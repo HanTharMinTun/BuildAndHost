@@ -25,9 +25,10 @@ import json
 from groq import Groq
 
 client = Groq(
-    api_key="xxx"
+    api_key="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"
 )
 
+#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
 
 COMPONENT_TEMPLATE = """
 Page
