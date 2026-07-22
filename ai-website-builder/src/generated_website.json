@@ -1,0 +1,162 @@
+{
+  "type": "Page",
+  "props": {},
+  "children": [
+    {
+      "type": "Navbar",
+      "props": {
+        "items": [
+          "Home",
+          "Menu",
+          "About",
+          "Contact"
+        ]
+      },
+      "children": []
+    },
+    {
+      "type": "Hero",
+      "props": {
+        "title": "Welcome to Coffee Haven",
+        "subtitle": "Freshly brewed coffee & cozy vibes",
+        "buttonText": "View Menu",
+        "buttonAction": "#menu",
+        "image": "hero.jpg"
+      },
+      "children": []
+    },
+    {
+      "type": "Section",
+      "props": {},
+      "children": [
+        {
+          "type": "Container",
+          "props": {},
+          "children": [
+            {
+              "type": "Heading",
+              "props": {
+                "text": "About Us"
+              },
+              "children": []
+            },
+            {
+              "type": "Paragraph",
+              "props": {
+                "text": "Coffee Haven is a community-focused coffee shop offering expertly crafted espresso drinks, artisanal pastries, and a warm, inviting atmosphere for friends and remote workers alike."
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Section",
+      "props": {},
+      "children": [
+        {
+          "type": "Container",
+          "props": {},
+          "children": [
+            {
+              "type": "Heading",
+              "props": {
+                "text": "Our Menu"
+              },
+              "children": []
+            },
+            {
+              "type": "Grid",
+              "props": {},
+              "children": [
+                {
+                  "type": "Card",
+                  "props": {
+                    "title": "Espresso",
+                    "description": "Rich, smooth, and bold single shot.",
+                    "image": "espresso.jpg",
+                    "buttonText": "Order"
+                  },
+                  "children": []
+                },
+                {
+                  "type": "Card",
+                  "props": {
+                    "title": "Cappuccino",
+                    "description": "Espresso with steamed milk and foam.",
+                    "image": "cappuccino.jpg",
+                    "buttonText": "Order"
+                  },
+                  "children": []
+                },
+                {
+                  "type": "Card",
+                  "props": {
+                    "title": "Latte",
+                    "description": "Creamy latte with your choice of flavor.",
+                    "image": "latte.jpg",
+                    "buttonText": "Order"
+                  },
+                  "children": []
+                },
+                {
+                  "type": "Card",
+                  "props": {
+                    "title": "Mocha",
+                    "description": "Chocolate-infused espresso delight.",
+                    "image": "mocha.jpg",
+                    "buttonText": "Order"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Section",
+      "props": {},
+      "children": [
+        {
+          "type": "Container",
+          "props": {},
+          "children": [
+            {
+              "type": "Stats",
+              "props": {
+                "items": [
+                  {
+                    "label": "Cups Served",
+                    "value": "10,000"
+                  },
+                  {
+                    "label": "Years Open",
+                    "value": "5"
+                  },
+                  {
+                    "label": "Locations",
+                    "value": "2"
+                  }
+                ]
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ContactForm",
+      "props": {},
+      "children": []
+    },
+    {
+      "type": "Footer",
+      "props": {},
+      "children": []
+    }
+  ]
+}

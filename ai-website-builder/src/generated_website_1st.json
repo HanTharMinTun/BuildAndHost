@@ -1,0 +1,375 @@
+{
+
+  "type": "Page",
+
+  "props": {},
+
+  "children": [
+
+    {
+
+      "type": "Navbar",
+
+      "props": {
+
+        "items": [
+
+          "Home",
+
+          "About",
+
+          "Projects",
+
+          "Skills",
+
+          "Experience",
+
+          "Contact"
+
+        ]
+
+      },
+
+      "children": []
+
+    },
+
+    {
+
+      "type": "Hero",
+
+      "props": {
+
+        "title": "Hello, I'm Alex Doe",
+
+        "subtitle": "Computer Science Student",
+
+        "buttonText": "View My Projects",
+
+        "buttonAction": "#projects",
+
+        "image": "hero.jpg"
+
+      },
+
+      "children": []
+
+    },
+
+    {
+
+      "type": "Container",
+
+      "props": {},
+
+      "children": [
+
+        {
+
+          "type": "Section",
+
+          "props": {},
+
+          "children": [
+
+            {
+
+              "type": "Heading",
+
+              "props": {
+
+                "text": "About Me"
+
+              },
+
+              "children": []
+
+            },
+
+            {
+
+              "type": "Paragraph",
+
+              "props": {
+
+                "text": "I am a passionate computer science student with a strong foundation in software development, algorithms, and data structures. I enjoy building web applications and exploring machine learning."
+
+              },
+
+              "children": []
+
+            }
+
+          ]
+
+        },
+
+        {
+
+          "type": "Section",
+
+          "props": {},
+
+          "children": [
+
+            {
+
+              "type": "Heading",
+
+              "props": {
+
+                "text": "Projects"
+
+              },
+
+              "children": []
+
+            },
+
+            {
+
+              "type": "Grid",
+
+              "props": {},
+
+              "children": [
+
+                {
+
+                  "type": "Card",
+
+                  "props": {
+
+                    "title": "Portfolio Website",
+
+                    "description": "A personal portfolio built with React and Node.js to showcase my projects and skills.",
+
+                    "image": "project1.png",
+
+                    "buttonText": "View Project"
+
+                  },
+
+                  "children": []
+
+                },
+
+                {
+
+                  "type": "Card",
+
+                  "props": {
+
+                    "title": "Chat Application",
+
+                    "description": "Real-time chat app using Socket.io and Express.",
+
+                    "image": "project2.png",
+
+                    "buttonText": "View Project"
+
+                  },
+
+                  "children": []
+
+                },
+
+                {
+
+                  "type": "Card",
+
+                  "props": {
+
+                    "title": "Machine Learning Model",
+
+                    "description": "Implemented a predictive model for housing prices using scikit-learn.",
+
+                    "image": "project3.png",
+
+                    "buttonText": "View Project"
+
+                  },
+
+                  "children": []
+
+                }
+
+              ]
+
+            }
+
+          ]
+
+        },
+
+        {
+
+          "type": "Section",
+
+          "props": {},
+
+          "children": [
+
+            {
+
+              "type": "Heading",
+
+              "props": {
+
+                "text": "Skills"
+
+              },
+
+              "children": []
+
+            },
+
+            {
+
+              "type": "FeatureList",
+
+              "props": {
+
+                "items": [
+
+                  "Python",
+
+                  "JavaScript",
+
+                  "React",
+
+                  "Node.js",
+
+                  "Algorithms",
+
+                  "Data Structures",
+
+                  "Machine Learning"
+
+                ]
+
+              },
+
+              "children": []
+
+            }
+
+          ]
+
+        },
+
+        {
+
+          "type": "Section",
+
+          "props": {},
+
+          "children": [
+
+            {
+
+              "type": "Heading",
+
+              "props": {
+
+                "text": "Experience"
+
+              },
+
+              "children": []
+
+            },
+
+            {
+
+              "type": "Timeline",
+
+              "props": {
+
+                "items": [
+
+                  {
+
+                    "title": "Software Engineering Intern",
+
+                    "date": "June 2024 - Aug 2024",
+
+                    "description": "Developed internal tools using Python and Flask."
+
+                  },
+
+                  {
+
+                    "title": "Research Assistant",
+
+                    "date": "Jan 2024 - May 2024",
+
+                    "description": "Assisted in research on natural language processing."
+
+                  }
+
+                ]
+
+              },
+
+              "children": []
+
+            }
+
+          ]
+
+        },
+
+        {
+
+          "type": "Section",
+
+          "props": {},
+
+          "children": [
+
+            {
+
+              "type": "Heading",
+
+              "props": {
+
+                "text": "Contact"
+
+              },
+
+              "children": []
+
+            },
+
+            {
+
+              "type": "ContactForm",
+
+              "props": {},
+
+              "children": []
+
+            }
+
+          ]
+
+        }
+
+      ]
+
+    },
+
+    {
+
+      "type": "Footer",
+
+      "props": {},
+
+      "children": []
+
+    }
+
+  ]
+
+}
