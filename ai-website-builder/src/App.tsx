@@ -1,43 +1,63 @@
-import Renderer from "./renderer/Renderer";
+import { Routes, Route } from "react-router-dom";
 
-import website from "./generated_website.json";
+import Home from "./pages/home";
+import Editor from "./pages/editor";
 
-import {validateNode}
-from "./renderer/validator";
-
-
-function App(){
-
-
-
-if(!validateNode(website)){
-
-
-return (
-
-<h1>
-Invalid Website Configuration
-</h1>
-
-);
-
-
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/editor" element={<Editor />} />
+    </Routes>
+  );
 }
 
 
 
-return (
+// import Renderer from "./renderer/Renderer";
 
-<Renderer
+// import website from "./generated_website.json";
+// import Home from "./pages/home";
 
-node={website}
-
-/>
-
-);
+// import {validateNode}
+// from "./renderer/validator";
 
 
-}
+// function App(){
 
 
-export default App;
+    
+
+// // if(!validateNode(website)){
+
+
+// // return (
+
+// // <h1>
+// // Invalid Website Configuration
+// // </h1>
+
+// // );
+
+
+// // }
+
+
+
+// // return (
+
+// // <Renderer
+
+// // node={website}
+
+// // />
+
+// // );
+
+
+// }
+
+
+// export default App;
+
+

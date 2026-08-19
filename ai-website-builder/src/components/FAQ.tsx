@@ -11,19 +11,23 @@ interface Props{
 
 items:FAQItem[];
 
+style?: React.CSSProperties;
+
 }
 
 
 export default function FAQ({
 
-items=[]
+items=[],
+
+style
 
 }:Props){
 
 
 return (
 
-<div className="space-y-4">
+<div className="space-y-4" style={style}>
 
 
 {
@@ -38,16 +42,21 @@ items.map(
 key={index}
 
 className="
+rounded-[1.25rem]
 border
+border-slate-200/70
+bg-white/80
 p-4
-rounded
+shadow-[0_14px_40px_-24px_rgba(15,23,42,0.3)]
 "
 
 >
 
 <summary className="
-font-bold
 cursor-pointer
+font-semibold
+text-slate-900
+list-none
 ">
 
 {item.question}
@@ -57,7 +66,9 @@ cursor-pointer
 
 <p className="
 mt-3
-text-gray-600
+text-base
+leading-7
+text-slate-600
 ">
 
 {item.answer}

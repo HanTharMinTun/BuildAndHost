@@ -1,162 +1,185 @@
 {
-  "type": "Page",
-  "props": {},
-  "children": [
-    {
-      "type": "Navbar",
-      "props": {
-        "items": [
-          "Home",
-          "Menu",
-          "About",
-          "Contact"
-        ]
-      },
-      "children": []
-    },
-    {
-      "type": "Hero",
-      "props": {
-        "title": "Welcome to Coffee Haven",
-        "subtitle": "Freshly brewed coffee & cozy vibes",
-        "buttonText": "View Menu",
-        "buttonAction": "#menu",
-        "image": "hero.jpg"
-      },
-      "children": []
-    },
-    {
-      "type": "Section",
-      "props": {},
-      "children": [
-        {
-          "type": "Container",
-          "props": {},
-          "children": [
-            {
-              "type": "Heading",
-              "props": {
-                "text": "About Us"
-              },
-              "children": []
-            },
-            {
-              "type": "Paragraph",
-              "props": {
-                "text": "Coffee Haven is a community-focused coffee shop offering expertly crafted espresso drinks, artisanal pastries, and a warm, inviting atmosphere for friends and remote workers alike."
-              },
-              "children": []
-            }
+  "website": {
+    "type": "Page",
+    "props": {},
+    "children": [
+      {
+        "type": "Navbar",
+        "props": {
+          "items": [
+            "Home",
+            "Team",
+            "Contact"
           ]
-        }
-      ]
-    },
-    {
-      "type": "Section",
-      "props": {},
-      "children": [
-        {
-          "type": "Container",
-          "props": {},
-          "children": [
-            {
-              "type": "Heading",
-              "props": {
-                "text": "Our Menu"
+        },
+        "children": []
+      },
+      {
+        "type": "Hero",
+        "props": {
+          "title": "Our Project Team",
+          "subtitle": "Meet the experts behind the project",
+          "buttonText": "Contact Us",
+          "buttonAction": "#contact",
+          "image": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80"
+        },
+        "children": []
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Heading",
+                "props": {
+                  "text": "Meet the Team",
+                  "level": 2
+                },
+                "children": []
               },
-              "children": []
-            },
-            {
-              "type": "Grid",
-              "props": {},
-              "children": [
-                {
-                  "type": "Card",
-                  "props": {
-                    "title": "Espresso",
-                    "description": "Rich, smooth, and bold single shot.",
-                    "image": "espresso.jpg",
-                    "buttonText": "Order"
-                  },
-                  "children": []
+              {
+                "type": "Grid",
+                "props": {
+                  "columns": 3
                 },
-                {
-                  "type": "Card",
-                  "props": {
-                    "title": "Cappuccino",
-                    "description": "Espresso with steamed milk and foam.",
-                    "image": "cappuccino.jpg",
-                    "buttonText": "Order"
-                  },
-                  "children": []
-                },
-                {
-                  "type": "Card",
-                  "props": {
-                    "title": "Latte",
-                    "description": "Creamy latte with your choice of flavor.",
-                    "image": "latte.jpg",
-                    "buttonText": "Order"
-                  },
-                  "children": []
-                },
-                {
-                  "type": "Card",
-                  "props": {
-                    "title": "Mocha",
-                    "description": "Chocolate-infused espresso delight.",
-                    "image": "mocha.jpg",
-                    "buttonText": "Order"
-                  },
-                  "children": []
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "Section",
-      "props": {},
-      "children": [
-        {
-          "type": "Container",
-          "props": {},
-          "children": [
-            {
-              "type": "Stats",
-              "props": {
-                "items": [
+                "children": [
                   {
-                    "label": "Cups Served",
-                    "value": "10,000"
+                    "type": "Card",
+                    "props": {
+                      "title": "Han Thar Min Tun",
+                      "description": "Lead Developer with a passion for building scalable solutions.",
+                      "image": "https://images.unsplash.com/photo-1502767089025-6572583495b9?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "View Profile"
+                    },
+                    "children": []
                   },
                   {
-                    "label": "Years Open",
-                    "value": "5"
+                    "type": "Card",
+                    "props": {
+                      "title": "Kaung Zarni Maung",
+                      "description": "Project Manager ensuring timely delivery and coordination.",
+                      "image": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "View Profile"
+                    },
+                    "children": []
                   },
                   {
-                    "label": "Locations",
-                    "value": "2"
+                    "type": "Card",
+                    "props": {
+                      "title": "Phone Myat Thura Kyaw",
+                      "description": "UX/UI Designer crafting intuitive user experiences.",
+                      "image": "https://images.unsplash.com/photo-1524503033411-c9566986fc8f?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "View Profile"
+                    },
+                    "children": []
                   }
                 ]
-              },
-              "children": []
-            }
-          ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ContactForm",
+        "props": {},
+        "children": []
+      },
+      {
+        "type": "Footer",
+        "props": {},
+        "children": []
+      }
+    ]
+  },
+  "layout": {
+    "responsive": {
+      "desktop": {
+        "Navbar": {
+          "display": "flex",
+          "justifyContent": "space-between",
+          "alignItems": "center",
+          "padding": "16px"
+        },
+        "Hero": {
+          "layout": "row",
+          "imagePosition": "right",
+          "textAlign": "left",
+          "padding": "80px 0"
+        },
+        "Section": {
+          "padding": "60px 0"
+        },
+        "Grid": {
+          "columns": 3,
+          "gap": "24px"
+        },
+        "Card": {
+          "height": "auto"
+        },
+        "ContactForm": {
+          "width": "50%",
+          "margin": "0 auto"
+        },
+        "Footer": {
+          "padding": "40px 0",
+          "textAlign": "center"
         }
-      ]
-    },
-    {
-      "type": "ContactForm",
-      "props": {},
-      "children": []
-    },
-    {
-      "type": "Footer",
-      "props": {},
-      "children": []
+      },
+      "tablet": {
+        "Navbar": {
+          "flexDirection": "row",
+          "padding": "12px"
+        },
+        "Hero": {
+          "layout": "column",
+          "imagePosition": "top",
+          "textAlign": "center",
+          "padding": "60px 0"
+        },
+        "Section": {
+          "padding": "40px 0"
+        },
+        "Grid": {
+          "columns": 2,
+          "gap": "20px"
+        },
+        "ContactForm": {
+          "width": "70%"
+        },
+        "Footer": {
+          "padding": "30px 0"
+        }
+      },
+      "mobile": {
+        "Navbar": {
+          "flexDirection": "column",
+          "alignItems": "center",
+          "padding": "8px"
+        },
+        "Hero": {
+          "layout": "column",
+          "imagePosition": "top",
+          "textAlign": "center",
+          "padding": "40px 0"
+        },
+        "Section": {
+          "padding": "30px 0"
+        },
+        "Grid": {
+          "columns": 1,
+          "gap": "16px"
+        },
+        "ContactForm": {
+          "width": "90%"
+        },
+        "Footer": {
+          "padding": "20px 0"
+        }
+      }
     }
-  ]
+  }
 }

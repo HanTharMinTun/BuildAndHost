@@ -1,0 +1,308 @@
+
+[00:00.0] (serious)
+I spent months building procedural floating islands for my game.
+
+[00:03.5] (confident)
+Everything was going great.
+
+[00:06.0] (dramatic pause)
+Until I decided...
+to let players destroy them.
+
+[00:10.0]
+[Show island explosion]
+
+[00:11.0] (excited)
+And this happened.
+
+[00:12.5]
+[Explosion montage]
+
+--------------------
+
+[00:15.0] (normal)
+Hi, I'm Ka.
+
+[00:16.5]
+I'm making a procedural floating-island game in Unity.
+
+[00:20.0]
+Every island is generated at runtime.
+
+[00:22.5]
+The trees are procedural.
+
+[00:24.0]
+The rocks are procedural.
+
+[00:25.5]
+And unfortunately...
+
+[00:27.0] (sigh)
+Most of my bugs are also procedural.
+
+[00:30.0]
+[Meme]
+
+--------------------
+
+[00:32.0]
+So my goal was simple.
+
+[00:34.0]
+I wanted players to travel between islands without loading screens.
+
+[00:38.0]
+I could have used normal movement.
+
+[00:40.0]
+But that's boring.
+
+[00:41.5]
+So I added a glider.
+
+[00:43.0]
+[Show gliding]
+
+[00:44.0] (excited)
+And honestly...
+
+[00:45.5]
+it felt pretty good.
+
+[00:47.0]
+For about five minutes.
+
+--------------------
+
+[00:50.0]
+Because then I thought:
+
+[00:52.0]
+"What if I add a grappling hook?"
+
+[00:55.0]
+[Meme: bad idea]
+
+[00:56.0] (confident)
+How hard could it be?
+
+[00:58.5]
+[Cut]
+
+[00:59.0]
+It was very hard.
+
+[01:01.0]
+[Show player flying into sky]
+
+[01:03.0] (confused laughter)
+My first test looked less like Spider-Man...
+
+[01:06.5]
+and more like somebody getting abducted by aliens.
+
+[01:10.0]
+[Meme]
+
+--------------------
+
+[01:12.0]
+After fighting physics for several days...
+
+[01:15.0]
+I finally got the rope working.
+
+[01:17.0]
+[Show smooth traversal]
+
+[01:18.0] (proud)
+And now moving around the world actually feels fun.
+
+[01:22.0]
+Which is great.
+
+[01:23.5]
+Because the player is going to spend a lot of time falling off islands.
+
+--------------------
+
+[01:28.0]
+The islands still felt a little empty.
+
+[01:30.5]
+So I built a procedural population system.
+
+[01:33.5]
+Trees.
+
+[01:34.5]
+Rocks.
+
+[01:35.5]
+Decoration.
+
+[01:37.0]
+Everything automatically placed.
+
+[01:39.0]
+[Show before-after]
+
+[01:40.0] (relieved)
+The world immediately looked better.
+
+[01:43.5]
+And more importantly...
+
+[01:45.0]
+it stopped looking like I forgot to finish the game.
+
+--------------------
+
+[01:49.0]
+Now came the dangerous idea.
+
+[01:51.0] (dramatic)
+Island destruction.
+
+[01:53.0]
+[Meme: nervous]
+
+[01:54.0]
+I wanted islands to break apart into real physical chunks.
+
+[01:58.0]
+No fake animation.
+
+[01:59.5]
+No smoke and mirrors.
+
+[02:01.0]
+Real destruction.
+
+--------------------
+
+[02:03.0]
+After experimenting with convex hull generation...
+
+[02:07.0]
+I finally got something working.
+
+[02:09.0]
+[Show destruction]
+
+[02:10.0] (excited)
+And it was glorious.
+
+[02:12.0]
+Pieces flying everywhere.
+
+[02:14.0]
+Physics going crazy.
+
+[02:15.5]
+My frame rate filing a formal complaint.
+
+[02:18.0]
+[Meme]
+
+--------------------
+
+[02:20.0]
+Of course...
+
+[02:21.5]
+it wasn't perfect.
+
+[02:23.0]
+Sometimes the destruction worked.
+
+[02:25.0]
+Sometimes it didn't.
+
+[02:27.0]
+And sometimes...
+
+[02:29.0]
+[Show ridiculous bug]
+
+[02:30.0]
+the island simply achieved enlightenment and left reality.
+
+[02:34.0]
+[laugh]
+
+--------------------
+
+[02:36.0]
+But after a lot of refactoring and cleanup...
+
+[02:39.5]
+the project is finally starting to feel solid.
+
+[02:42.5]
+Fewer errors.
+
+[02:44.0]
+Cleaner systems.
+
+[02:45.5]
+Much easier to add features.
+
+[02:48.0]
+And honestly...
+
+[02:49.5]
+that's probably the biggest win so far.
+
+--------------------
+
+[02:53.0]
+So that's where the game is right now.
+
+[02:56.0]
+Procedural islands.
+
+[02:57.5]
+Procedural world generation.
+
+[02:59.0]
+Glider traversal.
+
+[03:00.5]
+Grappling movement.
+
+[03:02.0]
+Island destruction.
+
+[03:03.5]
+And a growing collection of bugs that somehow create new bugs.
+
+[03:07.0]
+[Meme]
+
+--------------------
+
+[03:09.0]
+If you'd like to follow the development journey...
+
+[03:12.0]
+consider subscribing.
+
+[03:14.0]
+Because next time...
+
+[03:16.0]
+I'll probably either build something amazing...
+
+[03:19.5]
+or accidentally destroy the entire project.
+
+[03:22.5]
+Honestly, both outcomes are possible.
+
+[03:25.0]
+[Show funny bug montage]
+
+[03:27.0]
+Thanks for watching.

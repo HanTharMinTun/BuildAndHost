@@ -11,12 +11,16 @@ interface Props{
 
 items:Stat[];
 
+style?: React.CSSProperties;
+
 }
 
 
 export default function Stats({
 
-items=[]
+items=[],
+
+style
 
 }:Props){
 
@@ -28,7 +32,8 @@ grid
 grid-cols-2
 md:grid-cols-4
 gap-6
-">
+sm:gap-8
+" style={style}>
 
 
 {
@@ -43,17 +48,23 @@ items.map(
 key={index}
 
 className="
-text-center
-p-5
+rounded-[1.5rem]
 border
-rounded-xl
+border-slate-200/70
+bg-white/80
+p-6
+text-center
+shadow-[0_16px_45px_-24px_rgba(15,23,42,0.35)]
 "
 
 >
 
 <h2 className="
-text-4xl
-font-bold
+text-3xl
+sm:text-4xl
+font-semibold
+tracking-tight
+text-slate-900
 ">
 
 {item.value}
@@ -61,7 +72,7 @@ font-bold
 </h2>
 
 
-<p>
+<p className="mt-2 text-sm font-medium uppercase tracking-[0.2em] text-slate-500">
 
 {item.label}
 

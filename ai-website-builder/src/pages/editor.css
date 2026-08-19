@@ -1,0 +1,36 @@
+#root:has(.cms-editor) { width: 100%; max-width: none; height: 100vh; margin: 0; border: 0; overflow: hidden; }
+body:has(.cms-editor) { overflow: hidden; }
+.cms-editor { height: 100vh; min-height: 0; display: grid; grid-template-columns: 240px minmax(0, 1fr) 270px; overflow: hidden; background: #edf1f6; color: #172033; text-align: left; font: 14px/1.45 Inter, ui-sans-serif, system-ui, sans-serif; }
+.cms-panel { min-height: 0; overflow-y: auto; background: #fff; padding: 24px 18px; border-color: #dce3ed; position: sticky; top: 0; height: 100vh; align-self: start; }
+.cms-panel--palette { border-right: 1px solid #dce3ed; }
+.cms-panel--inspector { border-left: 1px solid #dce3ed; }
+.cms-brand { font-size: 18px; font-weight: 750; letter-spacing: -.4px; color: #172033; margin-bottom: 28px; }
+.cms-brand span { color: #546aee; }
+.cms-panel p { color: #68758a; font-size: 13px; margin: 0 0 18px; }
+.cms-palette { display: grid; gap: 8px; }
+.cms-palette button { border: 1px solid #dce3ed; background: #fff; color: #344054; border-radius: 8px; padding: 9px 10px; text-align: left; cursor: grab; font: inherit; }
+.cms-palette button:hover { background: #f4f6ff; border-color: #a9b5f7; }
+.cms-palette span { color: #546aee; font-size: 17px; margin-right: 8px; }
+.cms-workspace { min-width: 0; min-height: 0; box-sizing: border-box; padding: 18px 28px 48px; overflow: auto; }
+.cms-toolbar { max-width: 1100px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: space-between; color: #657086; font-weight: 650; }
+.cms-toolbar button { border: 0; background: #4255cf; color: #fff; border-radius: 7px; padding: 9px 13px; font: inherit; font-weight: 650; cursor: pointer; }
+.cms-canvas { max-width: 1100px; margin: 0 auto; min-height: calc(100vh - 115px); background: #fff; border: 1px solid #dce3ed; border-radius: 10px; box-shadow: 0 12px 28px rgba(29, 43, 72, .08); overflow: hidden; }
+.editor-node { position: relative; outline: 1px dashed transparent; outline-offset: 3px; transition: outline-color .15s, background .15s; }
+.editor-node:hover { outline-color: #9ca9ff; cursor: pointer; }
+.editor-node--selected { outline: 2px solid #546aee; background: rgba(84, 106, 238, .035); }
+.editor-node__label { position: absolute; z-index: 30; top: -22px; left: 0; display: none; padding: 2px 7px; border-radius: 5px 5px 0 0; background: #546aee; color: #fff; font-size: 11px; line-height: 16px; font-weight: 700; }
+.editor-node--selected > .editor-node__label { display: block; }
+.cms-panel h2 { font-size: 15px; color: #172033; margin: 0 0 18px; }
+.cms-selected-type { display: inline-block; padding: 4px 8px; border-radius: 5px; background: #edf0ff; color: #4255cf; font-size: 12px; font-weight: 700; margin-bottom: 18px; }
+.cms-panel label { display: grid; gap: 6px; margin-bottom: 14px; color: #536176; font-size: 12px; font-weight: 700; text-transform: capitalize; }
+.cms-panel input, .cms-panel textarea { min-width: 0; box-sizing: border-box; width: 100%; padding: 8px 9px; border: 1px solid #dce3ed; border-radius: 6px; background: #fff; color: #172033; font: 13px/1.2 ui-sans-serif, system-ui, sans-serif; }
+.cms-panel textarea { resize: vertical; }
+.cms-panel input:focus, .cms-panel textarea:focus { outline: 2px solid #c6ceff; border-color: #7c8af0; }
+.cms-empty { padding: 12px; border-radius: 7px; background: #f5f7fa; }
+.cms-position-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 18px; }
+.cms-position-actions button { padding: 8px 5px; border: 1px solid #cfd7e5; border-radius: 6px; background: #fff; color: #344054; font: inherit; font-size: 12px; font-weight: 650; cursor: pointer; }
+.cms-position-actions button:hover:not(:disabled) { border-color: #8e9df1; background: #f4f6ff; }
+.cms-position-actions button:disabled { opacity: .45; cursor: not-allowed; }
+.cms-delete { margin-top: 18px; width: 100%; padding: 9px; border: 1px solid #f3b5bb; border-radius: 6px; background: #fff5f5; color: #bb3341; font: inherit; font-weight: 650; cursor: pointer; }
+@media (max-width: 900px) { .cms-editor { grid-template-columns: 190px minmax(0, 1fr); } .cms-panel--inspector { display: none; } .cms-workspace { padding-inline: 15px; } }
+@media (max-width: 620px) { .cms-editor { display: block; } .cms-panel--palette { border-right: 0; border-bottom: 1px solid #dce3ed; } .cms-palette { grid-template-columns: repeat(2, 1fr); } }

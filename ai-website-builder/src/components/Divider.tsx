@@ -1,4 +1,8 @@
-export default function Divider(){
+interface Props {
+  style?: React.CSSProperties;
+}
+
+export default function Divider({ style }: Props){
 
 return (
 
@@ -6,8 +10,12 @@ return (
 
 className="
 my-8
-border-gray-200
+border-0
+border-t
+border-slate-200/80
 "
+
+style={style}
 
 />
 

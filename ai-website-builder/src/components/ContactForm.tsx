@@ -2,12 +2,16 @@ interface Props{
 
 submitAction?:string;
 
+style?: React.CSSProperties;
+
 }
 
 
 export default function ContactForm({
 
-submitAction
+submitAction,
+
+style
 
 }:Props){
 
@@ -17,9 +21,18 @@ return (
 <form
 
 className="
+max-w-2xl
 space-y-4
-max-w-xl
+rounded-[1.75rem]
+border
+border-slate-200/70
+bg-white/90
+p-6
+shadow-[0_20px_70px_-30px_rgba(15,23,42,0.35)]
+sm:p-8
 "
+
+style={style}
 
 >
 
@@ -74,11 +87,19 @@ rounded
 type="submit"
 
 className="
-bg-blue-600
-text-white
+rounded-full
+bg-gradient-to-r
+from-sky-600
+to-blue-600
 px-6
 py-3
-rounded
+font-medium
+text-white
+shadow-lg
+shadow-sky-600/25
+transition-transform
+duration-200
+hover:-translate-y-0.5
 "
 
 >

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>CS Game Dev · portfolio</title>
+  <!-- Font Awesome 6 for sharp icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, sans-serif;
+      background: #0b0c14;
+      color: #e7e9f0;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    /* modern gradient mesh background */
+    .bg-mesh {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 20%, #1d2145 0%, #0b0c14 70%),
+                  radial-gradient(circle at 80% 70%, #2a1e3a 0%, #0b0c14 70%);
+      z-index: -2;
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 2rem 2rem 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4.5rem;
+    }
+
+    /* glass cards & modern panels */
+    .glass {
+      background: rgba(20, 22, 36, 0.65);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 2.5rem;
+      box-shadow: 0 25px 45px -10px rgba(0,0,0,0.6);
+      padding: 2rem 2.2rem;
+      transition: transform 0.2s ease, border-color 0.2s;
+    }
+
+    .glass:hover {
+      border-color: rgba(255, 255, 255, 0.18);
+      transform: translateY(-3px);
+    }
+
+    h1, h2, h3 {
+      font-weight: 600;
+      letter-spacing: -0.3px;
+    }
+
+    h2 {
+      font-size: 2.2rem;
+      margin-bottom: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      background: linear-gradient(135deg, #c0a0ff, #7aa2f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    h2 i {
+      background: none;
+      -webkit-text-fill-color: #b7a4ff;
+      font-size: 2rem;
+    }
+
+    /* header / hero */
+    .hero-section {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2.5rem;
+    }
+
+    .hero-text {
+      flex: 1 1 400px;
+    }
+
+    .hero-text .badge {
+      display: inline-block;
+      background: rgba(120, 100, 255, 0.18);
+      border: 1px solid rgba(180, 150, 255, 0.5);
+      padding: 0.4rem 1.2rem;
+      border-radius: 3rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #cfc2ff;
+      margin-bottom: 1.2rem;
+      letter-spacing: 0.4px;
+    }
+
+    .hero-text h1 {
+      font-size: 3.7rem;
+      font-weight: 700;
+      line-height: 1.2;
+      background: linear-gradient(to right, #f0e9ff, #b7adff, #a5c1ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.6rem;
+    }
+
+    .hero-sub {
+      font-size: 1.25rem;
+      color: #b9c2e6;
+      margin-bottom: 1.8rem;
+    }
+
+    .hero-avatar {
+      flex: 0 0 200px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .avatar-icon {
+      width: 180px;
+      height: 180px;
+      background: linear-gradient(145deg, #2a2350, #10122b);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5.5rem;
+      color: #cbbefc;
+      border: 2px solid rgba(200, 180, 255, 0.5);
+      box-shadow: 0 20px 35px rgba(90, 60, 200, 0.4);
+      backdrop-filter: blur(10px);
+    }
+
+    /* grid for projects */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 0.8rem;
+    }
+
+    .project-card {
+      background: rgba(18, 20, 34, 0.7);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 2rem;
+      padding: 1.7rem;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .project-card:hover {
+      border-color: #6d5acb;
+      box-shadow: 0 18px 30px -10px #392d6b;
+      transform: translateY(-5px);
+    }
+
+    .project-icon {
+      font-size: 2.4rem;
+      color: #b7a4ff;
+      margin-bottom: 0.3rem;
+    }
+
+    .project-card h3 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #f0ebff;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.5rem 0 0.2rem;
+    }
+
+    .tag {
+      background: rgba(140, 120, 255, 0.15);
+      border: 1px solid rgba(180, 160, 255, 0.25);
+      padding: 0.25rem 0.9rem;
+      border-radius: 2rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #cfc2ff;
+      letter-spacing: 0.3px;
+    }
+
+    .project-desc {
+      color: #b9c2da;
+      font-size: 0.95rem;
+      margin-top: 0.4rem;
+      flex: 1;
+    }
+
+    /* skills row */
+    .skills-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.2rem;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+
+    .skill-item {
+      background: rgba(25, 27, 45, 0.8);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 2.5rem;
+      padding: 0.7rem 1.4rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+      color: #dbdeff;
+      transition: 0.2s;
+    }
+
+    .skill-item i {
+      color: #b197fc;
+      font-size: 1.2rem;
+    }
+
+    .skill-item:hover {
+      background: #2f2b54;
+      border-color: #8b7bcf;
+    }
+
+    /* education & experience compact */
+    .info-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+
+    .info-block {
+      flex: 1 1 250px;
+      background: rgba(15, 17, 28, 0.5);
+      backdrop-filter: blur(10px);
+      border-radius: 1.8rem;
+      padding: 1.4rem 1.8rem;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .info-block h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      color: #cfc2ff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .info-block p {
+      color: #cbd5f0;
+      font-weight: 400;
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 1.8rem;
+      color: #8e8eb0;
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 2rem;
+    }
+
+    a {
+      color: #ccbeff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    a:hover {
+      color: #ffffff;
+      text-shadow: 0 0 8px #aa9aff;
+    }
+
+    @media (max-width: 650px) {
+      .container {
+        padding: 1.5rem 1.2rem;
+        gap: 3rem;
+      }
+      .hero-text h1 {
+        font-size: 2.8rem;
+      }
+      .avatar-icon {
+        width: 140px;
+        height: 140px;
+        font-size: 4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-mesh"></div>
+  <div class="container">
+    
+    <!-- Hero / introduction -->
+    <section class="hero-section glass" style="padding: 2.5rem 2.5rem;">
+      <div class="hero-text">
+        <span class="badge"><i class="fas fa-gamepad" style="margin-right: 6px;"></i> CS · Game Developer</span>
+        <h1>Alex Rivera</h1>
+        <div class="hero-sub">Computer Science student building immersive worlds & interactive systems.</div>
+        <p style="color: #b5bedd; max-width: 500px; margin-bottom: 1.5rem;">
+          <i class="fas fa-map-pin" style="margin-right: 6px; color: #af9eff;"></i> Los Angeles, CA · 
+          <span style="margin-left: 1rem;"><i class="fas fa-envelope" style="margin-right: 4px;"></i> alex.r@game.dev</span>
+        </p>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <a href="#" style="background: #4f3d9e; padding: 0.6rem 1.8rem; border-radius: 3rem; color: white; font-weight: 600;">
+            <i class="fas fa-download"></i> Resume
+          </a>
+          <a href="#" style="background: transparent; border: 1px solid #9f8bff; padding: 0.6rem 1.8rem; border-radius: 3rem;">
+            <i class="fab fa-github"></i> GitHub
+          </a>
+          <a href="#" style="background: transparent; border: 1px solid #9f8bff; padding: 0.6rem 1.8rem; border-radius: 3rem;">
+            <i class="fab fa-linkedin"></i> LinkedIn
+          </a>
+        </div>
+      </div>
+      <div class="hero-avatar">
+        <div class="avatar-icon">
+          <i class="fas fa-dragon"></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Game Projects -->
+    <section>
+      <h2><i class="fas fa-ghost"></i> Featured Projects</h2>
+      <div class="projects-grid">
+        
+        <div class="project-card">
+          <div class="project-icon"><i class="fas fa-cube"></i></div>
+          <h3>Echo Realms</h3>
+          <div class="project-tags">
+            <span class="tag">Unity</span>
+            <span class="tag">C#</span>
+            <span class="tag">Shader Graph</span>
+          </div>
+          <p class="project-desc">
+            A first-person puzzle explorer with dynamic lighting and procedural audio. 
+            Built as a semester-long CS project focusing on optimization and real-time shadows.
+          </p>
+          <div style="margin-top: 0.6rem;">
+            <a href="#"><i class="fab fa-github"></i> Source</a>
+            <span style="margin:0 8px; color:#5a5f7a;">|</span>
+            <a href="#"><i class="fas fa-play"></i> Demo</a>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-icon"><i class="fas fa-robot"></i></div>
+          <h3>Neon Drift AI</h3>
+          <div class="project-tags">
+            <span class="tag">Unreal Engine 5</span>
+            <span class="tag">C++</span>
+            <span class="tag">Behavior Trees</span>
+          </div>
+          <p class="project-desc">
+            Arcade-style racing with adaptive AI opponents. Implemented steering behaviors 
+            and a finite state machine for competitive NPC drivers.
+          </p>
+          <div style="margin-top: 0.6rem;">
+            <a href="#"><i class="fab fa-github"></i> Source</a>
+            <span style="margin:0 8px; color:#5a5f7a;">|</span>
+            <a href="#"><i class="fas fa-video"></i> Trailer</a>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-icon"><i class="fas fa-wind"></i></div>
+          <h3>Spirit Voyager</h3>
+          <div class="project-tags">
+            <span class="tag">Godot</span>
+            <span class="tag">GDScript</span>
+            <span class="tag">Pixel Art</span>
+          </div>
+          <p class="project-desc">
+            2D metroidvania prototype with handcrafted levels and smooth platforming mechanics.
+            Focused on state machines and signal-based architecture.
+          </p>
+          <div style="margin-top: 0.6rem;">
+            <a href="#"><i class="fab fa-github"></i> Source</a>
+            <span style="margin:0 8px; color:#5a5f7a;">|</span>
+            <a href="#"><i class="fas fa-gamepad"></i> itch.io</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tech & Tools + Education side by side -->
+    <div style="display: flex; flex-wrap: wrap; gap: 2.5rem;">
+      <!-- Skills section -->
+      <div style="flex: 2; min-width: 300px;">
+        <h2 style="margin-bottom: 1.2rem;"><i class="fas fa-microchip"></i> Core Skills</h2>
+        <div class="skills-container">
+          <div class="skill-item"><i class="fab fa-unity"></i> Unity</div>
+          <div class="skill-item"><i class="fas fa-cube"></i> Unreal Engine</div>
+          <div class="skill-item"><i class="fas fa-code"></i> C# / C++</div>
+          <div class="skill-item"><i class="fas fa-paint-brush"></i> Shaders</div>
+          <div class="skill-item"><i class="fas fa-project-diagram"></i> Game AI</div>
+          <div class="skill-item"><i class="fas fa-vr-cardboard"></i> VR (Oculus)</div>
+          <div class="skill-item"><i class="fas fa-mobile-alt"></i> Mobile Dev</div>
+          <div class="skill-item"><i class="fab fa-git-alt"></i> Git / Perforce</div>
+          <div class="skill-item"><i class="fas fa-blender"></i> Blender</div>
+          <div class="skill-item"><i class="fas fa-music"></i> FMOD / Wwise</div>
+        </div>
+      </div>
+      
+      <!-- Education card -->
+      <div class="info-block" style="flex: 1;">
+        <h3><i class="fas fa-graduation-cap"></i> Education</h3>
+        <p style="font-weight: 600; font-size: 1.2rem; color: white;">B.S. Computer Science</p>
+        <p style="margin-bottom: 0.5rem;">University of Southern California</p>
+        <p style="color: #b2b9e0; font-size: 0.9rem;">2023 – 2026 (expected)</p>
+        <p style="margin-top: 1rem; color: #cfc2ff;"><i class="fas fa-trophy"></i> Dean's List · Game Design Club</p>
+        <p style="color: #cfc2ff;"><i class="fas fa-certificate"></i> Unity Certified Associate</p>
+      </div>
+    </div>
+
+    <!-- Additional game jam / experience -->
+    <section style="margin-top: 1.5rem;">
+      <h2><i class="fas fa-calendar-alt"></i> Game Jams & Experience</h2>
+      <div class="info-row">
+        <div class="info-block">
+          <h3><i class="fas fa-rocket"></i> Ludum Dare 54</h3>
+          <p><strong>“Limited Space”</strong> – Top 8% overall. Built a zero-gravity puzzle game in 72h using Unity & custom physics.</p>
+          <p style="font-size: 0.85rem; margin-top: 0.5rem; color: #aaa9dd;">Solo developer · C# · procedural animation</p>
+        </div>
+        <div class="info-block">
+          <h3><i class="fas fa-clock"></i> GMTK Game Jam 2024</h3>
+          <p><strong>“Scale of Time”</strong> – 2D platformer with time-manipulation mechanics. Collaborated with 2 artists.</p>
+          <p style="font-size: 0.85rem; margin-top: 0.5rem; color: #aaa9dd;">Godot · GDScript · team lead</p>
+        </div>
+        <div class="info-block">
+          <h3><i class="fas fa-briefcase"></i> Internship</h3>
+          <p><strong>PixelForge Studio</strong> – QA & Gameplay intern (summer 2025). Assisted in debugging UE5 build and implementing minor features.</p>
+          <p style="font-size: 0.85rem; margin-top: 0.5rem; color: #aaa9dd;">C++ · Unreal · Agile</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer / contact -->
+    <div class="footer-note">
+      <p>© 2026 Alex Rivera · Crafting interactive experiences with code & creativity.</p>
+      <p style="margin-top: 0.5rem;">
+        <a href="#"><i class="fab fa-discord"></i> Discord</a> · 
+        <a href="#"><i class="fab fa-twitter"></i> Twitter</a> · 
+        <a href="#"><i class="fas fa-envelope"></i> alex.r@game.dev</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

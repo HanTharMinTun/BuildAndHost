@@ -27,6 +27,7 @@ import FAQ from "../components/FAQ";
 
 import Footer from "../components/Footer";
 import Divider from "../components/Divider";
+import CDNIcon from "../components/CDNIcon";
 
 
 export const COMPONENT_REGISTRY:any = {
@@ -51,6 +52,7 @@ Text,
 
 
 Image,
+CDNIcon,
 
 Button,
 
