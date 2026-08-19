@@ -259,8 +259,8 @@ nvm --version
 Install Node LTS:
 
 ```bash
-nvm install
-nvm use
+nvm install v22.14.0
+nvm use v22.14.0
 ```
 
 Verify:
