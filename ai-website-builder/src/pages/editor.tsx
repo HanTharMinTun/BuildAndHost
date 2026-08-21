@@ -30,9 +30,9 @@ const palette = [
 
 const defaults: Record<string, ComponentNode> = {
   Section: { type: "Section", props: {}, children: [] },
-  Heading: { type: "Heading", props: { text: "New heading", level: 2 }, children: [] },
-  Paragraph: { type: "Paragraph", props: { text: "Write something meaningful here.", color: "#0f172a", size: "1rem", align: "left", animations: "" }, children: [] },
-  Button: { type: "Button", props: { text: "Learn more", link: "#", color: "#0f172a", size: "0.95rem", align: "center", animations: "" }, children: [] },
+  Heading: { type: "Heading", props: { level: 2 }, children: [] },
+  Paragraph: { type: "Paragraph", props: {}, children: [] },
+  Button: { type: "Button", props: { link: "#", text: "Button" }, children: [] },
   Grid: { type: "Grid", props: { columns: 3 }, children: [] },
   Card: { type: "Card", props: { title: "New card", description: "Card description" }, children: [] },
   FeatureList: { type: "FeatureList", props: { items: ["First feature", "Second feature"] }, children: [] },
@@ -111,6 +111,11 @@ function PropertyInput({
   const formattedValue = formatPropValue(value);
   const [draft, setDraft] = useState(formattedValue);
 
+  // Sync draft state when value changes externally
+  useEffect(() => {
+    setDraft(formattedValue);
+  }, [formattedValue]);
+
   const commit = () => {
     if (draft !== formattedValue) onCommit(name, draft);
   };
@@ -121,7 +126,7 @@ function PropertyInput({
     return (
       <input
         type="color"
-        value={v}
+        value={typeof draft === "string" && draft ? draft : v}
         onChange={(e) => { setDraft(e.target.value); onCommit(name, e.target.value); }}
         onBlur={commit}
         aria-label={name}
@@ -132,7 +137,7 @@ function PropertyInput({
   if (name === "align") {
     const v = typeof value === "string" && value ? value : "left";
     return (
-      <select value={v} onChange={(e) => { setDraft(e.target.value); onCommit(name, e.target.value); }} onBlur={commit}>
+      <select value={typeof draft === "string" && draft ? draft : v} onChange={(e) => { setDraft(e.target.value); onCommit(name, e.target.value); }} onBlur={commit}>
         <option value="left">left</option>
         <option value="center">center</option>
         <option value="right">right</option>
@@ -157,7 +162,20 @@ function PropertyInput({
     const v = typeof value === "string" ? value : "";
     return (
       <textarea
-        value={v}
+        value={draft}
+        rows={3}
+        spellCheck={false}
+        onChange={(event) => setDraft(event.target.value)}
+        onBlur={commit}
+        aria-label={name}
+      />
+    );
+  }
+
+  if (name === "text") {
+    return (
+      <textarea
+        value={draft}
         rows={3}
         spellCheck={false}
         onChange={(event) => setDraft(event.target.value)}
@@ -577,16 +595,21 @@ export default function Editor() {
   }
 
   function updateProp(key: string, value: string) {
-    if (!selected) return;
-    const path = selectedPath?.split(".").map(Number);
+    if (!selected || !selectedPath) return;
+    const path = selectedPath.split(".").map(Number);
+    if (!path.length) return;
+    
     const next = clone(website);
-    const node = path ? getNode(next, path) : undefined;
+    const node = getNode(next, path);
     if (!node) return;
+    
     const oldValue = node.props?.[key];
     const nextValue = Array.isArray(oldValue)
       ? parseListInput(value)
       : typeof oldValue === "number" ? Number(value) || 0 : value;
-    node.props = { ...node.props, [key]: nextValue };
+    
+    // Ensure we create a completely new props object to avoid any reference issues
+    node.props = { ...(node.props || {}), [key]: nextValue };
     save(next);
   }
 
@@ -675,12 +698,11 @@ export default function Editor() {
           <>
             <div className="cms-selected-type">{selected.type}</div>
             {
-              // Show a union of existing props plus common editable props
+              // Show only the props that exist on this component, excluding UI-only properties
               (() => {
-                const existing = Object.keys(selected.props ?? {}).filter((k) => k !== "style");
-                const common = ["color", "size", "align", "animations", "text"];
-                const keys = Array.from(new Set([...existing, ...common]));
-                return keys.map((key) => (
+                const excludedProps = ["style", "color", "size", "align", "animations"];
+                const existing = Object.keys(selected.props ?? {}).filter((k) => !excludedProps.includes(k));
+                return existing.map((key) => (
                   <label key={key}>
                     {key}
                     <PropertyInput key={`${selectedPath ?? "root"}-${key}`} name={key} value={(selected.props ?? {})[key]} onCommit={updateProp} />

@@ -1,5 +1,4 @@
 {
-<<<<<<< Updated upstream
   "website": {
     "type": "Page",
     "props": {},
@@ -9,8 +8,8 @@
         "props": {
           "items": [
             "Home",
-            "Team",
-            "Work",
+            "About",
+            "Portfolio",
             "Contact"
           ]
         },
@@ -19,11 +18,11 @@
       {
         "type": "Hero",
         "props": {
-          "title": "Three Man Studio",
-          "subtitle": "Han, Kaung & Phone — Creative collaboration at its finest. We bring diverse perspectives and unified vision to every project.",
-          "buttonText": "See Our Work",
-          "buttonAction": "#work",
-          "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80"
+          "title": "PhoneMyat",
+          "subtitle": "Creative Developer & Designer crafting digital experiences that make an impact",
+          "buttonText": "View My Work",
+          "buttonAction": "#portfolio",
+          "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1600&q=80"
         },
         "children": []
       },
@@ -36,55 +35,54 @@
             "props": {},
             "children": [
               {
-                "type": "Heading",
-                "props": {
-                  "text": "Meet The Team",
-                  "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "Paragraph",
-                "props": {
-                  "text": "Three creative minds, one shared passion for excellence."
-                },
-                "children": []
-              },
-              {
                 "type": "Grid",
                 "props": {
-                  "columns": 3
+                  "columns": 2
                 },
                 "children": [
                   {
-                    "type": "Card",
+                    "type": "Image",
                     "props": {
-                      "title": "Han",
-                      "description": "Creative director with 8 years of experience in digital design and brand strategy. Specializes in user-centered design and visual storytelling.",
-                      "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
-                      "buttonText": "View Profile"
+                      "src": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80",
+                      "alt": "Professional workspace with laptop and design tools"
                     },
                     "children": []
                   },
                   {
-                    "type": "Card",
-                    "props": {
-                      "title": "Kaung",
-                      "description": "Full-stack developer passionate about building scalable applications. Expert in modern web technologies and system architecture.",
-                      "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
-                      "buttonText": "View Profile"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Phone",
-                      "description": "Product strategist and UX researcher. Transforms complex problems into intuitive solutions through data-driven insights.",
-                      "image": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80",
-                      "buttonText": "View Profile"
-                    },
-                    "children": []
+                    "type": "Stack",
+                    "props": {},
+                    "children": [
+                      {
+                        "type": "Heading",
+                        "props": {
+                          "text": "About Me",
+                          "level": 2
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "Paragraph",
+                        "props": {
+                          "text": "I'm a passionate developer and designer with expertise in creating beautiful, functional digital experiences. With a focus on clean code and user-centered design, I help businesses and individuals bring their ideas to life through innovative web solutions."
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "Paragraph",
+                        "props": {
+                          "text": "My approach combines technical expertise with creative problem-solving to deliver solutions that not only look great but also perform exceptionally well."
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "Button",
+                        "props": {
+                          "text": "Download Resume",
+                          "link": "#resume"
+                        },
+                        "children": []
+                      }
+                    ]
                   }
                 ]
               }
@@ -103,7 +101,7 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "What We Do",
+                  "text": "What I Do",
                   "level": 2
                 },
                 "children": []
@@ -112,12 +110,12 @@
                 "type": "FeatureList",
                 "props": {
                   "items": [
-                    "Brand Identity & Visual Design",
-                    "Web & Mobile Application Development",
-                    "User Experience Research & Strategy",
-                    "Digital Marketing & Content Creation",
-                    "Product Design & Prototyping",
-                    "Technical Consulting & Code Review"
+                    "Web Development - Building responsive and performant websites using modern technologies",
+                    "UI/UX Design - Creating intuitive interfaces that users love",
+                    "Mobile Development - Developing cross-platform mobile applications",
+                    "Brand Identity - Designing cohesive visual identities for businesses",
+                    "Consultation - Providing technical guidance and strategic planning",
+                    "Maintenance - Ongoing support and optimization for digital products"
                   ]
                 },
                 "children": []
@@ -140,19 +138,19 @@
                   "items": [
                     {
                       "label": "Projects Completed",
-                      "value": "87"
+                      "value": "50+"
                     },
                     {
                       "label": "Happy Clients",
-                      "value": "52"
+                      "value": "35+"
                     },
                     {
-                      "label": "Years Combined Experience",
-                      "value": "20"
+                      "label": "Years Experience",
+                      "value": "5"
                     },
                     {
-                      "label": "Awards Won",
-                      "value": "12"
+                      "label": "Technologies",
+                      "value": "20+"
                     }
                   ]
                 },
@@ -173,15 +171,96 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Our Work",
+                  "text": "Featured Projects",
                   "level": 2
                 },
                 "children": []
               },
               {
-                "type": "Paragraph",
+                "type": "Grid",
                 "props": {
-                  "text": "A selection of projects that showcase our collaborative approach and diverse skill set."
+                  "columns": 3
+                },
+                "children": [
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "E-Commerce Platform",
+                      "description": "A full-featured online shopping platform with payment integration and inventory management",
+                      "image": "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "View Project"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Portfolio Website",
+                      "description": "A modern portfolio site showcasing creative work with smooth animations and responsive design",
+                      "image": "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "View Project"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Mobile Fitness App",
+                      "description": "A cross-platform fitness tracking application with workout plans and progress monitoring",
+                      "image": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "View Project"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Real Estate Portal",
+                      "description": "A comprehensive property listing platform with advanced search and virtual tours",
+                      "image": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "View Project"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Restaurant Management System",
+                      "description": "An integrated solution for order management, reservations, and kitchen operations",
+                      "image": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "View Project"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Educational Platform",
+                      "description": "An online learning platform with video courses, quizzes, and progress tracking",
+                      "image": "https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "View Project"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Heading",
+                "props": {
+                  "text": "Project Gallery",
+                  "level": 2
                 },
                 "children": []
               },
@@ -189,11 +268,11 @@
                 "type": "Gallery",
                 "props": {
                   "images": [
+                    "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=1600&q=80",
                     "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1512486130939-2c4f79935e4f?auto=format&fit=crop&w=1600&q=80",
                     "https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1600&q=80"
+                    "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=1600&q=80"
                   ]
                 },
                 "children": []
@@ -213,51 +292,7 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Frequently Asked Questions",
-                  "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "FAQ",
-                "props": {
-                  "items": [
-                    {
-                      "question": "How do you work as a team of three?",
-                      "answer": "We combine our individual expertise in design, development, and strategy to deliver comprehensive solutions. Each project benefits from three perspectives and skill sets."
-                    },
-                    {
-                      "question": "What is your typical project timeline?",
-                      "answer": "Project timelines vary based on scope and complexity. Most projects range from 4 to 12 weeks. We provide detailed timelines during the initial consultation."
-                    },
-                    {
-                      "question": "Do you work with remote clients?",
-                      "answer": "Yes, we work with clients worldwide. We use modern collaboration tools to ensure smooth communication regardless of location."
-                    },
-                    {
-                      "question": "What industries do you serve?",
-                      "answer": "We work across various industries including technology, finance, healthcare, education, and e-commerce. Our diverse backgrounds allow us to adapt to different sectors."
-                    }
-                  ]
-                },
-                "children": []
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
-              {
-                "type": "Heading",
-                "props": {
-                  "text": "Let's Work Together",
+                  "text": "Get In Touch",
                   "level": 2
                 },
                 "children": []
@@ -265,7 +300,7 @@
               {
                 "type": "Paragraph",
                 "props": {
-                  "text": "Have a project in mind? We'd love to hear about it. Send us a message and we'll get back to you within 24 hours."
+                  "text": "Have a project in mind or want to collaborate? I'd love to hear from you. Let's create something amazing together."
                 },
                 "children": []
               },
@@ -285,91 +320,5 @@
       }
     ]
   },
-  "layout": {
-    "responsive": {
-      "desktop": {
-        "Navbar": {
-          "display": "flex",
-          "justifyContent": "space-between",
-          "alignItems": "center",
-          "padding": "16px"
-        },
-        "Hero": {
-          "layout": "row",
-          "imagePosition": "right",
-          "textAlign": "left",
-          "padding": "80px 0"
-        },
-        "Section": {
-          "padding": "60px 0"
-        },
-        "Grid": {
-          "columns": 3,
-          "gap": "24px"
-        },
-        "Card": {
-          "height": "auto"
-        },
-        "ContactForm": {
-          "width": "50%",
-          "margin": "0 auto"
-        },
-        "Footer": {
-          "padding": "40px 0",
-          "textAlign": "center"
-        }
-      },
-      "tablet": {
-        "Navbar": {
-          "flexDirection": "row",
-          "padding": "12px"
-        },
-        "Hero": {
-          "layout": "column",
-          "imagePosition": "top",
-          "textAlign": "center",
-          "padding": "60px 0"
-        },
-        "Section": {
-          "padding": "40px 0"
-        },
-        "Grid": {
-          "columns": 2,
-          "gap": "20px"
-        },
-        "ContactForm": {
-          "width": "70%"
-        },
-        "Footer": {
-          "padding": "30px 0"
-        }
-      },
-      "mobile": {
-        "Navbar": {
-          "flexDirection": "column",
-          "alignItems": "center",
-          "padding": "8px"
-        },
-        "Hero": {
-          "layout": "column",
-          "imagePosition": "top",
-          "textAlign": "center",
-          "padding": "40px 0"
-        },
-        "Section": {
-          "padding": "30px 0"
-        },
-        "Grid": {
-          "columns": 1,
-          "gap": "16px"
-        },
-        "ContactForm": {
-          "width": "90%"
-        },
-        "Footer": {
-          "padding": "20px 0"
-        }
-      }
-    }
-  }
+  "layout": {}
 }

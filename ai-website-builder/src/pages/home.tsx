@@ -292,7 +292,7 @@ export default function Home() {
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
                                 placeholder="Describe your dream website..."
-                                className="w-full px-5 py-3.5 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all text-gray-800 placeholder-gray-400"
+                                className="w-full px-5 py-3.5 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all bg-white text-gray-800 placeholder-gray-400"
                             />
                         </div>
                         <button 
