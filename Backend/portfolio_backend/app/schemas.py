@@ -1,9 +1,12 @@
-from pydantic import BaseModel, EmailStr, Field, validator
+from pydantic import BaseModel, EmailStr, Field
 from typing import Optional, List
 from datetime import datetime, date
-from enum import Enum
 
 # ============ AUTH SCHEMAS ============
+class TokenData(BaseModel):
+    """Schema for JWT token data"""
+    username: Optional[str] = None
+
 class UserBase(BaseModel):
     username: str
     email: EmailStr
@@ -18,11 +21,7 @@ class UserLogin(BaseModel):
 
 class UserResponse(UserBase):
     user_id: int
-    role: str
-    profile_image: Optional[str] = None
-    bio: Optional[str] = None
     created_at: datetime
-    is_active: bool
 
     class Config:
         from_attributes = True
@@ -32,9 +31,6 @@ class Token(BaseModel):
     token_type: str
     user: UserResponse
 
-class TokenData(BaseModel):
-    username: Optional[str] = None
-
 # ============ PERSONAL INFO SCHEMAS ============
 class PersonalInfoBase(BaseModel):
     full_name: str
@@ -42,15 +38,11 @@ class PersonalInfoBase(BaseModel):
     bio: Optional[str] = None
     email: Optional[EmailStr] = None
     phone: Optional[str] = None
-    address: Optional[str] = None
-    profile_image_url: Optional[str] = None
+    profile_image: Optional[str] = None
     resume_url: Optional[str] = None
     github_url: Optional[str] = None
     linkedin_url: Optional[str] = None
     twitter_url: Optional[str] = None
-    youtube_url: Optional[str] = None
-    instagram_url: Optional[str] = None
-    facebook_url: Optional[str] = None
 
 class PersonalInfoCreate(PersonalInfoBase):
     pass
@@ -69,7 +61,6 @@ class SkillBase(BaseModel):
     category: str
     proficiency: Optional[int] = Field(None, ge=0, le=100)
     icon_class: Optional[str] = None
-    color_code: Optional[str] = None
     display_order: Optional[int] = 0
 
 class SkillCreate(SkillBase):
@@ -77,9 +68,7 @@ class SkillCreate(SkillBase):
 
 class SkillResponse(SkillBase):
     skill_id: int
-    is_active: bool
     created_at: datetime
-    updated_at: datetime
 
     class Config:
         from_attributes = True
@@ -91,17 +80,11 @@ class ProjectBase(BaseModel):
     description: Optional[str] = None
     content: Optional[str] = None
     category: Optional[str] = None
-    project_type: Optional[str] = None
-    status: Optional[str] = "completed"
     featured: Optional[bool] = False
     featured_image: Optional[str] = None
-    images: Optional[List[str]] = []
     technologies: Optional[List[str]] = []
     github_link: Optional[str] = None
     live_demo_link: Optional[str] = None
-    client_name: Optional[str] = None
-    start_date: Optional[date] = None
-    end_date: Optional[date] = None
     display_order: Optional[int] = 0
 
 class ProjectCreate(ProjectBase):
@@ -112,11 +95,9 @@ class ProjectUpdate(ProjectBase):
 
 class ProjectResponse(ProjectBase):
     project_id: int
-    is_active: bool
     created_at: datetime
     updated_at: datetime
     skill_names: Optional[List[str]] = []
-    skills: Optional[List['SkillResponse']] = []
 
     class Config:
         from_attributes = True
@@ -127,13 +108,9 @@ class ExperienceBase(BaseModel):
     position: str
     location: Optional[str] = None
     description: Optional[str] = None
-    achievements: Optional[List[str]] = []
-    technologies: Optional[List[str]] = []
     start_date: date
     end_date: Optional[date] = None
     is_current: Optional[bool] = False
-    company_logo: Optional[str] = None
-    company_website: Optional[str] = None
     display_order: Optional[int] = 0
 
 class ExperienceCreate(ExperienceBase):
@@ -141,7 +118,6 @@ class ExperienceCreate(ExperienceBase):
 
 class ExperienceResponse(ExperienceBase):
     experience_id: int
-    is_active: bool
     created_at: datetime
     updated_at: datetime
 
@@ -154,13 +130,9 @@ class EducationBase(BaseModel):
     degree: str
     field_of_study: Optional[str] = None
     location: Optional[str] = None
-    description: Optional[str] = None
     start_date: date
     end_date: Optional[date] = None
-    is_current: Optional[bool] = False
     gpa: Optional[float] = None
-    logo_url: Optional[str] = None
-    website: Optional[str] = None
     display_order: Optional[int] = 0
 
 class EducationCreate(EducationBase):
@@ -168,7 +140,6 @@ class EducationCreate(EducationBase):
 
 class EducationResponse(EducationBase):
     education_id: int
-    is_active: bool
     created_at: datetime
     updated_at: datetime
 
@@ -183,7 +154,7 @@ class TestimonialBase(BaseModel):
     content: str
     rating: Optional[int] = Field(None, ge=1, le=5)
     client_image: Optional[str] = None
-    website: Optional[str] = None
+    is_approved: Optional[bool] = True
     display_order: Optional[int] = 0
 
 class TestimonialCreate(TestimonialBase):
@@ -191,9 +162,7 @@ class TestimonialCreate(TestimonialBase):
 
 class TestimonialResponse(TestimonialBase):
     testimonial_id: int
-    is_approved: bool
     created_at: datetime
-    updated_at: datetime
 
     class Config:
         from_attributes = True
@@ -205,7 +174,6 @@ class BlogPostBase(BaseModel):
     excerpt: Optional[str] = None
     content: str
     featured_image: Optional[str] = None
-    category: Optional[str] = None
     tags: Optional[List[str]] = []
     is_published: Optional[bool] = False
     published_at: Optional[datetime] = None
@@ -216,11 +184,9 @@ class BlogPostCreate(BlogPostBase):
 class BlogPostResponse(BlogPostBase):
     post_id: int
     views: int
-    likes: int
     created_at: datetime
     updated_at: datetime
     author_name: Optional[str] = None
-    comment_count: Optional[int] = 0
 
     class Config:
         from_attributes = True
@@ -243,12 +209,16 @@ class BlogCommentResponse(BlogCommentBase):
         from_attributes = True
 
 # ============ CONTACT SCHEMAS ============
+# ============ NEWSLETTER SCHEMAS ============
+
+class NewsletterSubscribe(BaseModel):
+    email: EmailStr
+    
 class ContactMessageBase(BaseModel):
     name: str
     email: EmailStr
     subject: Optional[str] = None
     message: str
-    phone: Optional[str] = None
 
 class ContactMessageCreate(ContactMessageBase):
     pass
@@ -256,28 +226,7 @@ class ContactMessageCreate(ContactMessageBase):
 class ContactMessageResponse(ContactMessageBase):
     message_id: int
     is_read: bool
-    is_replied: bool
     created_at: datetime
 
     class Config:
         from_attributes = True
-
-# ============ NEWSLETTER SCHEMAS ============
-class NewsletterSubscribe(BaseModel):
-    email: EmailStr
-    name: Optional[str] = None
-
-# ============ RESPONSE SCHEMAS ============
-class ResponseModel(BaseModel):
-    success: bool
-    message: str
-    data: Optional[dict] = None
-
-class PaginatedResponse(BaseModel):
-    total: int
-    page: int
-    per_page: int
-    items: List[dict]
-
-# Update forward references
-ProjectResponse.model_rebuild()
