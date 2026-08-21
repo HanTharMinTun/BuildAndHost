@@ -10,6 +10,7 @@
           "items": [
             "Home",
             "Team",
+            "Work",
             "Contact"
           ]
         },
@@ -18,11 +19,11 @@
       {
         "type": "Hero",
         "props": {
-          "title": "Our Project Team",
-          "subtitle": "Meet the experts behind the project",
-          "buttonText": "Contact Us",
-          "buttonAction": "#contact",
-          "image": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80"
+          "title": "Three Man Studio",
+          "subtitle": "Han, Kaung & Phone — Creative collaboration at its finest. We bring diverse perspectives and unified vision to every project.",
+          "buttonText": "See Our Work",
+          "buttonAction": "#work",
+          "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80"
         },
         "children": []
       },
@@ -37,8 +38,15 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Meet the Team",
+                  "text": "Meet The Team",
                   "level": 2
+                },
+                "children": []
+              },
+              {
+                "type": "Paragraph",
+                "props": {
+                  "text": "Three creative minds, one shared passion for excellence."
                 },
                 "children": []
               },
@@ -51,9 +59,9 @@
                   {
                     "type": "Card",
                     "props": {
-                      "title": "Han Thar Min Tun",
-                      "description": "Lead Developer with a passion for building scalable solutions.",
-                      "image": "https://images.unsplash.com/photo-1502767089025-6572583495b9?auto=format&fit=crop&w=800&q=80",
+                      "title": "Han",
+                      "description": "Creative director with 8 years of experience in digital design and brand strategy. Specializes in user-centered design and visual storytelling.",
+                      "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
                       "buttonText": "View Profile"
                     },
                     "children": []
@@ -61,9 +69,9 @@
                   {
                     "type": "Card",
                     "props": {
-                      "title": "Kaung Zarni Maung",
-                      "description": "Project Manager ensuring timely delivery and coordination.",
-                      "image": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80",
+                      "title": "Kaung",
+                      "description": "Full-stack developer passionate about building scalable applications. Expert in modern web technologies and system architecture.",
+                      "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
                       "buttonText": "View Profile"
                     },
                     "children": []
@@ -71,9 +79,9 @@
                   {
                     "type": "Card",
                     "props": {
-                      "title": "Phone Myat Thura Kyaw",
-                      "description": "UX/UI Designer crafting intuitive user experiences.",
-                      "image": "https://images.unsplash.com/photo-1524503033411-c9566986fc8f?auto=format&fit=crop&w=800&q=80",
+                      "title": "Phone",
+                      "description": "Product strategist and UX researcher. Transforms complex problems into intuitive solutions through data-driven insights.",
+                      "image": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80",
                       "buttonText": "View Profile"
                     },
                     "children": []
@@ -85,9 +93,190 @@
         ]
       },
       {
-        "type": "ContactForm",
+        "type": "Section",
         "props": {},
-        "children": []
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Heading",
+                "props": {
+                  "text": "What We Do",
+                  "level": 2
+                },
+                "children": []
+              },
+              {
+                "type": "FeatureList",
+                "props": {
+                  "items": [
+                    "Brand Identity & Visual Design",
+                    "Web & Mobile Application Development",
+                    "User Experience Research & Strategy",
+                    "Digital Marketing & Content Creation",
+                    "Product Design & Prototyping",
+                    "Technical Consulting & Code Review"
+                  ]
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Stats",
+                "props": {
+                  "items": [
+                    {
+                      "label": "Projects Completed",
+                      "value": "87"
+                    },
+                    {
+                      "label": "Happy Clients",
+                      "value": "52"
+                    },
+                    {
+                      "label": "Years Combined Experience",
+                      "value": "20"
+                    },
+                    {
+                      "label": "Awards Won",
+                      "value": "12"
+                    }
+                  ]
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Heading",
+                "props": {
+                  "text": "Our Work",
+                  "level": 2
+                },
+                "children": []
+              },
+              {
+                "type": "Paragraph",
+                "props": {
+                  "text": "A selection of projects that showcase our collaborative approach and diverse skill set."
+                },
+                "children": []
+              },
+              {
+                "type": "Gallery",
+                "props": {
+                  "images": [
+                    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1600&q=80"
+                  ]
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Heading",
+                "props": {
+                  "text": "Frequently Asked Questions",
+                  "level": 2
+                },
+                "children": []
+              },
+              {
+                "type": "FAQ",
+                "props": {
+                  "items": [
+                    {
+                      "question": "How do you work as a team of three?",
+                      "answer": "We combine our individual expertise in design, development, and strategy to deliver comprehensive solutions. Each project benefits from three perspectives and skill sets."
+                    },
+                    {
+                      "question": "What is your typical project timeline?",
+                      "answer": "Project timelines vary based on scope and complexity. Most projects range from 4 to 12 weeks. We provide detailed timelines during the initial consultation."
+                    },
+                    {
+                      "question": "Do you work with remote clients?",
+                      "answer": "Yes, we work with clients worldwide. We use modern collaboration tools to ensure smooth communication regardless of location."
+                    },
+                    {
+                      "question": "What industries do you serve?",
+                      "answer": "We work across various industries including technology, finance, healthcare, education, and e-commerce. Our diverse backgrounds allow us to adapt to different sectors."
+                    }
+                  ]
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Heading",
+                "props": {
+                  "text": "Let's Work Together",
+                  "level": 2
+                },
+                "children": []
+              },
+              {
+                "type": "Paragraph",
+                "props": {
+                  "text": "Have a project in mind? We'd love to hear about it. Send us a message and we'll get back to you within 24 hours."
+                },
+                "children": []
+              },
+              {
+                "type": "ContactForm",
+                "props": {},
+                "children": []
+              }
+            ]
+          }
+        ]
       },
       {
         "type": "Footer",
@@ -181,139 +370,6 @@
           "padding": "20px 0"
         }
       }
-=======
-  "type": "Page",
-  "props": {},
-  "children": [
-    {
-      "type": "Navbar",
-      "props": {
-        "items": [
-          "Home",
-          "About",
-          "Projects",
-          "Contact"
-        ]
-      },
-      "children": []
-    },
-    {
-      "type": "Hero",
-      "props": {
-        "title": "KaungZarniMaung",
-        "subtitle": "Computer Science Student",
-        "buttonText": "View Projects",
-        "buttonAction": "#projects"
-      },
-      "children": []
-    },
-    {
-      "type": "Section",
-      "props": {},
-      "children": [
-        {
-          "type": "Container",
-          "props": {},
-          "children": [
-            {
-              "type": "Heading",
-              "props": {
-                "text": "About Me"
-              },
-              "children": []
-            },
-            {
-              "type": "Paragraph",
-              "props": {
-                "text": "Location: Yenanchaung, Magway, Myanmar"
-              },
-              "children": []
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "Section",
-      "props": {},
-      "children": [
-        {
-          "type": "Container",
-          "props": {},
-          "children": [
-            {
-              "type": "Heading",
-              "props": {
-                "text": "Projects"
-              },
-              "children": []
-            },
-            {
-              "type": "Grid",
-              "props": {},
-              "children": [
-                {
-                  "type": "Card",
-                  "props": {
-                    "title": "Project 1",
-                    "description": "Description of project 1",
-                    "buttonText": "Learn More"
-                  },
-                  "children": []
-                },
-                {
-                  "type": "Card",
-                  "props": {
-                    "title": "Project 2",
-                    "description": "Description of project 2",
-                    "buttonText": "Learn More"
-                  },
-                  "children": []
-                },
-                {
-                  "type": "Card",
-                  "props": {
-                    "title": "Project 3",
-                    "description": "Description of project 3",
-                    "buttonText": "Learn More"
-                  },
-                  "children": []
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "Section",
-      "props": {},
-      "children": [
-        {
-          "type": "Container",
-          "props": {},
-          "children": [
-            {
-              "type": "Heading",
-              "props": {
-                "text": "Contact"
-              },
-              "children": []
-            },
-            {
-              "type": "ContactForm",
-              "props": {},
-              "children": []
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "Footer",
-      "props": {},
-      "children": []
->>>>>>> Stashed changes
     }
   }
 }

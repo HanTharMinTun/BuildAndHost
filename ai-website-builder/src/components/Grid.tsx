@@ -34,7 +34,7 @@ return (
 
 	<div
 
-		className={`grid grid-cols-1 ${columnClasses[columns] ?? columnClasses[3]} ${gap} items-start auto-rows-fr`}
+		className={`grid grid-cols-1 ${columnClasses[columns] ?? columnClasses[3]} ${gap}`}
 
 		style={style}
 

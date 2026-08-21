@@ -3,7 +3,7 @@ import { parseAnimations, mergeStyle } from "../renderer/utils";
 interface Props {
   title: string;
   description?: string;
-  image?: string;
+  image?: string | { src: string; alt?: string };
   buttonText?: string;
   color?: string;
   size?: string;
@@ -30,25 +30,28 @@ export default function Card({
   if (align) extra.textAlign = align as any;
   const merged = mergeStyle(style, { ...extra, ...(animStyle as any) });
 
+  // Handle both string and object image props
+  const imageSrc = typeof image === 'string' ? image : image?.src;
+  const imageAlt = typeof image === 'object' && image ? image.alt : '';
+
   return (
     <div
-      className="component-card w-full h-full flex flex-col rounded-[1.75rem] border border-slate-200/70 bg-white/90 p-6 shadow-[0_20px_70px_-30px_rgba(15,23,42,0.35)] backdrop-blur"
+      className="component-card rounded-[1.75rem] border border-slate-200/70 bg-white/90 p-6 shadow-[0_20px_70px_-30px_rgba(15,23,42,0.35)] backdrop-blur"
       style={merged}
     >
 
-      {image && (
+      {imageSrc && (
         <img
-          src={image}
-          style={{ height: "12rem", maxWidth: "100%", objectFit: "cover" }}
-          className="mb-4 h-48 w-full rounded-[1.25rem] object-cover shadow-sm"
+          src={imageSrc}
+          alt={imageAlt || title}
+          className="mb-4 w-full rounded-[1.25rem] object-cover shadow-sm aspect-[3/4]"
+          style={{ maxWidth: '300px', margin: '0 auto' }}
         />
       )}
 
-      <div className="flex-1">
-        <h3 className="mb-3 text-2xl font-semibold tracking-tight text-current">{title}</h3>
+      <h3 className="mb-3 text-2xl font-semibold tracking-tight text-current">{title}</h3>
 
-        {description && <p className="mb-4 text-base leading-7 text-current">{description}</p>}
-      </div>
+      {description && <p className="mb-4 text-base leading-7 text-current">{description}</p>}
 
       {buttonText && (
         <div className="mt-4">

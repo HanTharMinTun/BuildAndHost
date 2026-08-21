@@ -401,6 +401,12 @@ function EditorNode({
     />
   ));
 
+  // Skip Grid wrapper in editor to prevent nested layout issues
+  // Render Grid children directly without the grid container
+  if (node.type === "Grid") {
+    return <>{children}</>;
+  }
+
   if (!Component) return null;
 
   return (
