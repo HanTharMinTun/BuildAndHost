@@ -1,4 +1,5 @@
 {
+<<<<<<< Updated upstream
   "website": {
     "type": "Page",
     "props": {},
@@ -180,6 +181,139 @@
           "padding": "20px 0"
         }
       }
+=======
+  "type": "Page",
+  "props": {},
+  "children": [
+    {
+      "type": "Navbar",
+      "props": {
+        "items": [
+          "Home",
+          "About",
+          "Projects",
+          "Contact"
+        ]
+      },
+      "children": []
+    },
+    {
+      "type": "Hero",
+      "props": {
+        "title": "KaungZarniMaung",
+        "subtitle": "Computer Science Student",
+        "buttonText": "View Projects",
+        "buttonAction": "#projects"
+      },
+      "children": []
+    },
+    {
+      "type": "Section",
+      "props": {},
+      "children": [
+        {
+          "type": "Container",
+          "props": {},
+          "children": [
+            {
+              "type": "Heading",
+              "props": {
+                "text": "About Me"
+              },
+              "children": []
+            },
+            {
+              "type": "Paragraph",
+              "props": {
+                "text": "Location: Yenanchaung, Magway, Myanmar"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Section",
+      "props": {},
+      "children": [
+        {
+          "type": "Container",
+          "props": {},
+          "children": [
+            {
+              "type": "Heading",
+              "props": {
+                "text": "Projects"
+              },
+              "children": []
+            },
+            {
+              "type": "Grid",
+              "props": {},
+              "children": [
+                {
+                  "type": "Card",
+                  "props": {
+                    "title": "Project 1",
+                    "description": "Description of project 1",
+                    "buttonText": "Learn More"
+                  },
+                  "children": []
+                },
+                {
+                  "type": "Card",
+                  "props": {
+                    "title": "Project 2",
+                    "description": "Description of project 2",
+                    "buttonText": "Learn More"
+                  },
+                  "children": []
+                },
+                {
+                  "type": "Card",
+                  "props": {
+                    "title": "Project 3",
+                    "description": "Description of project 3",
+                    "buttonText": "Learn More"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Section",
+      "props": {},
+      "children": [
+        {
+          "type": "Container",
+          "props": {},
+          "children": [
+            {
+              "type": "Heading",
+              "props": {
+                "text": "Contact"
+              },
+              "children": []
+            },
+            {
+              "type": "ContactForm",
+              "props": {},
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Footer",
+      "props": {},
+      "children": []
+>>>>>>> Stashed changes
     }
   }
 }
