@@ -1,11 +1,5 @@
 import json
-from groq import Groq
-
-
-
-client = Groq(
-    api_key="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"
-)
+from api_client import create_completion
 
 
 
@@ -46,18 +40,17 @@ Only add layout information.
 
 
 def create_responsive_layout(website_json):
-    completion = client.chat.completions.create(
-        model="qwen/qwen3.6-27b",
+    completion = create_completion(
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": json.dumps(website_json)},
         ],
         temperature=0.6,
-        max_completion_tokens=2048,
-        top_p=0.95,
-        reasoning_effort="default",
+        max_tokens=2048,
         response_format={"type": "json_object"},
         stream=True,
+        top_p=0.95,
+        reasoning_effort="default",
         stop=None,
     )
 

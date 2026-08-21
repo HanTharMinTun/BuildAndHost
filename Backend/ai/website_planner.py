@@ -1,10 +1,5 @@
 import json
-from groq import Groq
-
-
-client = Groq(
-    api_key="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"
-)
+from api_client import create_completion
 
 
 
@@ -153,15 +148,14 @@ def create_layout(user_prompt, file_urls=None, file_texts=None):
                 "content": f"Extracted text from {url}:\n{snippet}"
             })
 
-    completion = client.chat.completions.create(
-        model="qwen/qwen3.6-27b",
+    completion = create_completion(
         messages=messages,
         temperature=0.6,
-        max_completion_tokens=2048,
-        top_p=0.95,
-        reasoning_effort="default",
+        max_tokens=2048,
         response_format={"type": "json_object"},
         stream=True,
+        top_p=0.95,
+        reasoning_effort="default",
         stop=None,
     )
 
@@ -248,3 +242,9 @@ def create_layout(user_prompt, file_urls=None, file_texts=None):
     print("📁 File: generated_website.json")
 
     return data
+
+
+def create_design():
+    #check out how design rules should defind
+    #plan all of the possible rules
+    print("")

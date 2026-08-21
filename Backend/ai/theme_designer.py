@@ -2,7 +2,7 @@
 
 import json
 import os
-from groq import Groq
+from api_client import create_completion
 
 
 THEME_SELECTORS = [
@@ -81,16 +81,6 @@ Example output:
 
 
 
-def _client() -> Groq:
-    api_key = "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"
-
-    if api_key:
-        return Groq(api_key=api_key)
-
-    # Keep the new pass compatible with the existing planner configuration.
-    # New deployments should provide GROQ_API_KEY instead of embedding a key.
-    from website_planner import client
-    return client
 
 
 def _clean_theme(value: object) -> dict:
@@ -147,19 +137,17 @@ def _clean_theme(value: object) -> dict:
 
 def create_theme(user_prompt: str, website_tree: dict) -> dict:
     # Use streaming API to be compatible with the newer model usage.
-    client = _client()
-    completion = client.chat.completions.create(
-        model="qwen/qwen3.6-27b",
+    completion = create_completion(
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": json.dumps({"brief": user_prompt, "website": website_tree})},
         ],
         temperature=0.6,
-        max_completion_tokens=2048,
-        top_p=0.95,
-        reasoning_effort="default",
+        max_tokens=2048,
         response_format={"type": "json_object"},
         stream=True,
+        top_p=0.95,
+        reasoning_effort="default",
         stop=None,
     )
 
