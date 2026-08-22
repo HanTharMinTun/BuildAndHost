@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Builder API Tester</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #444;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        .endpoint {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        .endpoint h3 {
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .endpoint-method {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .method-post { background: #28a745; color: white; }
+        .method-get { background: #007bff; color: white; }
+        .method-patch { background: #ffc107; color: black; }
+        .method-delete { background: #dc3545; color: white; }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        textarea {
+            min-height: 100px;
+            font-family: monospace;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .response {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .success { border-left: 4px solid #28a745; }
+        .error { border-left: 4px solid #dc3545; }
+        .info-box {
+            padding: 10px;
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .token-display {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌐 Website Builder API Tester</h1>
+        
+        <div class="info-box">
+            <strong>Base URL:</strong> <input type="text" id="baseUrl" value="http://localhost:8000" style="width: 300px;">
+            <br><br>
+            <strong>Token Status:</strong> <span id="tokenStatus">No token stored</span>
+            <button onclick="clearToken()">Clear Token</button>
+        </div>
+
+        <!-- Authentication Section -->
+        <div class="section">
+            <h2>🔐 Authentication</h2>
+            
+            <div class="endpoint">
+                <h3><span class="endpoint-method method-post">POST</span> /api/auth/register</h3>
+                <input type="email" id="regEmail" placeholder="Email">
+                <input type="text" id="regUsername" placeholder="Username">
+                <input type="password" id="regPassword" placeholder="Password">
+                <input type="text" id="regFullName" placeholder="Full Name (optional)">
+                <button onclick="register()">Register</button>
+                <div id="regResponse" class="response" style="display:none;"></div>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="endpoint-method method-post">POST</span> /api/auth/login</h3>
+                <input type="email" id="loginEmail" placeholder="Email">
+                <input type="password" id="loginPassword" placeholder="Password">
+                <button onclick="login()">Login</button>
+                <div id="loginResponse" class="response" style="display:none;"></div>
+            </div>
+        </div>
+
+        <!-- Projects Section -->
+        <div class="section">
+            <h2>📁 Projects</h2>
+            
+            <div class="endpoint">
+                <h3><span class="endpoint-method method-post">POST</span> /api/projects</h3>
+                <input type="text" id="projName" placeholder="Project Name">
+                <input type="text" id="projDesc" placeholder="Description (optional)">
+                <button onclick="createProject()">Create Project</button>
+                <div id="createProjResponse" class="response" style="display:none;"></div>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="endpoint-method method-get">GET</span> /api/projects</h3>
+                <button onclick="getProjects()">Get All Projects</button>
+                <div id="getProjsResponse" class="response" style="display:none;"></div>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="endpoint-method method-get">GET</span> /api/projects/{project_id}</h3>
+                <input type="text" id="getProjId" placeholder="Project ID (UUID)">
+                <button onclick="getProject()">Get Project</button>
+                <div id="getProjResponse" class="response" style="display:none;"></div>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="endpoint-method method-patch">PATCH</span> /api/projects/{project_id}</h3>
+                <input type="text" id="updateProjId" placeholder="Project ID (UUID)">
+                <input type="text" id="updateProjName" placeholder="New Name (optional)">
+                <input type="text" id="updateProjDesc" placeholder="New Description (optional)">
+                <button onclick="updateProject()">Update Project</button>
+                <div id="updateProjResponse" class="response" style="display:none;"></div>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="endpoint-method method-delete">DELETE</span> /api/projects/{project_id}</h3>
+                <input type="text" id="deleteProjId" placeholder="Project ID (UUID)">
+                <button onclick="deleteProject()">Delete Project</button>
+                <div id="deleteProjResponse" class="response" style="display:none;"></div>
+            </div>
+        </div>
+
+        <!-- Websites Section -->
+        <div class="section">
+            <h2>🌍 Generated Websites</h2>
+            
+            <div class="endpoint">
+                <h3><span class="endpoint-method method-post">POST</span> /api/websites</h3>
+                <input type="text" id="websiteProjId" placeholder="Project ID (UUID)">
+                <input type="text" id="websitePromptId" placeholder="Prompt ID (UUID, optional)">
+                <input type="number" id="websiteVersion" placeholder="Version (e.g., 1)" value="1">
+                <textarea id="websiteJson" placeholder='Website JSON (e.g., {"pages": []})'>{}</textarea>
+                <button onclick="saveWebsite()">Save Website</button>
+                <div id="saveWebResponse" class="response" style="display:none;"></div>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="endpoint-method method-get">GET</span> /api/websites/project/{project_id}</h3>
+                <input type="text" id="getWebsProjId" placeholder="Project ID (UUID)">
+                <button onclick="getProjectWebsites()">Get Project Websites</button>
+                <div id="getWebsResponse" class="response" style="display:none;"></div>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="endpoint-method method-get">GET</span> /api/websites/{website_id}</h3>
+                <input type="text" id="getWebId" placeholder="Website ID (UUID)">
+                <button onclick="getWebsite()">Get Website</button>
+                <div id="getWebResponse" class="response" style="display:none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL_KEY = 'apiBaseUrl';
+        const TOKEN_KEY = 'authToken';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedUrl = localStorage.getItem(BASE_URL_KEY);
+            if (savedUrl) {
+                document.getElementById('baseUrl').value = savedUrl;
+            }
+            updateTokenStatus();
+        });
+
+        // Save base URL on change
+        document.getElementById('baseUrl').addEventListener('change', (e) => {
+            localStorage.setItem(BASE_URL_KEY, e.target.value);
+        });
+
+        function getBaseUrl() {
+            return document.getElementById('baseUrl').value;
+        }
+
+        function getToken() {
+            return localStorage.getItem(TOKEN_KEY);
+        }
+
+        function saveToken(token) {
+            localStorage.setItem(TOKEN_KEY, token);
+            updateTokenStatus();
+        }
+
+        function clearToken() {
+            localStorage.removeItem(TOKEN_KEY);
+            updateTokenStatus();
+        }
+
+        function updateTokenStatus() {
+            const token = getToken();
+            const statusEl = document.getElementById('tokenStatus');
+            if (token) {
+                statusEl.textContent = `Token: ${token.substring(0, 20)}...`;
+                statusEl.style.color = 'green';
+            } else {
+                statusEl.textContent = 'No token stored';
+                statusEl.style.color = 'red';
+            }
+        }
+
+        async function apiRequest(method, endpoint, body = null, requiresAuth = false) {
+            const url = `${getBaseUrl()}${endpoint}`;
+            const headers = {
+                'Content-Type': 'application/json',
+            };
+
+            if (requiresAuth) {
+                const token = getToken();
+                if (!token) {
+                    return { error: 'No authentication token. Please login first.' };
+                }
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            try {
+                const options = {
+                    method,
+                    headers,
+                };
+
+                if (body) {
+                    options.body = JSON.stringify(body);
+                }
+
+                const response = await fetch(url, options);
+                const data = await response.json().catch(() => null);
+
+                return {
+                    status: response.status,
+                    ok: response.ok,
+                    data
+                };
+            } catch (error) {
+                return { error: error.message };
+            }
+        }
+
+        function displayResponse(elementId, response) {
+            const el = document.getElementById(elementId);
+            el.style.display = 'block';
+            
+            if (response.error) {
+                el.className = 'response error';
+                el.textContent = `Error: ${response.error}`;
+            } else {
+                el.className = response.ok ? 'response success' : 'response error';
+                el.textContent = JSON.stringify(response, null, 2);
+            }
+        }
+
+        // Authentication
+        async function register() {
+            const body = {
+                email: document.getElementById('regEmail').value,
+                username: document.getElementById('regUsername').value,
+                password: document.getElementById('regPassword').value,
+            };
+            
+            const fullName = document.getElementById('regFullName').value;
+            if (fullName) body.full_name = fullName;
+
+            const response = await apiRequest('POST', '/api/auth/register', body);
+            displayResponse('regResponse', response);
+        }
+
+        async function login() {
+            const body = {
+                email: document.getElementById('loginEmail').value,
+                password: document.getElementById('loginPassword').value,
+            };
+
+            const response = await apiRequest('POST', '/api/auth/login', body);
+            
+            if (response.ok && response.data.access_token) {
+                saveToken(response.data.access_token);
+            }
+            
+            displayResponse('loginResponse', response);
+        }
+
+        // Projects
+        async function createProject() {
+            const body = {
+                name: document.getElementById('projName').value,
+            };
+            
+            const desc = document.getElementById('projDesc').value;
+            if (desc) body.description = desc;
+
+            const response = await apiRequest('POST', '/api/projects', body, true);
+            displayResponse('createProjResponse', response);
+        }
+
+        async function getProjects() {
+            const response = await apiRequest('GET', '/api/projects', null, true);
+            displayResponse('getProjsResponse', response);
+        }
+
+        async function getProject() {
+            const id = document.getElementById('getProjId').value;
+            const response = await apiRequest('GET', `/api/projects/${id}`, null, true);
+            displayResponse('getProjResponse', response);
+        }
+
+        async function updateProject() {
+            const id = document.getElementById('updateProjId').value;
+            const body = {};
+            
+            const name = document.getElementById('updateProjName').value;
+            const desc = document.getElementById('updateProjDesc').value;
+            
+            if (name) body.name = name;
+            if (desc) body.description = desc;
+
+            const response = await apiRequest('PATCH', `/api/projects/${id}`, body, true);
+            displayResponse('updateProjResponse', response);
+        }
+
+        async function deleteProject() {
+            const id = document.getElementById('deleteProjId').value;
+            const response = await apiRequest('DELETE', `/api/projects/${id}`, null, true);
+            displayResponse('deleteProjResponse', response);
+        }
+
+        // Websites
+        async function saveWebsite() {
+            const body = {
+                project_id: document.getElementById('websiteProjId').value,
+                version: parseInt(document.getElementById('websiteVersion').value) || 1,
+            };
+            
+            const promptId = document.getElementById('websitePromptId').value;
+            if (promptId) body.prompt_id = promptId;
+
+            try {
+                body.website_json = JSON.parse(document.getElementById('websiteJson').value);
+            } catch (e) {
+                displayResponse('saveWebResponse', { error: 'Invalid JSON format' });
+                return;
+            }
+
+            const response = await apiRequest('POST', '/api/websites', body, true);
+            displayResponse('saveWebResponse', response);
+        }
+
+        async function getProjectWebsites() {
+            const id = document.getElementById('getWebsProjId').value;
+            const response = await apiRequest('GET', `/api/websites/project/${id}`, null, true);
+            displayResponse('getWebsResponse', response);
+        }
+
+        async function getWebsite() {
+            const id = document.getElementById('getWebId').value;
+            const response = await apiRequest('GET', `/api/websites/${id}`, null, true);
+            displayResponse('getWebResponse', response);
+        }
+    </script>
+</body>
+</html>

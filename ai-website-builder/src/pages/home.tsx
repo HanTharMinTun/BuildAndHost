@@ -98,8 +98,16 @@
 // }
 
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../lib/auth';
+import { api } from '../lib/api';
+import type { Project, GeneratedWebsite } from '../lib/types';
 
 export default function Home() {
+    const navigate = useNavigate();
+    const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth();
+    const [currentProject, setCurrentProject] = useState<Project | null>(null);
+    
     const [messages, setMessages] = useState<{ role: "user" | "assistant"; text: string }[]>([
         { role: "assistant", text: "Hello! Describe the website you want — I can build a portfolio, business site, blog, or dashboard. Attach files if you have logos or images." },
     ]);
@@ -111,6 +119,31 @@ export default function Home() {
     const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
     const containerRef = useRef<HTMLDivElement | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+    // Auth check
+    useEffect(() => {
+        if (!authLoading && !isAuthenticated) {
+            navigate('/login');
+        }
+    }, [authLoading, isAuthenticated, navigate]);
+
+    // Create or get project on mount
+    useEffect(() => {
+        if (isAuthenticated && !currentProject) {
+            createDefaultProject();
+        }
+    }, [isAuthenticated, currentProject]);
+
+    async function createDefaultProject() {
+        const response = await api.post<Project>('/api/projects', {
+            name: 'My Website',
+            description: 'Generated with AI Website Builder',
+        });
+
+        if (response.data) {
+            setCurrentProject(response.data);
+        }
+    }
 
     function pushMessage(role: "user" | "assistant", text: string) {
         setMessages((m) => [...m, { role, text }]);
@@ -127,6 +160,11 @@ export default function Home() {
 
         // Prepare the prompt and files for the backend
         try {
+            // Ensure we have a project
+            if (!currentProject) {
+                await createDefaultProject();
+            }
+
             const form = new FormData();
             form.append("prompt", text);
             form.append("type", type);
@@ -137,6 +175,19 @@ export default function Home() {
             const resp = await fetch("/api/post_prompt", { method: "POST", body: form });
             const result = await resp.json();
             if (!resp.ok) throw new Error(result.detail || "Generation failed");
+
+            // Save to backend if we have a project
+            if (currentProject && result.website) {
+                const saveResponse = await api.post<GeneratedWebsite>('/api/websites', {
+                    project_id: currentProject.id,
+                    website_json: result.website,
+                    version: 1,
+                });
+
+                if (saveResponse.data) {
+                    localStorage.setItem('websiteId', saveResponse.data.id);
+                }
+            }
 
             setIsTyping(false);
             pushMessage("assistant", "Got it — your website is ready. Opening the editor...");
@@ -185,24 +236,41 @@ export default function Home() {
                                 <div className="font-bold text-lg">BuildAndHost Assistant</div>
                                 <div className="text-sm opacity-90 flex items-center gap-2">
                                     <span className="inline-block w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                                    Online • Ready to build
+                                    {user ? `Welcome, ${user.username}` : 'Online • Ready to build'}
                                 </div>
                             </div>
                         </div>
-                        <div className="relative">
-                            <select 
-                                value={type} 
-                                onChange={(e) => setType(e.target.value)} 
-                                className="rounded-xl px-4 py-2 bg-white/20 backdrop-blur border border-white/30 text-white font-medium hover:bg-white/30 transition-all cursor-pointer appearance-none pr-10"
-                            >
-                                <option value="portfolio" className="text-gray-900">🎨 Portfolio</option>
-                                <option value="business" className="text-gray-900">💼 Business</option>
-                                <option value="blog" className="text-gray-900">📝 Blog</option>
-                                <option value="dashboard" className="text-gray-900">📊 Dashboard</option>
-                            </select>
-                            <svg className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
+                        <div className="flex items-center gap-3">
+                            <div className="relative">
+                                <select
+                                    value={type}
+                                    onChange={(e) => setType(e.target.value)}
+                                    className="rounded-xl px-4 py-2 bg-white/20 backdrop-blur border border-white/30 text-white font-medium hover:bg-white/30 transition-all cursor-pointer appearance-none pr-10"
+                                >
+                                    <option value="portfolio" className="text-gray-900">🎨 Portfolio</option>
+                                    <option value="business" className="text-gray-900">💼 Business</option>
+                                    <option value="blog" className="text-gray-900">📝 Blog</option>
+                                    <option value="dashboard" className="text-gray-900">📊 Dashboard</option>
+                                </select>
+                                <svg className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                            {user && (
+                                <button
+                                    onClick={() => {
+                                        logout();
+                                        navigate('/login');
+                                    }}
+                                    className="px-4 py-2 bg-white/20 backdrop-blur border border-white/30 rounded-xl text-white font-medium hover:bg-white/30 transition-all flex items-center gap-2"
+                                    title="Logout"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                    </svg>
+                                    Logout
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
