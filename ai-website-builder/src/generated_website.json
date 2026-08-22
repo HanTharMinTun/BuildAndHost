@@ -9,7 +9,8 @@
           "items": [
             "Home",
             "About",
-            "Portfolio",
+            "Projects",
+            "Skills",
             "Contact"
           ]
         },
@@ -18,10 +19,10 @@
       {
         "type": "Hero",
         "props": {
-          "title": "PhoneMyat",
-          "subtitle": "Creative Developer & Designer crafting digital experiences that make an impact",
+          "title": "Creative Professional",
+          "subtitle": "Crafting digital experiences through design and development",
           "buttonText": "View My Work",
-          "buttonAction": "#portfolio",
+          "buttonAction": "#projects",
           "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1600&q=80"
         },
         "children": []
@@ -41,14 +42,6 @@
                 },
                 "children": [
                   {
-                    "type": "Image",
-                    "props": {
-                      "src": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80",
-                      "alt": "Professional workspace with laptop and design tools"
-                    },
-                    "children": []
-                  },
-                  {
                     "type": "Stack",
                     "props": {},
                     "children": [
@@ -63,14 +56,14 @@
                       {
                         "type": "Paragraph",
                         "props": {
-                          "text": "I'm a passionate developer and designer with expertise in creating beautiful, functional digital experiences. With a focus on clean code and user-centered design, I help businesses and individuals bring their ideas to life through innovative web solutions."
+                          "text": "I'm a multidisciplinary designer and developer with a passion for creating meaningful digital experiences. With years of experience in the industry, I've worked with clients ranging from startups to established brands."
                         },
                         "children": []
                       },
                       {
                         "type": "Paragraph",
                         "props": {
-                          "text": "My approach combines technical expertise with creative problem-solving to deliver solutions that not only look great but also perform exceptionally well."
+                          "text": "My approach combines strategic thinking with creative execution, always keeping the end user at the center of every decision."
                         },
                         "children": []
                       },
@@ -83,42 +76,16 @@
                         "children": []
                       }
                     ]
+                  },
+                  {
+                    "type": "Image",
+                    "props": {
+                      "src": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80",
+                      "alt": "Professional workspace with laptop and design materials"
+                    },
+                    "children": []
                   }
                 ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
-              {
-                "type": "Heading",
-                "props": {
-                  "text": "What I Do",
-                  "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "FeatureList",
-                "props": {
-                  "items": [
-                    "Web Development - Building responsive and performant websites using modern technologies",
-                    "UI/UX Design - Creating intuitive interfaces that users love",
-                    "Mobile Development - Developing cross-platform mobile applications",
-                    "Brand Identity - Designing cohesive visual identities for businesses",
-                    "Consultation - Providing technical guidance and strategic planning",
-                    "Maintenance - Ongoing support and optimization for digital products"
-                  ]
-                },
-                "children": []
               }
             ]
           }
@@ -138,19 +105,19 @@
                   "items": [
                     {
                       "label": "Projects Completed",
-                      "value": "50+"
+                      "value": "150+"
                     },
                     {
                       "label": "Happy Clients",
-                      "value": "35+"
+                      "value": "85"
                     },
                     {
                       "label": "Years Experience",
-                      "value": "5"
+                      "value": "8"
                     },
                     {
-                      "label": "Technologies",
-                      "value": "20+"
+                      "label": "Awards Won",
+                      "value": "12"
                     }
                   ]
                 },
@@ -177,72 +144,18 @@
                 "children": []
               },
               {
-                "type": "Grid",
+                "type": "Gallery",
                 "props": {
-                  "columns": 3
+                  "images": [
+                    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1557838923-2985c318be48?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1600&q=80"
+                  ]
                 },
-                "children": [
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "E-Commerce Platform",
-                      "description": "A full-featured online shopping platform with payment integration and inventory management",
-                      "image": "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=800&q=80",
-                      "buttonText": "View Project"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Portfolio Website",
-                      "description": "A modern portfolio site showcasing creative work with smooth animations and responsive design",
-                      "image": "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?auto=format&fit=crop&w=800&q=80",
-                      "buttonText": "View Project"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Mobile Fitness App",
-                      "description": "A cross-platform fitness tracking application with workout plans and progress monitoring",
-                      "image": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=800&q=80",
-                      "buttonText": "View Project"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Real Estate Portal",
-                      "description": "A comprehensive property listing platform with advanced search and virtual tours",
-                      "image": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80",
-                      "buttonText": "View Project"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Restaurant Management System",
-                      "description": "An integrated solution for order management, reservations, and kitchen operations",
-                      "image": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80",
-                      "buttonText": "View Project"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Educational Platform",
-                      "description": "An online learning platform with video courses, quizzes, and progress tracking",
-                      "image": "https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&w=800&q=80",
-                      "buttonText": "View Project"
-                    },
-                    "children": []
-                  }
-                ]
+                "children": []
               }
             ]
           }
@@ -259,20 +172,21 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Project Gallery",
+                  "text": "Skills & Expertise",
                   "level": 2
                 },
                 "children": []
               },
               {
-                "type": "Gallery",
+                "type": "FeatureList",
                 "props": {
-                  "images": [
-                    "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1512486130939-2c4f79935e4f?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=1600&q=80"
+                  "items": [
+                    "User Experience Design",
+                    "Front-end Development",
+                    "Visual Design & Branding",
+                    "Responsive Web Design",
+                    "Prototyping & Wireframing",
+                    "Design Systems"
                   ]
                 },
                 "children": []
@@ -300,7 +214,7 @@
               {
                 "type": "Paragraph",
                 "props": {
-                  "text": "Have a project in mind or want to collaborate? I'd love to hear from you. Let's create something amazing together."
+                  "text": "Interested in working together? I'd love to hear about your project and discuss how we can bring your vision to life."
                 },
                 "children": []
               },
