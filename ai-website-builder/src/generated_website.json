@@ -19,11 +19,11 @@
       {
         "type": "Hero",
         "props": {
-          "title": "Creative Professional",
-          "subtitle": "Crafting digital experiences through design and development",
-          "buttonText": "View My Work",
+          "title": "SiThuPhyo",
+          "subtitle": "Computer Technology Engineer specializing in hardware innovation and embedded systems",
+          "buttonText": "View Projects",
           "buttonAction": "#projects",
-          "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1600&q=80"
+          "image": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1600&q=80"
         },
         "children": []
       },
@@ -36,88 +36,39 @@
             "props": {},
             "children": [
               {
-                "type": "Grid",
+                "type": "Heading",
                 "props": {
-                  "columns": 2
+                  "text": "About Me",
+                  "level": 2
                 },
-                "children": [
-                  {
-                    "type": "Stack",
-                    "props": {},
-                    "children": [
-                      {
-                        "type": "Heading",
-                        "props": {
-                          "text": "About Me",
-                          "level": 2
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "Paragraph",
-                        "props": {
-                          "text": "I'm a multidisciplinary designer and developer with a passion for creating meaningful digital experiences. With years of experience in the industry, I've worked with clients ranging from startups to established brands."
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "Paragraph",
-                        "props": {
-                          "text": "My approach combines strategic thinking with creative execution, always keeping the end user at the center of every decision."
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "Button",
-                        "props": {
-                          "text": "Download Resume",
-                          "link": "#resume"
-                        },
-                        "children": []
-                      }
-                    ]
-                  },
-                  {
-                    "type": "Image",
-                    "props": {
-                      "src": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80",
-                      "alt": "Professional workspace with laptop and design materials"
-                    },
-                    "children": []
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
+                "children": []
+              },
+              {
+                "type": "Paragraph",
+                "props": {
+                  "text": "I am a Computer Technology Engineer with extensive experience in hardware design and embedded systems. My passion lies in creating intelligent solutions that bridge the physical and digital worlds, from smart home automation to access control systems."
+                },
+                "children": []
+              },
               {
                 "type": "Stats",
                 "props": {
                   "items": [
                     {
                       "label": "Projects Completed",
-                      "value": "150+"
-                    },
-                    {
-                      "label": "Happy Clients",
-                      "value": "85"
+                      "value": "25+"
                     },
                     {
                       "label": "Years Experience",
-                      "value": "8"
+                      "value": "5"
                     },
                     {
-                      "label": "Awards Won",
-                      "value": "12"
+                      "label": "Technologies",
+                      "value": "15+"
+                    },
+                    {
+                      "label": "Client Satisfaction",
+                      "value": "100%"
                     }
                   ]
                 },
@@ -144,15 +95,197 @@
                 "children": []
               },
               {
+                "type": "Grid",
+                "props": {
+                  "columns": 3
+                },
+                "children": [
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Smart House Automation System",
+                      "description": "Comprehensive home automation solution with IoT integration, controlling lighting, climate, security, and energy management through a centralized platform.",
+                      "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "Learn More"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "RFID-Based Attendance System",
+                      "description": "Automated attendance tracking system using RFID technology, featuring real-time monitoring, reporting, and integration with existing databases.",
+                      "image": "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "Learn More"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Environmental Monitoring Station",
+                      "description": "Multi-sensor environmental monitoring system tracking temperature, humidity, air quality, and other parameters with data logging and alert capabilities.",
+                      "image": "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "Learn More"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Industrial Control System",
+                      "description": "PLC-based industrial automation system for manufacturing process control with HMI interface and remote monitoring capabilities.",
+                      "image": "https://images.unsplash.com/photo-1565008576549-57569a49371d?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "Learn More"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Security Access Control",
+                      "description": "Integrated security system combining biometric authentication, RFID access control, and surveillance monitoring for commercial buildings.",
+                      "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "Learn More"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Energy Monitoring Dashboard",
+                      "description": "Real-time energy consumption monitoring system with analytics, providing insights for optimization and cost reduction across multiple facilities.",
+                      "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "Learn More"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Heading",
+                "props": {
+                  "text": "Technical Expertise",
+                  "level": 2
+                },
+                "children": []
+              },
+              {
+                "type": "Grid",
+                "props": {
+                  "columns": 2
+                },
+                "children": [
+                  {
+                    "type": "Stack",
+                    "props": {},
+                    "children": [
+                      {
+                        "type": "Heading",
+                        "props": {
+                          "text": "Hardware Skills",
+                          "level": 3
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "FeatureList",
+                        "props": {
+                          "items": [
+                            "Embedded Systems Design",
+                            "Microcontroller Programming (Arduino, ESP32, STM32)",
+                            "PCB Design and Prototyping",
+                            "Sensor Integration and Calibration",
+                            "RFID and NFC Technology",
+                            "IoT Device Development",
+                            "Power Management Systems",
+                            "Circuit Analysis and Troubleshooting"
+                          ]
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Stack",
+                    "props": {},
+                    "children": [
+                      {
+                        "type": "Heading",
+                        "props": {
+                          "text": "Software Skills",
+                          "level": 3
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "FeatureList",
+                        "props": {
+                          "items": [
+                            "C/C++ for Embedded Systems",
+                            "Python for Automation",
+                            "MQTT and IoT Protocols",
+                            "Database Management (MySQL, SQLite)",
+                            "Web-based Control Interfaces",
+                            "Real-time Operating Systems",
+                            "Version Control (Git)",
+                            "System Integration and Testing"
+                          ]
+                        },
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Heading",
+                "props": {
+                  "text": "Project Gallery",
+                  "level": 2
+                },
+                "children": []
+              },
+              {
+                "type": "Paragraph",
+                "props": {
+                  "text": "A visual showcase of my hardware engineering projects and prototypes."
+                },
+                "children": []
+              },
+              {
                 "type": "Gallery",
                 "props": {
                   "images": [
-                    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1557838923-2985c318be48?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1600&q=80"
+                    "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1600&q=80"
                   ]
                 },
                 "children": []
@@ -172,21 +305,31 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Skills & Expertise",
+                  "text": "Frequently Asked Questions",
                   "level": 2
                 },
                 "children": []
               },
               {
-                "type": "FeatureList",
+                "type": "FAQ",
                 "props": {
                   "items": [
-                    "User Experience Design",
-                    "Front-end Development",
-                    "Visual Design & Branding",
-                    "Responsive Web Design",
-                    "Prototyping & Wireframing",
-                    "Design Systems"
+                    {
+                      "question": "What types of projects do you specialize in?",
+                      "answer": "I specialize in embedded systems, IoT solutions, smart home automation, access control systems, and industrial automation projects. My expertise covers the full development cycle from concept to deployment."
+                    },
+                    {
+                      "question": "Can you work with existing systems?",
+                      "answer": "Yes, I can integrate new features into existing systems, upgrade legacy hardware, and ensure compatibility with current infrastructure while improving functionality and performance."
+                    },
+                    {
+                      "question": "What is your typical project timeline?",
+                      "answer": "Project timelines vary based on complexity, but most hardware projects take 4-12 weeks from initial consultation to deployment, including design, prototyping, testing, and final implementation."
+                    },
+                    {
+                      "question": "Do you provide maintenance and support?",
+                      "answer": "Yes, I offer ongoing maintenance, troubleshooting, and technical support for all delivered projects. I can also provide training for your team on system operation and basic maintenance."
+                    }
                   ]
                 },
                 "children": []
@@ -214,7 +357,7 @@
               {
                 "type": "Paragraph",
                 "props": {
-                  "text": "Interested in working together? I'd love to hear about your project and discuss how we can bring your vision to life."
+                  "text": "Interested in collaborating on a hardware project? Let's discuss how I can help bring your ideas to life."
                 },
                 "children": []
               },
