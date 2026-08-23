@@ -1,218 +1,43 @@
-// import { useState, useRef } from "react";
-
-// export default function Home() {
-//     const [messages, setMessages] = useState<{ role: "user" | "assistant"; text: string }[]>([
-//         { role: "assistant", text: "Hello! Describe the website you want — I can build a portfolio, business site, blog, or dashboard. Attach files if you have logos or images." },
-//     ]);
-//     const [input, setInput] = useState("");
-//     const [files, setFiles] = useState<FileList | null>(null);
-//     const [type, setType] = useState("portfolio");
-//     const [loading, setLoading] = useState(false);
-//     const containerRef = useRef<HTMLDivElement | null>(null);
-
-//     function pushMessage(role: "user" | "assistant", text: string) {
-//         setMessages((m) => [...m, { role, text }]);
-//         setTimeout(() => containerRef.current?.scrollTo({ top: containerRef.current.scrollHeight, behavior: "smooth" }), 50);
-//     }
-
-//     async function handleSend() {
-//         const text = input.trim();
-//         if (!text) return;
-//         pushMessage("user", text);
-//         setInput("");
-//         setLoading(true);
-
-//         // Prepare the prompt and files for the backend
-//         try {
-//             const form = new FormData();
-//             form.append("prompt", text);
-//             form.append("type", type);
-//             if (files) {
-//                 for (let i = 0; i < files.length; i++) form.append("files", files.item(i) as File);
-//             }
-
-//             const resp = await fetch("http://127.0.0.1:8000/post_prompt", { method: "POST", body: form });
-//             const result = await resp.json();
-//             if (!resp.ok) throw new Error(result.detail || "Generation failed");
-
-//             pushMessage("assistant", "Got it — your website is ready. Opening the editor...");
-//             // store generated website/theme and navigate to editor
-//             localStorage.setItem("website", JSON.stringify(result.website));
-//             localStorage.setItem("websiteTheme", JSON.stringify(result.theme));
-//             if (result.uploads) localStorage.setItem("uploadedFiles", JSON.stringify(result.uploads));
-//             window.location.href = "/editor";
-//         } catch (err: any) {
-//             pushMessage("assistant", `Sorry, failed to generate: ${err?.message ?? String(err)}`);
-//         } finally {
-//             setLoading(false);
-//         }
-//     }
-
-//     return (
-//         <div className="chat-root min-h-screen flex items-center justify-center bg-slate-50 p-6">
-//             <div className="chat-window w-full max-w-3xl bg-white rounded-2xl shadow-lg overflow-hidden">
-//                 <div className="chat-header bg-gradient-to-r from-sky-600 to-blue-600 text-white px-6 py-4 flex items-center justify-between">
-//                     <div className="flex items-center gap-3">
-//                         <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center font-bold">AI</div>
-//                         <div>
-//                             <div className="font-semibold">BuildAndHost Assistant</div>
-//                             <div className="text-sm opacity-80">Describe your website and I’ll generate it for you</div>
-//                         </div>
-//                     </div>
-//                     <div>
-//                         <select value={type} onChange={(e) => setType(e.target.value)} className="rounded px-2 py-1">
-//                             <option value="portfolio">Portfolio</option>
-//                             <option value="business">Business</option>
-//                             <option value="blog">Blog</option>
-//                             <option value="dashboard">Dashboard</option>
-//                         </select>
-//                     </div>
-//                 </div>
-
-//                 <div ref={containerRef} className="chat-body p-6 h-[60vh] overflow-auto bg-gradient-to-b from-white to-slate-50">
-//                     {messages.map((m, i) => (
-//                         <div key={i} className={`mb-4 flex ${m.role === "assistant" ? "justify-start" : "justify-end"}`}>
-//                             <div className={`max-w-[80%] px-4 py-3 rounded-lg ${m.role === "assistant" ? "bg-slate-100 text-slate-900" : "bg-sky-600 text-white"}`}>
-//                                 {m.text}
-//                             </div>
-//                         </div>
-//                     ))}
-//                 </div>
-
-//                 <div className="chat-input p-4 border-t bg-white flex items-center gap-3">
-//                     <input type="file" multiple onChange={(e) => setFiles(e.target.files)} />
-//                     <input
-//                         value={input}
-//                         onChange={(e) => setInput(e.target.value)}
-//                         onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
-//                         placeholder="Tell me what to build (e.g. a photography portfolio with a hero, gallery, and contact form)"
-//                         className="flex-1 px-4 py-3 rounded-lg border"
-//                     />
-//                     <button onClick={handleSend} disabled={loading} className="bg-sky-600 text-white px-4 py-2 rounded-lg">
-//                         {loading ? "Generating..." : "Send"}
-//                     </button>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// }
-
-import { useState, useRef, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
-import { api } from '../lib/api';
-import type { Project, GeneratedWebsite } from '../lib/types';
 
 export default function Home() {
+    const { user, isAuthenticated, logout } = useAuth();
     const navigate = useNavigate();
-    const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth();
-    const [currentProject, setCurrentProject] = useState<Project | null>(null);
-    
-    const [messages, setMessages] = useState<{ role: "user" | "assistant"; text: string }[]>([
-        { role: "assistant", text: "Hello! Describe the website you want — I can build a portfolio, business site, blog, or dashboard. Attach files if you have logos or images." },
-    ]);
-    const [input, setInput] = useState("");
-    const [files, setFiles] = useState<FileList | null>(null);
-    const [type, setType] = useState("portfolio");
-    const [loading, setLoading] = useState(false);
-    const [isTyping, setIsTyping] = useState(false);
-    const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
-    const containerRef = useRef<HTMLDivElement | null>(null);
-    const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-    // Auth check
-    useEffect(() => {
-        if (!authLoading && !isAuthenticated) {
-            navigate('/login');
-        }
-    }, [authLoading, isAuthenticated, navigate]);
-
-    // Create or get project on mount
-    useEffect(() => {
-        if (isAuthenticated && !currentProject) {
-            createDefaultProject();
-        }
-    }, [isAuthenticated, currentProject]);
-
-    async function createDefaultProject() {
-        const response = await api.post<Project>('/api/projects', {
-            name: 'My Website',
-            description: 'Generated with AI Website Builder',
-        });
-
-        if (response.data) {
-            setCurrentProject(response.data);
-        }
-    }
-
-    function pushMessage(role: "user" | "assistant", text: string) {
-        setMessages((m) => [...m, { role, text }]);
-        setTimeout(() => containerRef.current?.scrollTo({ top: containerRef.current.scrollHeight, behavior: "smooth" }), 50);
-    }
-
-    async function handleSend() {
-        const text = input.trim();
-        if (!text) return;
-        pushMessage("user", text);
-        setInput("");
-        setLoading(true);
-        setIsTyping(true);
-
-        // Prepare the prompt and files for the backend
-        try {
-            // Ensure we have a project
-            if (!currentProject) {
-                await createDefaultProject();
-            }
-
-            const form = new FormData();
-            form.append("prompt", text);
-            form.append("type", type);
-            if (files) {
-                for (let i = 0; i < files.length; i++) form.append("files", files.item(i) as File);
-            }
-
-            const resp = await fetch("/api/ai/post_prompt", { method: "POST", body: form });
-            const result = await resp.json();
-            if (!resp.ok) throw new Error(result.detail || "Generation failed");
-
-            // Save to backend if we have a project
-            if (currentProject && result.website) {
-                const saveResponse = await api.post<GeneratedWebsite>('/api/websites', {
-                    project_id: currentProject.id,
-                    website_json: result.website,
-                    version: 1,
-                });
-
-                if (saveResponse.data) {
-                    localStorage.setItem('websiteId', saveResponse.data.id);
-                }
-            }
-
-            setIsTyping(false);
-            pushMessage("assistant", "Got it — your website is ready. Opening the editor...");
-            // store generated website/theme and navigate to editor
-            localStorage.setItem("website", JSON.stringify(result.website));
-            localStorage.setItem("websiteTheme", JSON.stringify(result.theme));
-            if (result.uploads) localStorage.setItem("uploadedFiles", JSON.stringify(result.uploads));
-            window.location.href = "/editor";
-        } catch (err: any) {
-            setIsTyping(false);
-            pushMessage("assistant", `Sorry, failed to generate: ${err?.message ?? String(err)}`);
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFiles(e.target.files);
-        if (e.target.files) {
-            setSelectedFiles(Array.from(e.target.files).map(f => f.name));
-        }
-    };
+    const features = [
+        {
+            icon: '🤖',
+            title: 'AI Chat',
+            description: 'Describe your website and let AI build it for you',
+            link: '/chat',
+            gradient: 'from-blue-500 to-cyan-500',
+        },
+        {
+            icon: '✏️',
+            title: 'Visual Editor',
+            description: 'Customize and edit your website visually',
+            link: '/editor',
+            gradient: 'from-purple-500 to-pink-500',
+        },
+        {
+            icon: '🌐',
+            title: 'Generated Websites',
+            description: 'View and manage all your generated websites',
+            link: '/websites',
+            gradient: 'from-green-500 to-teal-500',
+        },
+        {
+            icon: '🚀',
+            title: 'Deploy',
+            description: 'Configure domain and deploy your website',
+            link: '/deploy',
+            gradient: 'from-orange-500 to-red-500',
+        },
+    ];
 
     return (
-        <div className="chat-root min-h-screen flex items-center justify-center p-4 sm:p-6 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
             {/* Animated background elements */}
             <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute -top-40 -left-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
@@ -220,191 +45,146 @@ export default function Home() {
                 <div className="absolute top-1/2 left-1/2 w-60 h-60 bg-pink-500/10 rounded-full blur-3xl"></div>
             </div>
 
-            <div className="chat-window w-full max-w-4xl bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden relative border border-white/20">
-                {/* Header */}
-                <div className="chat-header bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white px-6 py-5 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12"></div>
-                    <div className="flex items-center justify-between relative">
-                        <div className="flex items-center gap-4">
-                            <div className="relative">
-                                <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center font-bold text-xl border border-white/30 shadow-lg">
-                                    AI
-                                </div>
-                                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white animate-pulse"></div>
-                            </div>
-                            <div>
-                                <div className="font-bold text-lg">BuildAndHost Assistant</div>
-                                <div className="text-sm opacity-90 flex items-center gap-2">
-                                    <span className="inline-block w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                                    {user ? `Welcome, ${user.username}` : 'Online • Ready to build'}
-                                </div>
-                            </div>
-                        </div>
+            {/* Navigation Bar */}
+            <nav className="relative z-10 bg-white/10 backdrop-blur-md border-b border-white/10">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-between items-center h-16">
                         <div className="flex items-center gap-3">
-                            <div className="relative">
-                                <select
-                                    value={type}
-                                    onChange={(e) => setType(e.target.value)}
-                                    className="rounded-xl px-4 py-2 bg-white/20 backdrop-blur border border-white/30 text-white font-medium hover:bg-white/30 transition-all cursor-pointer appearance-none pr-10"
-                                >
-                                    <option value="portfolio" className="text-gray-900">🎨 Portfolio</option>
-                                    <option value="business" className="text-gray-900">💼 Business</option>
-                                    <option value="blog" className="text-gray-900">📝 Blog</option>
-                                    <option value="dashboard" className="text-gray-900">📊 Dashboard</option>
-                                </select>
-                                <svg className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                </svg>
+                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-white shadow-lg">
+                                AI
                             </div>
-                            {user && (
-                                <button
-                                    onClick={() => {
-                                        logout();
-                                        navigate('/login');
-                                    }}
-                                    className="px-4 py-2 bg-white/20 backdrop-blur border border-white/30 rounded-xl text-white font-medium hover:bg-white/30 transition-all flex items-center gap-2"
-                                    title="Logout"
-                                >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                    </svg>
-                                    Logout
-                                </button>
-                            )}
+                            <span className="text-xl font-bold text-white">BuildAndHost</span>
                         </div>
-                    </div>
-                </div>
-
-                {/* Chat Body */}
-                <div ref={containerRef} className="chat-body p-6 h-[60vh] overflow-auto bg-gradient-to-b from-gray-50 to-white">
-                    <div className="space-y-4">
-                        {messages.map((m, i) => (
-                            <div key={i} className={`flex ${m.role === "assistant" ? "justify-start" : "justify-end"} animate-slide-in`}>
-                                {m.role === "assistant" && (
-                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold mr-2 mt-1 shadow-md">
-                                        AI
-                                    </div>
-                                )}
-                                <div className={`max-w-[75%] px-5 py-3.5 rounded-2xl shadow-md transition-all hover:shadow-lg ${
-                                    m.role === "assistant" 
-                                        ? "bg-white border border-gray-200 text-gray-800 rounded-tl-sm" 
-                                        : "bg-gradient-to-br from-indigo-600 to-purple-600 text-white rounded-tr-sm"
-                                }`}>
-                                    <p className="leading-relaxed">{m.text}</p>
-                                </div>
-                            </div>
-                        ))}
-                        
-                        {isTyping && (
-                            <div className="flex justify-start">
-                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold mr-2 mt-1 shadow-md">
-                                    AI
-                                </div>
-                                <div className="bg-white border border-gray-200 rounded-2xl rounded-tl-sm px-5 py-4 shadow-md">
-                                    <div className="flex space-x-2">
-                                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
-                                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* File Preview */}
-                {selectedFiles.length > 0 && (
-                    <div className="px-6 py-2 bg-gray-50 border-t border-gray-100">
-                        <div className="flex flex-wrap gap-2">
-                            {selectedFiles.map((fileName, index) => (
-                                <span key={index} className="inline-flex items-center gap-1 px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-xs font-medium">
-                                    📎 {fileName}
-                                    <button 
-                                        onClick={() => {
-                                            const newFiles = Array.from(files || []).filter((_, i) => i !== index);
-                                            setFiles(newFiles.length > 0 ? newFiles as unknown as FileList : null);
-                                            setSelectedFiles(selectedFiles.filter((_, i) => i !== index));
-                                        }}
-                                        className="ml-1 hover:text-red-500"
-                                    >
-                                        ×
-                                    </button>
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                {/* Input Area */}
-                <div className="chat-input p-4 border-t bg-white">
-                    <div className="flex items-center gap-3">
-                        <input 
-                            type="file" 
-                            ref={fileInputRef}
-                            multiple 
-                            onChange={handleFileChange}
-                            className="hidden"
-                        />
-                        <button 
-                            onClick={() => fileInputRef.current?.click()}
-                            className="p-3 rounded-xl border-2 border-dashed border-gray-300 hover:border-indigo-400 hover:bg-indigo-50 transition-all group"
-                            title="Attach files"
-                        >
-                            <svg className="w-5 h-5 text-gray-400 group-hover:text-indigo-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-                            </svg>
-                        </button>
-                        <div className="flex-1 relative">
-                            <input
-                                value={input}
-                                onChange={(e) => setInput(e.target.value)}
-                                onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
-                                placeholder="Describe your dream website..."
-                                className="w-full px-5 py-3.5 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all bg-white text-gray-800 placeholder-gray-400"
-                            />
-                        </div>
-                        <button 
-                            onClick={handleSend} 
-                            disabled={loading || !input.trim()}
-                            className="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center gap-2"
-                        >
-                            {loading ? (
+                        <div className="flex items-center gap-4">
+                            {isAuthenticated && user ? (
                                 <>
-                                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                                    </svg>
-                                    Creating...
+                                    <span className="text-white/80 text-sm">
+                                        Welcome, <span className="font-semibold text-white">{user.username}</span>
+                                    </span>
+                                    <button
+                                        onClick={() => {
+                                            logout();
+                                            navigate('/login');
+                                        }}
+                                        className="px-4 py-2 bg-white/20 backdrop-blur border border-white/30 rounded-lg text-white font-medium hover:bg-white/30 transition-all"
+                                    >
+                                        Logout
+                                    </button>
                                 </>
                             ) : (
                                 <>
-                                    Send
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                                    </svg>
+                                    <Link
+                                        to="/login"
+                                        className="px-4 py-2 text-white font-medium hover:text-white/80 transition-colors"
+                                    >
+                                        Login
+                                    </Link>
+                                    <Link
+                                        to="/register"
+                                        className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all"
+                                    >
+                                        Get Started
+                                    </Link>
                                 </>
                             )}
-                        </button>
+                        </div>
                     </div>
+                </div>
+            </nav>
+
+            {/* Hero Section */}
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
+                <div className="text-center">
+                    <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white mb-6 leading-tight">
+                        Build Websites with
+                        <span className="block bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                            Artificial Intelligence
+                        </span>
+                    </h1>
+                    <p className="text-xl sm:text-2xl text-white/80 mb-12 max-w-3xl mx-auto leading-relaxed">
+                        Describe your vision, and watch AI create a beautiful, functional website in seconds.
+                        No coding required.
+                    </p>
+                    <Link
+                        to="/chat"
+                        className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-lg font-bold rounded-xl shadow-2xl hover:shadow-purple-500/50 hover:scale-105 transition-all"
+                    >
+                        <span>Start Building</span>
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                    </Link>
                 </div>
             </div>
 
+            {/* Features Grid */}
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {features.map((feature, index) => (
+                        <Link
+                            key={index}
+                            to={feature.link}
+                            className="group relative bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 hover:bg-white/20 hover:scale-105 transition-all duration-300 hover:shadow-2xl"
+                        >
+                            <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center text-3xl mb-4 shadow-lg group-hover:scale-110 transition-transform`}>
+                                {feature.icon}
+                            </div>
+                            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-cyan-400 group-hover:to-purple-400 group-hover:bg-clip-text transition-all">
+                                {feature.title}
+                            </h3>
+                            <p className="text-white/70 text-sm leading-relaxed">
+                                {feature.description}
+                            </p>
+                            <div className="absolute bottom-4 right-4 text-white/40 group-hover:text-white/80 group-hover:translate-x-1 transition-all">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                            </div>
+                        </Link>
+                    ))}
+                </div>
+            </div>
+
+            {/* CTA Section */}
+            {!isAuthenticated && (
+                <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                    <div className="bg-gradient-to-r from-indigo-600/80 to-purple-600/80 backdrop-blur-xl border border-white/20 rounded-3xl p-8 sm:p-12 text-center shadow-2xl">
+                        <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                            Ready to Build Your Dream Website?
+                        </h2>
+                        <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
+                            Join thousands of creators who are building stunning websites with AI. Start for free today.
+                        </p>
+                        <Link
+                            to="/register"
+                            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-purple-600 text-lg font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all"
+                        >
+                            Create Free Account
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                            </svg>
+                        </Link>
+                    </div>
+                </div>
+            )}
+
+            {/* Footer */}
+            <footer className="relative z-10 border-t border-white/10 bg-black/20 backdrop-blur-md mt-20">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <div className="text-white/60 text-sm">
+                            © 2026 BuildAndHost. All rights reserved.
+                        </div>
+                        <div className="flex items-center gap-6 text-white/60 text-sm">
+                            <a href="#" className="hover:text-white transition-colors">Privacy</a>
+                            <a href="#" className="hover:text-white transition-colors">Terms</a>
+                            <a href="#" className="hover:text-white transition-colors">Support</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+
             <style>{`
-                @keyframes slide-in {
-                    from {
-                        opacity: 0;
-                        transform: translateY(10px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-                
-                .animate-slide-in {
-                    animation: slide-in 0.3s ease-out;
-                }
-                
                 @keyframes pulse {
                     0%, 100% { opacity: 1; }
                     50% { opacity: 0.5; }

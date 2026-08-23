@@ -1,7 +1,10 @@
 import { Routes, Route } from "react-router-dom";
 
 import Home from "./pages/home";
+import Chat from "./pages/chat";
 import Editor from "./pages/editor";
+import Websites from "./pages/websites";
+import Deploy from "./pages/deploy";
 import Login from "./pages/login";
 import Register from "./pages/register";
 
@@ -9,7 +12,10 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/chat" element={<Chat />} />
       <Route path="/editor" element={<Editor />} />
+      <Route path="/websites" element={<Websites />} />
+      <Route path="/deploy" element={<Deploy />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
     </Routes>
