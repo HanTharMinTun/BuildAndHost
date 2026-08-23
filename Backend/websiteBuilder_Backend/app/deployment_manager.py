@@ -410,10 +410,16 @@ WantedBy=multi-user.target
             await self.log(f"Validating subdomain: {subdomain}")
             subdomain = self.sanitize_subdomain(subdomain)
             
-            # Step 2: Allocate port
-            port = await self.allocate_port()
-            self.deployment.port = port
-            await self.db.flush()
+            # Step 2: Check/Allocate port
+            if self.deployment.port and self.deployment.port != 0:
+                # Port already allocated in the endpoint
+                port = self.deployment.port
+                await self.log(f"Using pre-allocated port: {port}")
+            else:
+                # Port not allocated, allocate it now
+                port = await self.allocate_port()
+                self.deployment.port = port
+                await self.db.flush()
             
             # Step 3: Create database
             database_name = f"buildandhost_{subdomain}"

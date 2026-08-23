@@ -1,4 +1,5 @@
 import uuid
+import subprocess
 
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlalchemy import select
@@ -19,11 +20,52 @@ from ..schemas import (
 from ..security import get_current_user
 from ..deployment_manager import DeploymentManager
 
+# Port range for deployments
+PORT_RANGE_START = 8000
+PORT_RANGE_END = 8999
+
 
 router = APIRouter(
     prefix="/api/deployments",
     tags=["Deployments"],
 )
+
+
+def is_port_in_use(port: int) -> bool:
+    """Check if port is in use on the system"""
+    try:
+        result = subprocess.run(
+            ["ss", "-tuln"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        return f":{port}" in result.stdout
+    except Exception:
+        return False
+
+
+async def allocate_port_for_deployment(db: AsyncSession) -> int:
+    """Allocate a unique port for a new deployment"""
+    # Get all allocated ports in DEPLOYING or RUNNING state
+    result = await db.scalars(
+        select(Deployment.port).where(
+            Deployment.status.in_(["DEPLOYING", "RUNNING"])
+        )
+    )
+    allocated_ports = set(result.all())
+    
+    # Find first available port
+    for port in range(PORT_RANGE_START, PORT_RANGE_END + 1):
+        if port not in allocated_ports and port != 0:
+            # Double-check port is not in use by system
+            if not is_port_in_use(port):
+                return port
+    
+    raise HTTPException(
+        status_code=503,
+        detail="No available ports in range 8000-8999"
+    )
 
 
 async def run_deployment(deployment_id: uuid.UUID, subdomain: str, db_url: str):
@@ -86,6 +128,9 @@ async def deploy_website(
             detail=f"Subdomain '{subdomain}' is already taken",
         )
     
+    # Allocate port before creating deployment record
+    port = await allocate_port_for_deployment(db)
+    
     # Create deployment record
     deployment = Deployment(
         website_id=website_id,
@@ -93,7 +138,7 @@ async def deploy_website(
         subdomain=subdomain,
         domain=f"https://{subdomain}.onlinegif.shop",
         database_name="",  # Will be set during deployment
-        port=0,  # Will be allocated during deployment
+        port=port,  # Port allocated synchronously
         systemd_service="",  # Will be set during deployment
         backend_path="",  # Will be set during deployment
         status="DEPLOYING",
