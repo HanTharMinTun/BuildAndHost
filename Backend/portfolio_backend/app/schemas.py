@@ -168,18 +168,27 @@ class TestimonialResponse(TestimonialBase):
         from_attributes = True
 
 # ============ BLOG SCHEMAS ============
+from pydantic import BaseModel, EmailStr, Field
+from typing import List, Optional
+from datetime import datetime
+
+
+# ============ BLOG SCHEMAS ============
+
 class BlogPostBase(BaseModel):
     title: str
     slug: str
     excerpt: Optional[str] = None
     content: str
     featured_image: Optional[str] = None
-    tags: Optional[List[str]] = []
-    is_published: Optional[bool] = False
+    tags: List[str] = Field(default_factory=list)
+    is_published: bool = False
     published_at: Optional[datetime] = None
+
 
 class BlogPostCreate(BlogPostBase):
     pass
+
 
 class BlogPostResponse(BlogPostBase):
     post_id: int
@@ -191,17 +200,21 @@ class BlogPostResponse(BlogPostBase):
     class Config:
         from_attributes = True
 
+
 class BlogCommentBase(BaseModel):
     author_name: str
     author_email: Optional[EmailStr] = None
     author_website: Optional[str] = None
     content: str
 
+
 class BlogCommentCreate(BlogCommentBase):
     pass
 
+
 class BlogCommentResponse(BlogCommentBase):
     comment_id: int
+    post_id: int
     is_approved: bool
     created_at: datetime
 

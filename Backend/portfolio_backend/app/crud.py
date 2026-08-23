@@ -1,8 +1,9 @@
 from sqlalchemy.orm import Session
 from typing import Optional, List
 from datetime import datetime
-
+from fastapi import HTTPException
 from app import models, schemas
+from fastapi import HTTPException
 
 # ============ USER CRUD ============
 def get_user_by_username(db: Session, username: str):
@@ -88,38 +89,126 @@ def get_project(db: Session, project_id: int):
 def get_project_by_slug(db: Session, slug: str):
     return db.query(models.Project).filter(models.Project.slug == slug).first()
 
+
+
 def create_project(db: Session, project: schemas.ProjectCreate):
-    db_project = models.Project(**project.dict(exclude={'skill_ids'}))
+
+    # Check duplicate slug
+    existing_project = (
+        db.query(models.Project)
+        .filter(models.Project.slug == project.slug)
+        .first()
+    )
+
+    if existing_project:
+        raise HTTPException(
+            status_code=409,
+            detail=f"Project with slug '{project.slug}' already exists"
+        )
+
+    db_project = models.Project(
+        **project.dict(exclude={"skill_ids"})
+    )
+
     db.add(db_project)
-    db.commit()
-    db.refresh(db_project)
-    
-    if project.skill_ids:
-        for skill_id in project.skill_ids:
-            skill = db.query(models.Skill).filter(models.Skill.skill_id == skill_id).first()
-            if skill:
-                db_project.project_skills.append(models.ProjectSkill(project_id=db_project.project_id, skill_id=skill_id))
+
+    try:
         db.commit()
-    
+        db.refresh(db_project)
+
+    except Exception:
+        db.rollback()
+        raise
+
+    # Add skills
+    if project.skill_ids:
+
+        for skill_id in project.skill_ids:
+
+            skill = (
+                db.query(models.Skill)
+                .filter(models.Skill.skill_id == skill_id)
+                .first()
+            )
+
+            if skill:
+                db_project.project_skills.append(
+                    models.ProjectSkill(
+                        project_id=db_project.project_id,
+                        skill_id=skill_id
+                    )
+                )
+
+        db.commit()
+        db.refresh(db_project)
+
     return db_project
 
-def update_project(db: Session, project_id: int, project: schemas.ProjectUpdate):
+def update_project(
+    db: Session,
+    project_id: int,
+    project: schemas.ProjectUpdate
+):
     db_project = get_project(db, project_id)
+
     if not db_project:
         return None
-    
-    for key, value in project.dict(exclude={'skill_ids'}).items():
+
+    update_data = project.dict(exclude={"skill_ids"})
+
+    # Check slug only if slug is being updated
+    if "slug" in update_data and update_data["slug"] is not None:
+
+        existing_project = (
+            db.query(models.Project)
+            .filter(
+                models.Project.slug == update_data["slug"],
+                models.Project.project_id != project_id
+            )
+            .first()
+        )
+
+        if existing_project:
+            raise HTTPException(
+                status_code=400,
+                detail="Project slug already exists"
+            )
+
+    # Update project fields
+    for key, value in update_data.items():
         setattr(db_project, key, value)
-    
+
+    # Update skills
     if project.skill_ids is not None:
-        db.query(models.ProjectSkill).filter(models.ProjectSkill.project_id == project_id).delete()
+
+        db.query(models.ProjectSkill).filter(
+            models.ProjectSkill.project_id == project_id
+        ).delete(synchronize_session=False)
+
         for skill_id in project.skill_ids:
-            skill = db.query(models.Skill).filter(models.Skill.skill_id == skill_id).first()
+
+            skill = (
+                db.query(models.Skill)
+                .filter(models.Skill.skill_id == skill_id)
+                .first()
+            )
+
             if skill:
-                db_project.project_skills.append(models.ProjectSkill(project_id=project_id, skill_id=skill_id))
-    
-    db.commit()
-    db.refresh(db_project)
+                db_project.project_skills.append(
+                    models.ProjectSkill(
+                        project_id=project_id,
+                        skill_id=skill_id
+                    )
+                )
+
+    try:
+        db.commit()
+        db.refresh(db_project)
+
+    except Exception:
+        db.rollback()
+        raise
+
     return db_project
 
 def delete_project(db: Session, project_id: int):
@@ -242,26 +331,148 @@ def get_blog_post(db: Session, post_id: int):
 def get_blog_post_by_slug(db: Session, slug: str):
     return db.query(models.BlogPost).filter(models.BlogPost.slug == slug).first()
 
-def create_blog_post(db: Session, post: schemas.BlogPostCreate, user_id: int):
-    db_post = models.BlogPost(**post.dict(), created_by=user_id)
+def create_blog_post(
+    db: Session,
+    post: schemas.BlogPostCreate,
+    user_id: int
+):
+    # Check duplicate slug before inserting
+    existing_post = (
+        db.query(models.BlogPost)
+        .filter(models.BlogPost.slug == post.slug)
+        .first()
+    )
+
+    if existing_post:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Slug '{post.slug}' already exists"
+        )
+
+    db_post = models.BlogPost(
+        title=post.title,
+        slug=post.slug,
+        excerpt=post.excerpt,
+        content=post.content,
+        featured_image=post.featured_image,
+        tags=post.tags,
+        is_published=post.is_published,
+        published_at=post.published_at,
+        created_by=user_id
+    )
+
     if post.is_published and not post.published_at:
         db_post.published_at = datetime.utcnow()
-    db.add(db_post)
-    db.commit()
-    db.refresh(db_post)
-    return db_post
 
-def update_blog_post(db: Session, post_id: int, post: schemas.BlogPostCreate):
-    db_post = get_blog_post(db, post_id)
+    try:
+        db.add(db_post)
+        db.commit()
+        db.refresh(db_post)
+
+        return db_post
+
+    except Exception:
+        db.rollback()
+        raise
+
+def update_blog_post(
+    db: Session,
+    post_id: int,
+    post: schemas.BlogPostCreate
+):
+    db_post = (
+        db.query(models.BlogPost)
+        .filter(models.BlogPost.post_id == post_id)
+        .first()
+    )
+
     if not db_post:
         return None
-    for key, value in post.dict().items():
-        setattr(db_post, key, value)
-    if post.is_published and not db_post.published_at:
-        db_post.published_at = datetime.utcnow()
-    db.commit()
-    db.refresh(db_post)
-    return db_post
+
+    # Check duplicate slug
+    existing_slug = (
+        db.query(models.BlogPost)
+        .filter(
+            models.BlogPost.slug == post.slug,
+            models.BlogPost.post_id != post_id
+        )
+        .first()
+    )
+
+    if existing_slug:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Slug '{post.slug}' already exists"
+        )
+
+    db_post.title = post.title
+    db_post.slug = post.slug
+    db_post.excerpt = post.excerpt
+    db_post.content = post.content
+    db_post.featured_image = post.featured_image
+    db_post.tags = post.tags
+    db_post.is_published = post.is_published
+
+    if post.is_published and not post.published_at:
+        if not db_post.published_at:
+            db_post.published_at = datetime.utcnow()
+    else:
+        db_post.published_at = post.published_at
+
+    try:
+        db.commit()
+        db.refresh(db_post)
+
+        return db_post
+
+    except Exception:
+        db.rollback()
+        raise
+
+def create_blog_comment(
+    db: Session,
+    post_id: int,
+    comment: schemas.BlogCommentCreate
+):
+    post = (
+        db.query(models.BlogPost)
+        .filter(models.BlogPost.post_id == post_id)
+        .first()
+    )
+
+    if not post:
+        return None
+
+    db_comment = models.BlogComment(
+        post_id=post_id,
+        author_name=comment.author_name,
+        author_email=comment.author_email,
+        author_website=comment.author_website,
+        content=comment.content
+    )
+
+    try:
+        db.add(db_comment)
+        db.commit()
+        db.refresh(db_comment)
+
+        return db_comment
+
+    except Exception:
+        db.rollback()
+        raise
+
+
+def get_blog_comments(
+    db: Session,
+    post_id: int
+):
+    return (
+        db.query(models.BlogComment)
+        .filter(models.BlogComment.post_id == post_id)
+        .order_by(models.BlogComment.created_at.desc())
+        .all()
+    )
 
 def delete_blog_post(db: Session, post_id: int):
     db_post = get_blog_post(db, post_id)
@@ -280,11 +491,21 @@ def increment_blog_view(db: Session, post_id: int):
     return False
 
 # ============ CONTACT CRUD ============
-def create_contact_message(db: Session, message: schemas.ContactMessageCreate):
-    db_message = models.ContactMessage(**message.dict())
+def create_contact_message(
+    db: Session,
+    message: schemas.ContactMessageCreate
+):
+    db_message = models.ContactMessage(
+        name=message.name,
+        email=message.email,
+        subject=message.subject,
+        message=message.message
+    )
+
     db.add(db_message)
     db.commit()
     db.refresh(db_message)
+
     return db_message
 
 def get_contact_messages(db: Session, skip: int = 0, limit: int = 100, unread_only: bool = False):

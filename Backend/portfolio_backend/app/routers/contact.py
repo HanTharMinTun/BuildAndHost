@@ -9,14 +9,10 @@ router = APIRouter(prefix="/api/contact", tags=["Contact"])
 
 @router.post("/", response_model=schemas.ContactMessageResponse)
 async def send_contact_message(
-    request: Request,
     message: schemas.ContactMessageCreate,
     db: Session = Depends(get_db)
 ):
-    # Get IP and user agent
-    client_ip = request.client.host if request.client else None
-    user_agent = request.headers.get("user-agent")
-    return crud.create_contact_message(db, message, ip=client_ip, user_agent=user_agent)
+    return crud.create_contact_message(db, message)
 
 @router.get("/messages", response_model=List[schemas.ContactMessageResponse])
 async def get_contact_messages(

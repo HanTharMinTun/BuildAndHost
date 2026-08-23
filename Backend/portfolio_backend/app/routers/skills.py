@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import Optional, List
 
 from app.database import get_db
-from app import schemas, crud, auth
+from app import schemas, crud, auth, models
 
 router = APIRouter(prefix="/api/skills", tags=["Skills"])
 
@@ -27,8 +27,13 @@ async def get_skill(
     db: Session = Depends(get_db)
 ):
     skill = crud.get_skill(db, skill_id)
-    if not skill or not skill.is_active:
-        raise HTTPException(status_code=404, detail="Skill not found")
+
+    if not skill:
+        raise HTTPException(
+            status_code=404,
+            detail="Skill not found"
+        )
+
     return skill
 
 @router.post("/", response_model=schemas.SkillResponse)

@@ -90,6 +90,7 @@ class Experience(Base):
     end_date = Column(Date)
     is_current = Column(Boolean, default=False)
     display_order = Column(Integer, default=0)
+    is_active = Column(Boolean, default=True, nullable=False)
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
@@ -141,17 +142,35 @@ class BlogPost(Base):
 
     author = relationship("User", back_populates="blog_posts")
 
+    comments = relationship(
+        "BlogComment",
+        back_populates="post",
+        cascade="all, delete-orphan"
+    )
+
+
 class BlogComment(Base):
     __tablename__ = "blog_comments"
 
     comment_id = Column(Integer, primary_key=True, index=True)
-    post_id = Column(Integer, ForeignKey("blog_posts.post_id", ondelete="CASCADE"))
+
+    post_id = Column(
+        Integer,
+        ForeignKey("blog_posts.post_id", ondelete="CASCADE"),
+        nullable=False
+    )
+
     author_name = Column(String(100), nullable=False)
     author_email = Column(String(100))
     author_website = Column(String(255))
     content = Column(Text, nullable=False)
     is_approved = Column(Boolean, default=False)
     created_at = Column(DateTime, server_default=func.now())
+
+    post = relationship(
+        "BlogPost",
+        back_populates="comments"
+    )
 
 class ContactMessage(Base):
     __tablename__ = "contact_messages"
