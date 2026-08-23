@@ -481,7 +481,7 @@ export default function Editor() {
       try {
         const stored = localStorage.getItem("websiteTheme");
         if (stored) return; // user has a theme already
-        const resp = await fetch("/api/design_theme", {
+        const resp = await fetch("/api/ai/design_theme", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ brief: "Create a polished, modern theme with subtle animations and responsive adjustments.", ...(website as any) }),
@@ -672,7 +672,7 @@ export default function Editor() {
           <button onClick={() => localStorage.setItem("website", JSON.stringify(website))}>Save changes</button>
           <button onClick={async () => {
             try {
-              const resp = await fetch("/api/design_theme", {
+              const resp = await fetch("/api/ai/design_theme", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ brief: "Create a polished, modern theme with subtle animations and responsive adjustments.", ...(website as any) }),

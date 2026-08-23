@@ -172,7 +172,7 @@ export default function Home() {
                 for (let i = 0; i < files.length; i++) form.append("files", files.item(i) as File);
             }
 
-            const resp = await fetch("/api/post_prompt", { method: "POST", body: form });
+            const resp = await fetch("/api/ai/post_prompt", { method: "POST", body: form });
             const result = await resp.json();
             if (!resp.ok) throw new Error(result.detail || "Generation failed");
 

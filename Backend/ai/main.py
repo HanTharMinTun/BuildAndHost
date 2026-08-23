@@ -35,7 +35,7 @@ app.add_middleware(
 )
 
 
-@app.get("/api/")
+@app.get("/api/ai/")
 def read_root():
     return {"message": "Hello User"}
 
@@ -127,7 +127,7 @@ import os
 UPLOAD_DIR = "/var/www/onlinegif/uploads"
 
 
-@app.post("/api/post_prompt")
+@app.post("/api/ai/post_prompt")
 async def post_prompt(
     prompt: str = Form(...),
     type: str = Form(...),
@@ -302,7 +302,7 @@ async def design_layout(body: dict = Body(...)):
         return JSONResponse(status_code=400, content={"detail": "Layout designer failed: " + str(e)})
 
 
-@app.post("/api/design_theme")
+@app.post("/api/ai/design_theme")
 async def design_theme(body: dict = Body(...)):
     """Accept a website component tree (JSON) and return a generated theme."""
     try:
