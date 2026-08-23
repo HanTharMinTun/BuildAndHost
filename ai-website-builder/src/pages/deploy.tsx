@@ -62,7 +62,7 @@ export default function Deploy() {
             // Simulate deployment
             await new Promise(resolve => setTimeout(resolve, 2000));
             
-            const url = config.customDomain || `${config.subdomain}.buildandhost.app`;
+            const url = config.customDomain || `${config.subdomain}.onlinegif.shop`;
             setDeployUrl(`https://${url}`);
             setDeployed(true);
         } catch (err) {
@@ -134,7 +134,7 @@ export default function Deploy() {
                                     placeholder="mysite"
                                     className="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/50 transition-all"
                                 />
-                                <span className="text-white/70 font-mono">.buildandhost.app</span>
+                                <span className="text-white/70 font-mono">.onlinegif.shop</span>
                             </div>
                             <p className="text-white/50 text-sm mt-2">
                                 Choose a unique subdomain for your website (3-63 characters, lowercase letters, numbers, hyphens)

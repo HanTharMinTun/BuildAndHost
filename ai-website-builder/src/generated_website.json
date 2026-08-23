@@ -8,8 +8,9 @@
         "props": {
           "items": [
             "Home",
-            "Team",
+            "About",
             "Projects",
+            "Experience",
             "Contact"
           ]
         },
@@ -18,11 +19,11 @@
       {
         "type": "Hero",
         "props": {
-          "title": "Creative Project Team",
-          "subtitle": "Building innovative solutions with expertise and passion",
-          "buttonText": "Meet the Team",
-          "buttonAction": "#team",
-          "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80"
+          "title": "Alex Rivera",
+          "subtitle": "Full-Stack Software Engineer specializing in scalable web applications and cloud architecture",
+          "buttonText": "View Projects",
+          "buttonAction": "#projects",
+          "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1600&q=80"
         },
         "children": []
       },
@@ -35,53 +36,44 @@
             "props": {},
             "children": [
               {
-                "type": "Heading",
-                "props": {
-                  "text": "Our Team",
-                  "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "Paragraph",
-                "props": {
-                  "text": "Meet the talented individuals behind our success"
-                },
-                "children": []
-              },
-              {
                 "type": "Grid",
                 "props": {
-                  "columns": 3
+                  "columns": 2
                 },
                 "children": [
                   {
-                    "type": "Card",
-                    "props": {
-                      "title": "Han Thar Min Tun",
-                      "description": "Full-stack developer specializing in modern web technologies and user experience design",
-                      "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
-                      "buttonText": "View Profile"
-                    },
-                    "children": []
+                    "type": "Stack",
+                    "props": {},
+                    "children": [
+                      {
+                        "type": "Heading",
+                        "props": {
+                          "text": "About Me",
+                          "level": 2
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "Paragraph",
+                        "props": {
+                          "text": "I'm a passionate software engineer with over 5 years of experience building modern web applications. I specialize in JavaScript ecosystems, cloud infrastructure, and creating elegant solutions to complex problems."
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "Paragraph",
+                        "props": {
+                          "text": "My expertise spans full-stack development, DevOps practices, and agile methodologies. I thrive in collaborative environments and am always eager to learn new technologies."
+                        },
+                        "children": []
+                      }
+                    ]
                   },
                   {
-                    "type": "Card",
+                    "type": "Image",
                     "props": {
-                      "title": "Kaung Zarni Maung",
-                      "description": "Backend architect with expertise in scalable systems and database optimization",
-                      "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
-                      "buttonText": "View Profile"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Phone Myat Thura Kyaw",
-                      "description": "Frontend specialist focused on responsive design and performance optimization",
-                      "image": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80",
-                      "buttonText": "View Profile"
+                      "src": "https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?auto=format&fit=crop&w=800&q=80",
+                      "alt": "Software development workspace with laptop and code"
                     },
                     "children": []
                   }
@@ -100,58 +92,24 @@
             "props": {},
             "children": [
               {
-                "type": "Heading",
-                "props": {
-                  "text": "Our Expertise",
-                  "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "FeatureList",
-                "props": {
-                  "items": [
-                    "Web Application Development",
-                    "Mobile-First Design",
-                    "API Integration & Development",
-                    "Database Architecture",
-                    "Cloud Infrastructure",
-                    "UI/UX Design"
-                  ]
-                },
-                "children": []
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
-              {
                 "type": "Stats",
                 "props": {
                   "items": [
                     {
-                      "label": "Projects Completed",
-                      "value": "45"
+                      "label": "Years Experience",
+                      "value": "5+"
+                    },
+                    {
+                      "label": "Projects Delivered",
+                      "value": "40+"
                     },
                     {
                       "label": "Happy Clients",
-                      "value": "32"
+                      "value": "25+"
                     },
                     {
-                      "label": "Years Experience",
-                      "value": "12"
-                    },
-                    {
-                      "label": "Team Members",
-                      "value": "3"
+                      "label": "GitHub Stars",
+                      "value": "1.2K"
                     }
                   ]
                 },
@@ -172,27 +130,157 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Our Work",
+                  "text": "Technical Skills",
                   "level": 2
                 },
                 "children": []
               },
               {
-                "type": "Paragraph",
+                "type": "FeatureList",
                 "props": {
-                  "text": "A selection of recent projects showcasing our capabilities"
+                  "items": [
+                    "JavaScript, TypeScript, Python, Java",
+                    "React, Node.js, Next.js, Express",
+                    "AWS, Docker, Kubernetes, CI/CD",
+                    "PostgreSQL, MongoDB, Redis",
+                    "REST APIs, GraphQL, Microservices",
+                    "Git, Agile, Test-Driven Development"
+                  ]
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Heading",
+                "props": {
+                  "text": "Featured Projects",
+                  "level": 2
                 },
                 "children": []
               },
               {
-                "type": "Gallery",
+                "type": "Grid",
                 "props": {
-                  "images": [
-                    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=1600&q=80"
+                  "columns": 3
+                },
+                "children": [
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "E-Commerce Platform",
+                      "description": "A scalable e-commerce solution built with React and Node.js, processing over 10,000 daily transactions with real-time inventory management.",
+                      "image": "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "View Details"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Analytics Dashboard",
+                      "description": "Interactive data visualization platform using React and D3.js, providing real-time insights for business intelligence teams.",
+                      "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "View Details"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Task Management App",
+                      "description": "Collaborative project management tool with real-time updates, built with Next.js and WebSocket integration for team productivity.",
+                      "image": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "View Details"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "AI Content Generator",
+                      "description": "Machine learning powered content creation tool integrated with OpenAI APIs, helping marketers generate high-quality copy.",
+                      "image": "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "View Details"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Cloud Infrastructure Automation",
+                      "description": "Infrastructure as Code solution using Terraform and AWS, reducing deployment time by 70% with automated testing pipelines.",
+                      "image": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "View Details"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Mobile Fitness Tracker",
+                      "description": "Cross-platform mobile app built with React Native, tracking workouts and nutrition with social features for fitness enthusiasts.",
+                      "image": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "View Details"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Heading",
+                "props": {
+                  "text": "Professional Experience",
+                  "level": 2
+                },
+                "children": []
+              },
+              {
+                "type": "Timeline",
+                "props": {
+                  "items": [
+                    {
+                      "year": "2024",
+                      "title": "Senior Software Engineer at TechCorp",
+                      "description": "Leading a team of 6 engineers developing cloud-native applications. Architected microservices infrastructure serving 2M+ users."
+                    },
+                    {
+                      "year": "2022",
+                      "title": "Software Engineer at StartupXYZ",
+                      "description": "Built scalable web applications using React and Node.js. Improved application performance by 40% through optimization initiatives."
+                    },
+                    {
+                      "year": "2021",
+                      "title": "Junior Developer at Digital Agency",
+                      "description": "Developed custom client websites and e-commerce solutions. Collaborated with design and marketing teams to deliver pixel-perfect implementations."
+                    },
+                    {
+                      "year": "2020",
+                      "title": "Computer Science Degree",
+                      "description": "Graduated with honors from State University. Specialized in software engineering and distributed systems."
+                    }
                   ]
                 },
                 "children": []
@@ -220,7 +308,7 @@
               {
                 "type": "Paragraph",
                 "props": {
-                  "text": "Have a project in mind? We would love to hear from you"
+                  "text": "I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out."
                 },
                 "children": []
               },

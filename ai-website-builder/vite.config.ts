@@ -5,6 +5,6 @@ export default defineConfig({
   plugins: [react()],
 
   server: {
-    allowedHosts: ['onlinegif.shop'],
+    allowedHosts: ['onlinegif.shop','.onlinegif.shop'],
   },
 })
