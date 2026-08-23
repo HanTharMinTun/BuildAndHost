@@ -76,6 +76,12 @@ class User(Base):
         cascade="all, delete-orphan",
     )
 
+    deployments = relationship(
+        "Deployment",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+
 
 class Project(Base):
     __tablename__ = "projects"
@@ -328,4 +334,149 @@ class GeneratedWebsite(Base):
     user = relationship(
         "User",
         back_populates="generated_websites",
+    )
+
+    deployments = relationship(
+        "Deployment",
+        back_populates="website",
+        cascade="all, delete-orphan",
+    )
+
+
+class Deployment(Base):
+    __tablename__ = "deployments"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4,
+    )
+
+    website_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("generated_websites.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+
+    subdomain: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+        unique=True,
+        index=True,
+    )
+
+    domain: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+    )
+
+    database_name: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+    )
+
+    port: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+        unique=True,
+        index=True,
+    )
+
+    systemd_service: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+    )
+
+    backend_path: Mapped[str] = mapped_column(
+        String(500),
+        nullable=False,
+    )
+
+    status: Mapped[str] = mapped_column(
+        String(50),
+        nullable=False,
+        server_default="DEPLOYING",
+        index=True,
+    )
+
+    error_message: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    created_at: Mapped[DateTime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    )
+
+    updated_at: Mapped[DateTime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False,
+    )
+
+    website = relationship(
+        "GeneratedWebsite",
+        back_populates="deployments",
+    )
+
+    user = relationship(
+        "User",
+        back_populates="deployments",
+    )
+
+    logs = relationship(
+        "DeploymentLog",
+        back_populates="deployment",
+        cascade="all, delete-orphan",
+        order_by="DeploymentLog.created_at",
+    )
+
+
+class DeploymentLog(Base):
+    __tablename__ = "deployment_logs"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4,
+    )
+
+    deployment_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("deployments.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+
+    level: Mapped[str] = mapped_column(
+        String(20),
+        nullable=False,
+        server_default="INFO",
+    )
+
+    message: Mapped[str] = mapped_column(
+        Text,
+        nullable=False,
+    )
+
+    created_at: Mapped[DateTime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    )
+
+    deployment = relationship(
+        "Deployment",
+        back_populates="logs",
     )

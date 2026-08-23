@@ -83,3 +83,31 @@ export interface AuthContextType {
   register: (data: RegisterRequest) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
 }
+
+export interface Deployment {
+  id: string;
+  website_id: string;
+  user_id: string;
+  subdomain: string;
+  domain: string;
+  database_name: string;
+  port: number;
+  systemd_service: string;
+  backend_path: string;
+  status: 'DEPLOYING' | 'RUNNING' | 'FAILED';
+  error_message?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DeploymentCreate {
+  subdomain: string;
+}
+
+export interface DeploymentLog {
+  id: string;
+  deployment_id: string;
+  level: string;
+  message: string;
+  created_at: string;
+}

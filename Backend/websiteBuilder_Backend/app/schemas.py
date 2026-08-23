@@ -101,3 +101,39 @@ class WebsiteResponse(BaseModel):
     website_json: dict[str, Any]
     version: int
     created_at: datetime
+
+
+# =========================
+# DEPLOYMENT
+# =========================
+
+class DeploymentCreate(BaseModel):
+    subdomain: str
+
+
+class DeploymentResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    website_id: uuid.UUID
+    user_id: uuid.UUID
+    subdomain: str
+    domain: str
+    database_name: str
+    port: int
+    systemd_service: str
+    backend_path: str
+    status: str
+    error_message: str | None
+    created_at: datetime
+    updated_at: datetime
+
+
+class DeploymentLogResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    deployment_id: uuid.UUID
+    level: str
+    message: str
+    created_at: datetime

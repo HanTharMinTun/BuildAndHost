@@ -130,6 +130,22 @@ class ApiClient {
       };
     }
   }
+  // Deployment methods
+  async deployWebsite(websiteId: string, subdomain: string) {
+    return this.post(`/api/deployments/websites/${websiteId}`, { subdomain });
+  }
+
+  async getDeployment(deploymentId: string) {
+    return this.get(`/api/deployments/${deploymentId}`);
+  }
+
+  async getDeploymentLogs(deploymentId: string) {
+    return this.get(`/api/deployments/${deploymentId}/logs`);
+  }
+
+  async getWebsiteDeployments(websiteId: string) {
+    return this.get(`/api/deployments/website/${websiteId}`);
+  }
 }
 
 export const api = new ApiClient(API_BASE_URL);

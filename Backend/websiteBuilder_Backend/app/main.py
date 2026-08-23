@@ -5,6 +5,7 @@ from app.routers import (
     auth,
     projects,
     websites,
+    deployments,
 )
 
 
@@ -30,6 +31,7 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(projects.router)
 app.include_router(websites.router)
+app.include_router(deployments.router)
 
 
 @app.get("/api/health")
