@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect, type DragEvent, type ReactNode } from "react";
+import { useNavigate } from 'react-router-dom';
 import AppNavbar from '../components/AppNavbar';
 
 // Avoid statically importing `generated_website.json` which can cause the
@@ -452,6 +453,7 @@ function EditorNode({
 }
 
 export default function Editor() {
+  const navigate = useNavigate();
   const [website, setWebsite] = useState<ComponentNode>(readStoredWebsite);
   const [theme, setTheme] = useState(readStoredTheme);
   const themeCss = useMemo(() => themeToCss(theme), [theme]);
@@ -639,6 +641,14 @@ export default function Editor() {
     setSelectedPath([...path.slice(0, -1), nextIndex].join("."));
   }
 
+  function handleDeploy() {
+    // Save the current website state before navigating
+    localStorage.setItem("website", JSON.stringify(website));
+    localStorage.setItem("websiteTheme", JSON.stringify(theme));
+    // Navigate to deploy page with the current website context
+    navigate('/deploy');
+  }
+
   return (
     <>
       <AppNavbar currentPage="/editor" />
@@ -689,6 +699,8 @@ export default function Editor() {
               }
             } catch {}
           }}>Generate Theme</button>
+
+          <button onClick={handleDeploy} style={{ backgroundColor: '#4F46E5', color: 'white' }}>Deploy Website</button>
         </div>
         <div className="cms-canvas ai-site">
           {themeCss && <style>{themeCss}</style>}
