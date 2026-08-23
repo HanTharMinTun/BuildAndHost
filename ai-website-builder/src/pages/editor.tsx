@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect, type DragEvent, type ReactNode } from "react";
+import AppNavbar from '../components/AppNavbar';
 
 // Avoid statically importing `generated_website.json` which can cause the
 // dev server to throw and break the overlay when the file is invalid. Use a
@@ -639,7 +640,9 @@ export default function Editor() {
   }
 
   return (
-    <div className="cms-editor">
+    <>
+      <AppNavbar currentPage="/editor" />
+      <div className="cms-editor">
       <aside className="cms-panel cms-panel--palette">
         <div className="cms-brand">BuildAndHost <span>CMS</span></div>
         <p>Drag a block onto the page, or click to add it at the bottom.</p>
@@ -724,5 +727,6 @@ export default function Editor() {
         ) : <p className="cms-empty">Select a block on the canvas to edit it.</p>}
       </aside>
     </div>
+    </>
   );
 }

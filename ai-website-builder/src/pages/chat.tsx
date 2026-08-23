@@ -102,6 +102,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
 import { api } from '../lib/api';
 import type { Project, GeneratedWebsite } from '../lib/types';
+import AppNavbar from '../components/AppNavbar';
 
 export default function Home() {
     const navigate = useNavigate();
@@ -212,7 +213,9 @@ export default function Home() {
     };
 
     return (
-        <div className="chat-root min-h-screen flex items-center justify-center p-4 sm:p-6 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+        <>
+            <AppNavbar currentPage="/chat" />
+            <div className="chat-root min-h-screen flex items-center justify-center p-4 sm:p-6 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
             {/* Animated background elements */}
             <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute -top-40 -left-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
@@ -419,5 +422,6 @@ export default function Home() {
                 }
             `}</style>
         </div>
+        </>
     );
 }
