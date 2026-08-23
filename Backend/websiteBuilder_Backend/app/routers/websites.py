@@ -22,6 +22,25 @@ router = APIRouter(
     tags=["Generated Websites"],
 )
 
+@router.get(
+    "",
+    response_model=list[WebsiteResponse],
+)
+async def get_websites(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    result = await db.scalars(
+        select(GeneratedWebsite)
+        .where(
+            GeneratedWebsite.user_id == current_user.id,
+        )
+        .order_by(
+            GeneratedWebsite.created_at.desc()
+        )
+    )
+
+    return result.all()
 
 @router.post(
     "",

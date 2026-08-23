@@ -8,9 +8,8 @@
         "props": {
           "items": [
             "Home",
-            "About",
+            "Team",
             "Projects",
-            "Skills",
             "Contact"
           ]
         },
@@ -19,11 +18,11 @@
       {
         "type": "Hero",
         "props": {
-          "title": "Han Thar Min Tun",
-          "subtitle": "Computer Science Student | Software Developer | Problem Solver",
-          "buttonText": "View My Work",
-          "buttonAction": "#projects",
-          "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1600&q=80"
+          "title": "Creative Project Team",
+          "subtitle": "Building innovative solutions with expertise and passion",
+          "buttonText": "Meet the Team",
+          "buttonAction": "#team",
+          "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80"
         },
         "children": []
       },
@@ -38,72 +37,15 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "About Me",
+                  "text": "Our Team",
                   "level": 2
                 },
                 "children": []
               },
               {
-                "type": "Grid",
+                "type": "Paragraph",
                 "props": {
-                  "columns": 2
-                },
-                "children": [
-                  {
-                    "type": "Stack",
-                    "props": {},
-                    "children": [
-                      {
-                        "type": "Paragraph",
-                        "props": {
-                          "text": "I'm a passionate computer science student with a strong foundation in software development, algorithms, and data structures. I enjoy building innovative solutions and learning new technologies."
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "Paragraph",
-                        "props": {
-                          "text": "My focus areas include web development, machine learning, and system design. I'm constantly exploring new frameworks and tools to expand my technical expertise."
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "Button",
-                        "props": {
-                          "text": "Download Resume",
-                          "link": "#contact"
-                        },
-                        "children": []
-                      }
-                    ]
-                  },
-                  {
-                    "type": "Image",
-                    "props": {
-                      "src": "https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?auto=format&fit=crop&w=800&q=80",
-                      "alt": "Developer workspace with laptop and code"
-                    },
-                    "children": []
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
-              {
-                "type": "Heading",
-                "props": {
-                  "text": "Featured Projects",
-                  "level": 2
+                  "text": "Meet the talented individuals behind our success"
                 },
                 "children": []
               },
@@ -116,30 +58,30 @@
                   {
                     "type": "Card",
                     "props": {
-                      "title": "E-Commerce Platform",
-                      "description": "Full-stack web application with React and Node.js featuring user authentication, product management, and payment integration.",
-                      "image": "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=800&q=80",
-                      "buttonText": "View Project"
+                      "title": "Han Thar Min Tun",
+                      "description": "Full-stack developer specializing in modern web technologies and user experience design",
+                      "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "View Profile"
                     },
                     "children": []
                   },
                   {
                     "type": "Card",
                     "props": {
-                      "title": "Machine Learning Image Classifier",
-                      "description": "Deep learning model using TensorFlow to classify images with 95% accuracy. Trained on a custom dataset of 10,000 images.",
-                      "image": "https://images.unsplash.com/photo-1555949963-aa79dcee981c?auto=format&fit=crop&w=800&q=80",
-                      "buttonText": "View Project"
+                      "title": "Kaung Zarni Maung",
+                      "description": "Backend architect with expertise in scalable systems and database optimization",
+                      "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "View Profile"
                     },
                     "children": []
                   },
                   {
                     "type": "Card",
                     "props": {
-                      "title": "Task Management App",
-                      "description": "Mobile-responsive productivity application with real-time collaboration features, built with Vue.js and Firebase.",
-                      "image": "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=800&q=80",
-                      "buttonText": "View Project"
+                      "title": "Phone Myat Thura Kyaw",
+                      "description": "Frontend specialist focused on responsive design and performance optimization",
+                      "image": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "View Profile"
                     },
                     "children": []
                   }
@@ -160,7 +102,7 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Technical Skills",
+                  "text": "Our Expertise",
                   "level": 2
                 },
                 "children": []
@@ -169,12 +111,12 @@
                 "type": "FeatureList",
                 "props": {
                   "items": [
-                    "Programming Languages: Python, JavaScript, Java, C++, TypeScript",
-                    "Web Development: React, Node.js, Express, Vue.js, HTML/CSS",
-                    "Databases: MongoDB, PostgreSQL, MySQL, Firebase",
-                    "Tools & Technologies: Git, Docker, AWS, REST APIs, GraphQL",
-                    "Machine Learning: TensorFlow, PyTorch, scikit-learn, Pandas",
-                    "Software Engineering: Agile, CI/CD, Unit Testing, Design Patterns"
+                    "Web Application Development",
+                    "Mobile-First Design",
+                    "API Integration & Development",
+                    "Database Architecture",
+                    "Cloud Infrastructure",
+                    "UI/UX Design"
                   ]
                 },
                 "children": []
@@ -191,33 +133,25 @@
             "type": "Container",
             "props": {},
             "children": [
-              {
-                "type": "Heading",
-                "props": {
-                  "text": "Statistics",
-                  "level": 2
-                },
-                "children": []
-              },
               {
                 "type": "Stats",
                 "props": {
                   "items": [
                     {
                       "label": "Projects Completed",
-                      "value": "25+"
+                      "value": "45"
                     },
                     {
-                      "label": "GitHub Contributions",
-                      "value": "500+"
+                      "label": "Happy Clients",
+                      "value": "32"
                     },
                     {
-                      "label": "Programming Languages",
-                      "value": "8"
+                      "label": "Years Experience",
+                      "value": "12"
                     },
                     {
-                      "label": "Certifications",
-                      "value": "6"
+                      "label": "Team Members",
+                      "value": "3"
                     }
                   ]
                 },
@@ -238,35 +172,27 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Education & Experience",
+                  "text": "Our Work",
                   "level": 2
                 },
                 "children": []
               },
               {
-                "type": "Timeline",
+                "type": "Paragraph",
                 "props": {
-                  "items": [
-                    {
-                      "year": "2023",
-                      "title": "Bachelor of Science in Computer Science",
-                      "description": "Currently pursuing degree with focus on software engineering and artificial intelligence. GPA: 3.8/4.0"
-                    },
-                    {
-                      "year": "2024",
-                      "title": "Software Development Intern",
-                      "description": "Developed web applications and contributed to production codebases. Collaborated with cross-functional teams using Agile methodologies."
-                    },
-                    {
-                      "year": "2025",
-                      "title": "Research Assistant",
-                      "description": "Conducted research in machine learning and published findings. Developed novel algorithms for image classification tasks."
-                    },
-                    {
-                      "year": "2026",
-                      "title": "Open Source Contributor",
-                      "description": "Active contributor to various open-source projects. Maintained repositories with over 1000 stars on GitHub."
-                    }
+                  "text": "A selection of recent projects showcasing our capabilities"
+                },
+                "children": []
+              },
+              {
+                "type": "Gallery",
+                "props": {
+                  "images": [
+                    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=1600&q=80"
                   ]
                 },
                 "children": []
@@ -294,7 +220,7 @@
               {
                 "type": "Paragraph",
                 "props": {
-                  "text": "I'm always open to discussing new projects, opportunities, or collaborations. Feel free to reach out!"
+                  "text": "Have a project in mind? We would love to hear from you"
                 },
                 "children": []
               },
