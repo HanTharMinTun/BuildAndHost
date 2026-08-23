@@ -130,3 +130,30 @@ async def get_website(
         )
 
     return website
+
+
+
+@router.delete(
+    "/{website_id}",
+    status_code=204,
+)
+async def delete_website(
+    website_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    website = await db.scalar(
+        select(GeneratedWebsite).where(
+            GeneratedWebsite.id == website_id,
+            GeneratedWebsite.user_id == current_user.id,
+        )
+    )
+
+    if not website:
+        raise HTTPException(
+            status_code=404,
+            detail="Website not found",
+        )
+
+    await db.delete(website)
+    await db.commit()

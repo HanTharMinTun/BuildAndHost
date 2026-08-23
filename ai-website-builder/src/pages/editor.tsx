@@ -673,6 +673,7 @@ export default function Editor() {
         <div className="cms-toolbar">
           <span>Page editor</span>
           <button onClick={() => localStorage.setItem("website", JSON.stringify(website))}>Save changes</button>
+
           <button onClick={async () => {
             try {
               const resp = await fetch("/api/ai/design_theme", {
