@@ -1,0 +1,25 @@
+# Sudoers configuration for BuildAndHost deployment service
+# This file should be placed in /etc/sudoers.d/buildandhost
+# Install with: sudo visudo -cf /etc/sudoers.d/buildandhost
+
+# Allow ubuntu user to run deployment-related commands without password
+ubuntu ALL=(ALL) NOPASSWD: /bin/systemctl daemon-reload
+ubuntu ALL=(ALL) NOPASSWD: /bin/systemctl enable buildandhost-*
+ubuntu ALL=(ALL) NOPASSWD: /bin/systemctl disable buildandhost-*
+ubuntu ALL=(ALL) NOPASSWD: /bin/systemctl start buildandhost-*
+ubuntu ALL=(ALL) NOPASSWD: /bin/systemctl stop buildandhost-*
+ubuntu ALL=(ALL) NOPASSWD: /bin/systemctl restart buildandhost-*
+ubuntu ALL=(ALL) NOPASSWD: /bin/systemctl is-active buildandhost-*
+ubuntu ALL=(ALL) NOPASSWD: /bin/systemctl reload nginx
+ubuntu ALL=(ALL) NOPASSWD: /usr/sbin/nginx -t
+ubuntu ALL=(ALL) NOPASSWD: /usr/bin/tee /etc/systemd/system/buildandhost-*.service
+ubuntu ALL=(ALL) NOPASSWD: /usr/bin/tee /etc/nginx/sites-available/buildandhost-*
+ubuntu ALL=(ALL) NOPASSWD: /bin/ln -s /etc/nginx/sites-available/buildandhost-* /etc/nginx/sites-enabled/buildandhost-*
+ubuntu ALL=(ALL) NOPASSWD: /bin/rm /etc/nginx/sites-enabled/buildandhost-*
+ubuntu ALL=(ALL) NOPASSWD: /bin/rm /etc/systemd/system/buildandhost-*.service
+ubuntu ALL=(ALL) NOPASSWD: /bin/rm /etc/nginx/sites-available/buildandhost-*
+ubuntu ALL=(ALL) NOPASSWD: /bin/mv * /etc/systemd/system/buildandhost-*.service
+ubuntu ALL=(ALL) NOPASSWD: /bin/mv * /etc/nginx/sites-available/buildandhost-*
+ubuntu ALL=(ALL) NOPASSWD: /bin/chmod * /etc/systemd/system/buildandhost-*.service
+ubuntu ALL=(ALL) NOPASSWD: /bin/chmod * /etc/nginx/sites-available/buildandhost-*
+ubuntu ALL=(postgres) NOPASSWD: /usr/bin/psql

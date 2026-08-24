@@ -123,45 +123,49 @@ class DeploymentManager:
             return False
 
     def create_database(self, database_name: str, sql_script_path: Path) -> bool:
-        """Create a new PostgreSQL database and initialize schema"""
+        """Create a new PostgreSQL database and initialize schema using sudo"""
         try:
-            # Connect to postgres database to create new database
-            conn = psycopg2.connect(
-                host=DB_HOST,
-                port=DB_PORT,
-                user=DB_USER,
-                password=DB_PASSWORD,
-                database="postgres",
+            # Create database using sudo -u postgres
+            result = subprocess.run(
+                ["sudo", "-u", "postgres", "psql", "-c", f"CREATE DATABASE {database_name}"],
+                capture_output=True,
+                text=True,
+                timeout=30,
             )
-            conn.autocommit = True
-            cursor = conn.cursor()
             
-            # Create database
-            cursor.execute(f"CREATE DATABASE {database_name}")
-            cursor.close()
-            conn.close()
+            # Check if database was created (ignore error if already exists)
+            if result.returncode != 0 and "already exists" not in result.stderr:
+                raise RuntimeError(f"CREATE DATABASE failed: {result.stderr}")
             
-            # Connect to new database and execute schema
-            conn = psycopg2.connect(
-                host=DB_HOST,
-                port=DB_PORT,
-                user=DB_USER,
-                password=DB_PASSWORD,
-                database=database_name,
-            )
-            cursor = conn.cursor()
-            
-            # Read and execute SQL script
+            # Read SQL script content and pipe it to psql (avoids permission issues)
             with open(sql_script_path, 'r') as f:
-                sql_script = f.read()
+                sql_content = f.read()
             
-            cursor.execute(sql_script)
-            conn.commit()
-            cursor.close()
-            conn.close()
+            # Execute schema SQL script by piping content to psql
+            result = subprocess.run(
+                ["sudo", "-u", "postgres", "psql", "-d", database_name],
+                input=sql_content,
+                capture_output=True,
+                text=True,
+                timeout=60,
+            )
+            
+            if result.returncode != 0:
+                raise RuntimeError(f"Schema initialization failed: {result.stderr}")
+            
+            # Grant privileges to the application user
+            grant_sql = f"GRANT ALL PRIVILEGES ON DATABASE {database_name} TO {DB_USER};"
+            subprocess.run(
+                ["sudo", "-u", "postgres", "psql", "-c", grant_sql],
+                capture_output=True,
+                text=True,
+                timeout=10,
+            )
             
             return True
             
+        except subprocess.TimeoutExpired:
+            raise RuntimeError("Database creation timeout")
         except Exception as e:
             raise RuntimeError(f"Database creation failed: {str(e)}")
 
@@ -169,13 +173,21 @@ class DeploymentManager:
         """Generate database URL for deployment"""
         return f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{database_name}"
 
+    def get_project_venv(self) -> Path:
+        """Return the project virtual environment directory if present."""
+        return Path(__file__).resolve().parents[3] / ".venv"
+
     def copy_backend(self, deployment_path: Path) -> bool:
         """Copy portfolio backend template to deployment directory"""
         try:
             if deployment_path.exists():
                 shutil.rmtree(deployment_path)
             
-            shutil.copytree(PORTFOLIO_BACKEND_TEMPLATE, deployment_path)
+            # Ignore the deployments directory to prevent recursive copy
+            def ignore_deployments(dir, files):
+                return ['deployments', '__pycache__', '*.pyc', '.env'] if 'deployments' in files else []
+            
+            shutil.copytree(PORTFOLIO_BACKEND_TEMPLATE, deployment_path, ignore=ignore_deployments)
             return True
             
         except Exception as e:
@@ -202,23 +214,57 @@ class DeploymentManager:
         except Exception as e:
             raise RuntimeError(f"Database config update failed: {str(e)}")
 
+    def install_dependencies(self, deployment_path: Path) -> bool:
+        """Install Python dependencies for the deployed backend"""
+        try:
+            requirements_file = deployment_path / "requirements.txt"
+            
+            # Check if requirements.txt exists
+            if not requirements_file.exists():
+                # If no requirements.txt, try to find one in parent
+                template_requirements = PORTFOLIO_BACKEND_TEMPLATE / "requirements.txt"
+                if template_requirements.exists():
+                    shutil.copy(template_requirements, requirements_file)
+                else:
+                    raise RuntimeError("No requirements.txt found")
+
+            python_executable = self.get_python_path()
+            
+            # Install dependencies using the active project Python interpreter
+            result = subprocess.run(
+                [python_executable, "-m", "pip", "install", "-r", str(requirements_file)],
+                capture_output=True,
+                text=True,
+                timeout=180,  # 3 minutes for installation
+                cwd=str(deployment_path),
+            )
+            
+            if result.returncode != 0:
+                raise RuntimeError(f"pip install failed: {result.stderr}")
+            
+            return True
+            
+        except subprocess.TimeoutExpired:
+            raise RuntimeError("Dependency installation timeout")
+        except Exception as e:
+            raise RuntimeError(f"Dependency installation failed: {str(e)}")
+
     def get_python_path(self) -> str:
-        """Get Python virtual environment path"""
-        # Check if we're in a virtual environment
-        venv_python = Path(__file__).parent.parent.parent.parent / "venv" / "bin" / "python3"
+        """Return the Python interpreter used by the project virtual environment when available."""
+        venv_python = self.get_project_venv() / "bin" / "python"
         if venv_python.exists():
             return str(venv_python)
-        
-        # Fallback to system python
         return "/usr/bin/python3"
 
     def get_uvicorn_path(self) -> str:
-        """Get uvicorn path"""
-        venv_uvicorn = Path(__file__).parent.parent.parent.parent / "venv" / "bin" / "uvicorn"
+        """Prefer the project virtual environment's uvicorn before system fallbacks."""
+        venv_uvicorn = self.get_project_venv() / "bin" / "uvicorn"
         if venv_uvicorn.exists():
             return str(venv_uvicorn)
-        
-        return "/usr/local/bin/uvicorn"
+        for path in ["/usr/local/bin/uvicorn", "/usr/bin/uvicorn"]:
+            if Path(path).exists():
+                return path
+        return "/usr/bin/uvicorn"
 
     def create_systemd_service(self, subdomain: str, deployment_path: Path, port: int) -> str:
         """Create systemd service file for deployment"""
@@ -226,7 +272,9 @@ class DeploymentManager:
         service_path = SYSTEMD_SERVICE_DIR / service_name
         
         uvicorn_path = self.get_uvicorn_path()
-        
+        venv_bin = self.get_project_venv() / "bin"
+        path_value = str(venv_bin) + ":/usr/local/bin:/usr/bin:/bin" if venv_bin.exists() else "/usr/local/bin:/usr/bin:/bin"
+
         # Service file content
         service_content = f"""[Unit]
 Description=BuildAndHost Portfolio - {subdomain}
@@ -234,9 +282,11 @@ After=network.target postgresql.service
 
 [Service]
 Type=simple
-User=www-data
+User=ubuntu
+Group=ubuntu
 WorkingDirectory={deployment_path}
-Environment="PATH={deployment_path.parent.parent.parent}/venv/bin:/usr/local/bin:/usr/bin:/bin"
+Environment="PATH={path_value}"
+Environment="PYTHONPATH={deployment_path}"
 ExecStart={uvicorn_path} app.main:app --host 127.0.0.1 --port {port}
 Restart=on-failure
 RestartSec=5s
@@ -249,12 +299,29 @@ WantedBy=multi-user.target
         
         try:
             # Write service file (requires sudo)
-            with open(service_path, 'w') as f:
-                f.write(service_content)
+            # First write to temp file, then move with sudo
+            import tempfile
+            with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.service') as tmp:
+                tmp.write(service_content)
+                tmp_path = tmp.name
+            
+            # Move temp file to systemd directory with sudo
+            subprocess.run(
+                ["sudo", "mv", tmp_path, str(service_path)],
+                check=True,
+                timeout=10,
+            )
+            
+            # Set proper permissions
+            subprocess.run(
+                ["sudo", "chmod", "644", str(service_path)],
+                check=True,
+                timeout=10,
+            )
             
             # Reload systemd daemon
             subprocess.run(
-                ["systemctl", "daemon-reload"],
+                ["sudo", "/bin/systemctl", "daemon-reload"],
                 check=True,
                 timeout=10,
             )
@@ -269,24 +336,24 @@ WantedBy=multi-user.target
         try:
             # Enable service
             subprocess.run(
-                ["systemctl", "enable", service_name],
+                ["sudo", "/bin/systemctl", "enable", service_name],
                 check=True,
                 timeout=10,
             )
             
             # Start service
             subprocess.run(
-                ["systemctl", "start", service_name],
+                ["sudo", "/bin/systemctl", "start", service_name],
                 check=True,
                 timeout=10,
             )
             
             # Wait a moment for service to start
-            time.sleep(2)
+            time.sleep(8)
             
             # Check if service is active
             result = subprocess.run(
-                ["systemctl", "is-active", service_name],
+                ["sudo", "/bin/systemctl", "is-active", service_name],
                 capture_output=True,
                 text=True,
                 timeout=5,
@@ -342,16 +409,40 @@ WantedBy=multi-user.target
 """
         
         try:
-            # Write config file
-            with open(config_path, 'w') as f:
-                f.write(nginx_content)
+            # Write config file with sudo
+            import tempfile
+            with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp:
+                tmp.write(nginx_content)
+                tmp_path = tmp.name
+            
+            # Move temp file to nginx directory with sudo
+            subprocess.run(
+                ["sudo", "mv", tmp_path, str(config_path)],
+                check=True,
+                timeout=10,
+            )
+            
+            # Set proper permissions
+            subprocess.run(
+                ["sudo", "chmod", "644", str(config_path)],
+                check=True,
+                timeout=10,
+            )
             
             # Create symlink in sites-enabled
             enabled_path = NGINX_SITES_ENABLED / config_name
             if enabled_path.exists():
-                enabled_path.unlink()
+                subprocess.run(
+                    ["sudo", "rm", str(enabled_path)],
+                    check=True,
+                    timeout=10,
+                )
             
-            enabled_path.symlink_to(config_path)
+            subprocess.run(
+                ["sudo", "ln", "-s", str(config_path), str(enabled_path)],
+                check=True,
+                timeout=10,
+            )
             
             return config_name
             
@@ -363,7 +454,7 @@ WantedBy=multi-user.target
         try:
             # Test configuration
             result = subprocess.run(
-                ["nginx", "-t"],
+                ["sudo", "/usr/sbin/nginx", "-t"],
                 capture_output=True,
                 text=True,
                 timeout=10,
@@ -374,7 +465,7 @@ WantedBy=multi-user.target
             
             # Reload Nginx
             subprocess.run(
-                ["systemctl", "reload", "nginx"],
+                ["sudo", "/bin/systemctl", "reload", "nginx"],
                 check=True,
                 timeout=10,
             )
@@ -439,44 +530,64 @@ WantedBy=multi-user.target
             self.deployment.backend_path = str(deployment_path)
             await self.db.flush()
             
-            # Step 5: Update database configuration
+            # Step 5: Install dependencies
+            await self.log("Installing Python dependencies")
+            self.install_dependencies(deployment_path)
+            await self.log("Dependencies installed successfully")
+            
+            # Step 6: Update database configuration
             await self.log("Updating database configuration")
             database_url = self.get_database_url(database_name)
             self.update_database_config(deployment_path, database_url)
             await self.log("Database configuration updated")
             
-            # Step 6: Create systemd service
+            # Step 7: Create systemd service
             await self.log("Creating systemd service")
             service_name = self.create_systemd_service(subdomain, deployment_path, port)
             await self.log(f"Systemd service created: {service_name}")
             self.deployment.systemd_service = service_name
             await self.db.flush()
             
-            # Step 7: Start systemd service
+            # Step 8: Start systemd service
             await self.log("Starting systemd service")
             if not self.start_systemd_service(service_name):
                 raise RuntimeError("Service failed to start")
             await self.log("Systemd service started")
             
-            # Step 8: Health check
+            # Step 9: Health check
             await self.log("Performing health check")
             if not self.check_backend_health(port):
                 raise RuntimeError("Backend health check failed")
             await self.log("Backend is healthy")
             
-            # Step 9: Create Nginx configuration
+            # Step 10: Create Nginx configuration
             await self.log("Creating Nginx configuration")
             nginx_config = self.create_nginx_config(subdomain, port)
             await self.log(f"Nginx configuration created: {nginx_config}")
             
-            # Step 10: Test and reload Nginx
+            # Step 11: Test and reload Nginx
             await self.log("Testing Nginx configuration")
             self.test_and_reload_nginx()
             await self.log("Nginx reloaded successfully")
             
-            # Step 11: Final verification
+
+            # Step 12: Setup SSL certificate
+            await self.log("Setting up SSL certificate")
+            self.setup_ssl_certificate(subdomain)
+            await self.log("SSL certificate installed")
+
+            # Step 13: Test and reload Nginx again
+            await self.log("Testing Nginx configuration after SSL")
+            self.test_and_reload_nginx()
+            await self.log("Nginx reloaded successfully")
+
+            # Step 14: Final verification
             await self.log("Deployment completed successfully")
             await self.update_status("RUNNING")
+
+            # # Step 12: Final verification
+            # await self.log("Deployment completed successfully")
+            # await self.update_status("RUNNING")
             
             return True
             
@@ -509,12 +620,12 @@ WantedBy=multi-user.target
         # Stop and disable systemd service
         if service_name:
             try:
-                subprocess.run(["systemctl", "stop", service_name], timeout=10)
-                subprocess.run(["systemctl", "disable", service_name], timeout=10)
+                subprocess.run(["sudo", "/bin/systemctl", "stop", service_name], timeout=10)
+                subprocess.run(["sudo", "/bin/systemctl", "disable", service_name], timeout=10)
                 service_file = SYSTEMD_SERVICE_DIR / service_name
                 if service_file.exists():
-                    service_file.unlink()
-                subprocess.run(["systemctl", "daemon-reload"], timeout=10)
+                    subprocess.run(["sudo", "rm", str(service_file)], timeout=10)
+                subprocess.run(["sudo", "/bin/systemctl", "daemon-reload"], timeout=10)
                 await self.log(f"Removed systemd service: {service_name}")
             except Exception as e:
                 await self.log(f"Failed to remove service: {e}", level="WARNING")
@@ -526,12 +637,12 @@ WantedBy=multi-user.target
                 enabled_path = NGINX_SITES_ENABLED / nginx_config
                 
                 if enabled_path.exists():
-                    enabled_path.unlink()
+                    subprocess.run(["sudo", "rm", str(enabled_path)], timeout=10)
                 if config_path.exists():
-                    config_path.unlink()
+                    subprocess.run(["sudo", "rm", str(config_path)], timeout=10)
                 
-                subprocess.run(["nginx", "-t"], timeout=10, capture_output=True)
-                subprocess.run(["systemctl", "reload", "nginx"], timeout=10)
+                subprocess.run(["sudo", "/usr/sbin/nginx", "-t"], timeout=10, capture_output=True)
+                subprocess.run(["sudo", "/bin/systemctl", "reload", "nginx"], timeout=10)
                 await self.log(f"Removed Nginx config: {nginx_config}")
             except Exception as e:
                 await self.log(f"Failed to remove Nginx config: {e}", level="WARNING")
@@ -545,3 +656,35 @@ WantedBy=multi-user.target
                 await self.log(f"Failed to remove backend: {e}", level="WARNING")
         
         await self.log("Rollback completed")
+
+
+
+    def setup_ssl_certificate(self, subdomain: str) -> bool:
+        """Get SSL certificate for subdomain using certbot"""
+        domain = f"{subdomain}.{BASE_DOMAIN}"
+        
+        try:
+            # Run certbot to get SSL certificate
+            result = subprocess.run(
+                [
+                    "sudo", "certbot", "--nginx",
+                    "-d", domain,
+                    "--non-interactive",
+                    "--agree-tos",
+                    "--email", "admin@onlinegif.shop",  # Change to your email
+                    "--redirect"
+                ],
+                capture_output=True,
+                text=True,
+                timeout=120,
+            )
+            
+            if result.returncode != 0:
+                raise RuntimeError(f"Certbot failed: {result.stderr}")
+            
+            return True
+            
+        except subprocess.TimeoutExpired:
+            raise RuntimeError("SSL certificate generation timeout")
+        except Exception as e:
+            raise RuntimeError(f"SSL certificate generation failed: {str(e)}")

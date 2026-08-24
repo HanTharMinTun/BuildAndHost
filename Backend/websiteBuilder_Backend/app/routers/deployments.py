@@ -1,5 +1,6 @@
 import uuid
 import subprocess
+import asyncio
 
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlalchemy import select
@@ -68,18 +69,45 @@ async def allocate_port_for_deployment(db: AsyncSession) -> int:
     )
 
 
-async def run_deployment(deployment_id: uuid.UUID, subdomain: str, db_url: str):
+async def run_deployment(deployment_id: uuid.UUID, subdomain: str):
     """Background task to run deployment"""
-    from ..database import engine, AsyncSessionLocal
+    from ..database import AsyncSessionLocal
+    import traceback
+    
+    print(f"[DEPLOYMENT] Starting deployment task for {deployment_id}")
     
     async with AsyncSessionLocal() as session:
         try:
+            print(f"[DEPLOYMENT] Creating DeploymentManager for {subdomain}")
             manager = DeploymentManager(session, deployment_id)
-            await manager.deploy(subdomain)
+            
+            print(f"[DEPLOYMENT] Calling deploy() method")
+            result = await manager.deploy(subdomain)
+            
+            print(f"[DEPLOYMENT] Deploy completed with result: {result}")
             await session.commit()
+            print(f"[DEPLOYMENT] Session committed successfully")
+            
         except Exception as e:
-            print(f"Deployment error: {e}")
+            error_trace = traceback.format_exc()
+            print(f"[DEPLOYMENT ERROR] Deployment failed for {deployment_id}")
+            print(f"[DEPLOYMENT ERROR] Error: {e}")
+            print(f"[DEPLOYMENT ERROR] Traceback:\n{error_trace}")
             await session.rollback()
+            print(f"[DEPLOYMENT ERROR] Session rolled back")
+
+
+def start_deployment_task(deployment_id: uuid.UUID, subdomain: str):
+    """Start deployment as a proper asyncio task"""
+    try:
+        print(f"[TASK] Creating asyncio task for deployment {deployment_id}")
+        loop = asyncio.get_event_loop()
+        task = loop.create_task(run_deployment(deployment_id, subdomain))
+        print(f"[TASK] Task created: {task}")
+    except Exception as e:
+        print(f"[TASK ERROR] Failed to create task: {e}")
+        import traceback
+        print(traceback.format_exc())
 
 
 @router.post(
@@ -120,42 +148,76 @@ async def deploy_website(
             detail=str(e),
         )
     
-    # Check if subdomain is available
-    manager = DeploymentManager(db, uuid.uuid4())  # Temporary manager for validation
-    if not await manager.check_subdomain_available(subdomain):
-        raise HTTPException(
-            status_code=409,
-            detail=f"Subdomain '{subdomain}' is already taken",
+    # Check if subdomain is available or has a failed deployment
+    existing_deployment = await db.scalar(
+        select(Deployment).where(Deployment.subdomain == subdomain)
+    )
+    
+    if existing_deployment:
+        # If there's an existing deployment that's DEPLOYING or RUNNING, reject
+        if existing_deployment.status in ["DEPLOYING", "RUNNING"]:
+            raise HTTPException(
+                status_code=409,
+                detail=f"Subdomain '{subdomain}' is already in use",
+            )
+        
+        # If there's a FAILED deployment, reuse it
+        if existing_deployment.status == "FAILED":
+            # Verify it belongs to the same website
+            if existing_deployment.website_id != website_id:
+                raise HTTPException(
+                    status_code=409,
+                    detail=f"Subdomain '{subdomain}' was previously used by a different website",
+                )
+            
+            # Reset the failed deployment for retry
+            existing_deployment.status = "DEPLOYING"
+            existing_deployment.error_message = None
+            existing_deployment.database_name = ""
+            existing_deployment.systemd_service = ""
+            existing_deployment.backend_path = ""
+            
+            # Allocate new port
+            existing_deployment.port = await allocate_port_for_deployment(db)
+            
+            await db.flush()
+            await db.refresh(existing_deployment)
+            deployment = existing_deployment
+        else:
+            raise HTTPException(
+                status_code=409,
+                detail=f"Subdomain '{subdomain}' has unexpected status: {existing_deployment.status}",
+            )
+    else:
+        # No existing deployment, create new one
+        port = await allocate_port_for_deployment(db)
+        
+        deployment = Deployment(
+            website_id=website_id,
+            user_id=current_user.id,
+            subdomain=subdomain,
+            domain=f"https://{subdomain}.onlinegif.shop",
+            database_name="",
+            port=port,
+            systemd_service="",
+            backend_path="",
+            status="DEPLOYING",
         )
+        
+        db.add(deployment)
+        await db.flush()
+        await db.refresh(deployment)
     
-    # Allocate port before creating deployment record
-    port = await allocate_port_for_deployment(db)
-    
-    # Create deployment record
-    deployment = Deployment(
-        website_id=website_id,
-        user_id=current_user.id,
-        subdomain=subdomain,
-        domain=f"https://{subdomain}.onlinegif.shop",
-        database_name="",  # Will be set during deployment
-        port=port,  # Port allocated synchronously
-        systemd_service="",  # Will be set during deployment
-        backend_path="",  # Will be set during deployment
-        status="DEPLOYING",
-    )
-    
-    db.add(deployment)
-    await db.flush()
-    await db.refresh(deployment)
-    
-    # Start deployment in background
-    from ..database import settings
-    background_tasks.add_task(
-        run_deployment,
-        deployment.id,
-        subdomain,
-        settings.DATABASE_URL,
-    )
+    # Start deployment in background using asyncio.create_task
+    print(f"[API] Initiating deployment task for {deployment.id}")
+    try:
+        # Create the task directly in the current event loop
+        asyncio.create_task(run_deployment(deployment.id, subdomain))
+        print(f"[API] Deployment task created successfully")
+    except Exception as e:
+        print(f"[API ERROR] Failed to create deployment task: {e}")
+        import traceback
+        print(traceback.format_exc())
     
     return deployment
 
