@@ -6,6 +6,7 @@ from app.routers import (
     projects,
     websites,
     deployments,
+    public,
 )
 
 
@@ -22,6 +23,8 @@ app.add_middleware(
         "http://127.0.0.1:5173",
         "https://onlinegif.shop",
     ],
+    # Allow all subdomains of onlinegif.shop for published sites
+    allow_origin_regex=r"https://.*\.onlinegif\.shop",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -32,6 +35,7 @@ app.include_router(auth.router)
 app.include_router(projects.router)
 app.include_router(websites.router)
 app.include_router(deployments.router)
+app.include_router(public.router)
 
 
 @app.get("/api/health")
