@@ -1,172 +1,352 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
-import AppNavbar from '../components/AppNavbar';
+import { 
+  Mail, 
+  Lock, 
+  ArrowRight, 
+  Eye, 
+  EyeOff,
+  Loader2,
+  Sparkles,
+  Shield,
+  CheckCircle
+} from 'lucide-react';
 
 export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [emailFocused, setEmailFocused] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
     const result = await login(email, password);
 
     if (result.success) {
-      navigate('/');
+      navigate('/dashboard');
     } else {
-      setError(result.error || 'Login failed');
+      setError(result.error || 'Invalid email or password');
     }
 
     setLoading(false);
   };
 
   return (
-    <>
-      <AppNavbar currentPage="/login" />
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4 relative overflow-hidden">
-      {/* Animated background */}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0a0a1a] via-[#1a0a2e] to-[#0a0a1a] p-4 relative overflow-hidden">
+      {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -left-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        {/* Floating orbs */}
+        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-600/20 rounded-full blur-3xl animate-float-slow"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl animate-float-slower"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-3xl animate-pulse-slow"></div>
+        
+        {/* Floating particles */}
+        <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-purple-400/60 rounded-full animate-particle"></div>
+        <div className="absolute top-1/3 right-1/3 w-1.5 h-1.5 bg-indigo-400/60 rounded-full animate-particle-delay-1"></div>
+        <div className="absolute bottom-1/4 left-1/3 w-1 h-1 bg-blue-400/60 rounded-full animate-particle-delay-2"></div>
+        <div className="absolute top-2/3 right-1/4 w-1.5 h-1.5 bg-purple-400/60 rounded-full animate-particle-delay-3"></div>
+        <div className="absolute top-1/2 left-1/2 w-2 h-2 bg-indigo-400/40 rounded-full animate-particle-delay-4"></div>
       </div>
 
-      <div className="w-full max-w-md relative">
-        <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/20">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl mb-4 shadow-lg">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
+      {/* Main container with entrance animation */}
+      <div className={`w-full max-w-md relative z-10 transition-all duration-1000 transform ${
+        isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+      }`}>
+        {/* Logo/Brand with animation */}
+        <div className="text-center mb-8 animate-float">
+          <div className="inline-flex items-center justify-center gap-3 group">
+            <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-3 rounded-2xl shadow-2xl shadow-purple-500/30 group-hover:shadow-purple-500/50 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
+              <Sparkles className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
-            <p className="text-gray-600">Sign in to continue building amazing websites</p>
+            <span className="text-4xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
+              BuildAndHost
+            </span>
           </div>
+          <p className="text-purple-200/60 mt-3 text-sm font-light tracking-wider animate-pulse-subtle">
+            Welcome back! Sign in to continue
+          </p>
+        </div>
 
-          {/* Error message */}
+        {/* Card with glassmorphism and hover effect */}
+        <div className="bg-white/5 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/10 hover:border-white/20 transition-all duration-500 hover:shadow-purple-500/10">
+          {/* Decorative gradient line */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full"></div>
+
+          {/* Error message with slide animation */}
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
-              <svg className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-              </svg>
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-start gap-3 backdrop-blur-sm animate-slide-down">
+              <div className="flex-shrink-0 w-5 h-5 bg-red-500/20 rounded-full flex items-center justify-center mt-0.5 animate-pulse">
+                <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+              </div>
               <div className="flex-1">
-                <h3 className="text-sm font-semibold text-red-900">Login Failed</h3>
-                <p className="text-sm text-red-700 mt-1">{error}</p>
+                <p className="text-sm font-medium text-red-200">{error}</p>
               </div>
             </div>
           )}
 
-          {/* Login form */}
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            {/* Email with focus animation */}
+            <div className="transform transition-all duration-300 hover:scale-[1.02]">
+              <label className="block text-sm font-medium text-purple-200/80 mb-2 transition-all duration-300">
                 Email Address
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-                  </svg>
+              <div className={`relative group transition-all duration-300 ${
+                emailFocused ? 'scale-[1.02]' : ''
+              }`}>
+                <div className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-all duration-300 ${
+                  emailFocused ? 'text-purple-400' : 'text-purple-300/50'
+                }`}>
+                  <Mail className="h-5 w-5 transition-all duration-300 group-hover:scale-110" />
                 </div>
                 <input
-                  id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  onFocus={() => setEmailFocused(true)}
+                  onBlur={() => setEmailFocused(false)}
                   required
                   placeholder="you@example.com"
-                  className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all"
+                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl focus:border-purple-400 focus:ring-4 focus:ring-purple-500/20 transition-all duration-300 outline-none text-white placeholder:text-white/30 hover:border-white/20"
                 />
+                {email && (
+                  <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-400 animate-fade-in" />
+                )}
               </div>
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
+            {/* Password with focus animation */}
+            <div className="transform transition-all duration-300 hover:scale-[1.02]">
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-sm font-medium text-purple-200/80 transition-all duration-300">
+                  Password
+                </label>
+                <button
+                  type="button"
+                  className="text-sm text-purple-300/60 hover:text-purple-200 font-medium hover:underline transition-all duration-300 hover:scale-105"
+                >
+                  Forgot password?
+                </button>
+              </div>
+              <div className={`relative group transition-all duration-300 ${
+                passwordFocused ? 'scale-[1.02]' : ''
+              }`}>
+                <div className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-all duration-300 ${
+                  passwordFocused ? 'text-purple-400' : 'text-purple-300/50'
+                }`}>
+                  <Lock className="h-5 w-5 transition-all duration-300 group-hover:scale-110" />
                 </div>
                 <input
-                  id="password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  onFocus={() => setPasswordFocused(true)}
+                  onBlur={() => setPasswordFocused(false)}
                   required
-                  placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all"
+                  placeholder="Enter your password"
+                  className="w-full pl-10 pr-12 py-3 bg-white/5 border border-white/10 rounded-2xl focus:border-purple-400 focus:ring-4 focus:ring-purple-500/20 transition-all duration-300 outline-none text-white placeholder:text-white/30 hover:border-white/20"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-purple-300/50 hover:text-purple-200 transition-all duration-300 hover:scale-110"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
+                </button>
               </div>
             </div>
 
+            {/* Remember me with custom checkbox animation */}
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-2 text-sm text-purple-200/60 cursor-pointer group">
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-4 h-4 rounded border-white/20 bg-white/5 text-purple-600 focus:ring-purple-500 focus:ring-offset-0 cursor-pointer"
+                  />
+                  <div className={`absolute inset-0 rounded border-2 border-purple-400/0 transition-all duration-300 ${
+                    rememberMe ? 'border-purple-400/50 scale-110' : ''
+                  }`}></div>
+                </div>
+                <span className="group-hover:text-purple-200 transition-all duration-300">Remember me</span>
+              </label>
+              <Shield className="w-4 h-4 text-purple-300/30 animate-pulse-subtle" />
+            </div>
+
+            {/* Submit button with hover animation */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold py-3.5 rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold py-3.5 rounded-2xl shadow-lg hover:shadow-purple-500/30 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 group relative overflow-hidden"
             >
+              {/* Button background animation */}
+              <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+              
               {loading ? (
                 <>
-                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                  </svg>
-                  Signing in...
+                  <Loader2 className="w-5 h-5 animate-spin relative z-10" />
+                  <span className="relative z-10">Signing in...</span>
                 </>
               ) : (
                 <>
-                  Sign In
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>button
+                  <span className="relative z-10">Sign In</span>
+                  <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
                 </>
               )}
             </button>
           </form>
 
-          {/* Divider */}
-          <div className="relative my-8">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-gray-500 font-medium">New to BuildAndHost?</span>
-            </div>
-          </div>
-
-          {/* Register link */}
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={() => navigate('/register')}
-              className="text-indigo-600 hover:text-indigo-700 font-semibold hover:underline transition-all"
-            >
-              Create an account
-            </button>
+          {/* Register link with hover animation */}
+          <div className="mt-8 text-center">
+            <p className="text-purple-200/50">
+              Don't have an account?{' '}
+              <Link
+                to="/register"
+                className="text-purple-200 hover:text-white font-semibold transition-all duration-300 relative group"
+              >
+                <span className="relative">
+                  Create account
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-400 group-hover:w-full transition-all duration-300"></span>
+                </span>
+              </Link>
+            </p>
           </div>
         </div>
 
-        {/* Footer */}
-        <p className="text-center text-sm text-gray-400 mt-6">
+        {/* Footer with fade-in */}
+        <p className="text-center text-xs text-purple-300/30 mt-6 animate-fade-in">
           By signing in, you agree to our Terms of Service and Privacy Policy
         </p>
       </div>
 
+      {/* Custom CSS animations */}
       <style>{`
-        .delay-1000 {
-          animation-delay: 1s;
+        @keyframes float-slow {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          50% { transform: translate(30px, -30px) scale(1.1); }
+        }
+        
+        @keyframes float-slower {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          50% { transform: translate(-30px, 30px) scale(1.2); }
+        }
+        
+        @keyframes pulse-slow {
+          0%, 100% { opacity: 0.3; transform: scale(1); }
+          50% { opacity: 0.6; transform: scale(1.1); }
+        }
+        
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes pulse-subtle {
+          0%, 100% { opacity: 0.6; }
+          50% { opacity: 1; }
+        }
+        
+        @keyframes slide-down {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes fade-in {
+          from { opacity: 0; transform: scale(0.8); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        
+        @keyframes particle {
+          0% {
+            transform: translate(0, 0) scale(1);
+            opacity: 0;
+          }
+          50% {
+            opacity: 1;
+          }
+          100% {
+            transform: translate(100px, -100px) scale(0);
+            opacity: 0;
+          }
+        }
+        
+        .animate-float-slow {
+          animation: float-slow 15s ease-in-out infinite;
+        }
+        
+        .animate-float-slower {
+          animation: float-slower 20s ease-in-out infinite;
+        }
+        
+        .animate-pulse-slow {
+          animation: pulse-slow 8s ease-in-out infinite;
+        }
+        
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
+        
+        .animate-pulse-subtle {
+          animation: pulse-subtle 3s ease-in-out infinite;
+        }
+        
+        .animate-slide-down {
+          animation: slide-down 0.5s ease-out;
+        }
+        
+        .animate-fade-in {
+          animation: fade-in 0.5s ease-out;
+        }
+        
+        .animate-particle {
+          animation: particle 8s linear infinite;
+        }
+        
+        .animate-particle-delay-1 {
+          animation: particle 10s linear infinite 1s;
+        }
+        
+        .animate-particle-delay-2 {
+          animation: particle 12s linear infinite 2s;
+        }
+        
+        .animate-particle-delay-3 {
+          animation: particle 9s linear infinite 3s;
+        }
+        
+        .animate-particle-delay-4 {
+          animation: particle 11s linear infinite 4s;
         }
       `}</style>
     </div>
-    </>
   );
 }
