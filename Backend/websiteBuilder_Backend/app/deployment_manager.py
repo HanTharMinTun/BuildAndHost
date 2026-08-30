@@ -15,7 +15,7 @@ from .models import Deployment, DeploymentLog
 
 
 # Configuration
-BASE_DOMAIN = "onlinegif.shop"
+BASE_DOMAIN = "webcreator.site"
 PORT_RANGE_START = 8000
 PORT_RANGE_END = 8999
 PORTFOLIO_BACKEND_TEMPLATE = Path(__file__).parent.parent.parent / "portfolio_backend"
@@ -708,7 +708,7 @@ WantedBy=multi-user.target
                     "-d", domain,
                     "--non-interactive",
                     "--agree-tos",
-                    "--email", "admin@onlinegif.shop",  # Change to your email
+                    "--email", "admin@webcreator.site",  # Change to your email
                     "--redirect"
                 ],
                 capture_output=True,

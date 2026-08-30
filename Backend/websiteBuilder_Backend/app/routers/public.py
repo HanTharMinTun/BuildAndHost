@@ -86,11 +86,11 @@ async def get_website_by_hostname(
         )
     
     # Remove protocol (https://) and port if present
-    # origin format: https://subdomain.onlinegif.shop or https://subdomain.onlinegif.shop:443
+    # origin format: https://subdomain.webcreator.site or https://subdomain.webcreator.site:443
     hostname = origin.replace("https://", "").replace("http://", "").split(":")[0]
     
     # Extract subdomain from hostname
-    # Expected format: subdomain.onlinegif.shop
+    # Expected format: subdomain.webcreator.site
     parts = hostname.split(".")
     
     # If it's localhost or doesn't match subdomain pattern, reject

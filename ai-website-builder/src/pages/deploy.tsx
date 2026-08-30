@@ -177,7 +177,7 @@ export default function Deploy() {
                       className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       disabled={isDeploying}
                     />
-                    <span className="text-gray-600">.onlinegif.shop</span>
+                    <span className="text-gray-600">.webcreator.site</span>
                   </div>
                   <p className="mt-2 text-sm text-gray-500">
                     Only lowercase letters, numbers, and hyphens allowed
@@ -188,7 +188,7 @@ export default function Deploy() {
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <p className="text-sm text-gray-700">Your website will be available at:</p>
                     <p className="text-lg font-semibold text-blue-600 mt-1">
-                      https://{subdomain}.onlinegif.shop
+                      https://{subdomain}.webcreator.site
                     </p>
                   </div>
                 )}

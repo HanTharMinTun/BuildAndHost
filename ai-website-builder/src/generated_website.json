@@ -9,8 +9,8 @@
           "items": [
             "Home",
             "About",
-            "Products",
-            "Gallery",
+            "Projects",
+            "Experience",
             "Contact"
           ]
         },
@@ -19,13 +19,196 @@
       {
         "type": "Hero",
         "props": {
-          "title": "Harvest Fresh Farm",
-          "subtitle": "Sustainable farming practices bringing fresh, organic produce from our fields to your table since 1985",
-          "buttonText": "View Our Products",
-          "buttonAction": "#products",
-          "image": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=80"
+          "title": "Full-Stack Developer & Security Researcher",
+          "subtitle": "Building secure, scalable systems and exploring the boundaries of technology. Passionate about open source, cryptography, and ethical hacking.",
+          "buttonText": "View Projects",
+          "buttonAction": "#projects",
+          "image": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1600&q=80"
         },
         "children": []
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Heading",
+                "props": {
+                  "text": "About Me",
+                  "level": 2
+                },
+                "children": []
+              },
+              {
+                "type": "Paragraph",
+                "props": {
+                  "text": "I'm a software engineer with expertise in building secure applications, reverse engineering, and penetration testing. I contribute to open-source security tools and participate in bug bounty programs."
+                },
+                "children": []
+              },
+              {
+                "type": "FeatureList",
+                "props": {
+                  "items": [
+                    "Full-stack development (React, Node.js, Python, Go)",
+                    "Security auditing and vulnerability assessment",
+                    "Cloud architecture (AWS, GCP, Docker, Kubernetes)",
+                    "Cryptography and secure protocol design",
+                    "Reverse engineering and binary analysis",
+                    "Open-source contributions and community engagement"
+                  ]
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Heading",
+                "props": {
+                  "text": "Featured Projects",
+                  "level": 2
+                },
+                "children": []
+              },
+              {
+                "type": "Grid",
+                "props": {
+                  "columns": 3
+                },
+                "children": [
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "SecureAuth Framework",
+                      "description": "Open-source authentication library with zero-knowledge proof implementation and multi-factor authentication support. Used by over 500 projects.",
+                      "image": "https://images.unsplash.com/photo-1555949963-aa79dcee981c?auto=format&fit=crop&w=1600&q=80",
+                      "buttonText": "View on GitHub"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Network Scanner Pro",
+                      "description": "Advanced network reconnaissance tool for security professionals. Features port scanning, service detection, and vulnerability mapping.",
+                      "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1600&q=80",
+                      "buttonText": "Learn More"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "CryptoChat",
+                      "description": "End-to-end encrypted messaging platform with perfect forward secrecy. Built with WebRTC and Signal protocol.",
+                      "image": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1600&q=80",
+                      "buttonText": "Try Demo"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Heading",
+                "props": {
+                  "text": "Experience",
+                  "level": 2
+                },
+                "children": []
+              },
+              {
+                "type": "Timeline",
+                "props": {
+                  "items": [
+                    {
+                      "year": "2024",
+                      "title": "Senior Security Engineer",
+                      "description": "Leading security initiatives and conducting penetration tests for Fortune 500 clients. Discovered and responsibly disclosed 15+ critical vulnerabilities."
+                    },
+                    {
+                      "year": "2022",
+                      "title": "Full-Stack Developer",
+                      "description": "Built scalable microservices architecture handling 10M+ requests per day. Implemented CI/CD pipelines and infrastructure as code."
+                    },
+                    {
+                      "year": "2020",
+                      "title": "Security Researcher",
+                      "description": "Participated in bug bounty programs and CTF competitions. Ranked in top 100 on HackerOne with $50K+ in bounties."
+                    },
+                    {
+                      "year": "2018",
+                      "title": "Software Engineer Intern",
+                      "description": "Developed internal tools and contributed to backend services. Learned best practices in secure coding and DevOps."
+                    }
+                  ]
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Stats",
+                "props": {
+                  "items": [
+                    {
+                      "label": "GitHub Stars",
+                      "value": "12K+"
+                    },
+                    {
+                      "label": "Open Source Projects",
+                      "value": "45"
+                    },
+                    {
+                      "label": "Security Audits",
+                      "value": "100+"
+                    },
+                    {
+                      "label": "Bug Bounties",
+                      "value": "$80K"
+                    }
+                  ]
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
       },
       {
         "type": "Section",
@@ -48,7 +231,7 @@
                       {
                         "type": "Heading",
                         "props": {
-                          "text": "Growing With Purpose",
+                          "text": "Let's Work Together",
                           "level": 2
                         },
                         "children": []
@@ -56,265 +239,18 @@
                       {
                         "type": "Paragraph",
                         "props": {
-                          "text": "For over three decades, our family farm has been committed to sustainable agricultural practices that respect the land and nourish our community. We grow a diverse range of seasonal vegetables, fruits, and grains using organic methods that prioritize soil health and biodiversity."
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "Paragraph",
-                        "props": {
-                          "text": "Our 150-acre farm is home to rotating crops, heritage seed varieties, and integrated pest management systems. We believe in working with nature, not against it, to produce the highest quality food while preserving our land for future generations."
+                          "text": "Available for consulting, security audits, and full-stack development projects. Let's build something secure and impactful."
                         },
                         "children": []
                       }
                     ]
                   },
                   {
-                    "type": "Image",
-                    "props": {
-                      "src": "https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=1600&q=80",
-                      "alt": "Farmer working in vegetable field"
-                    },
+                    "type": "ContactForm",
+                    "props": {},
                     "children": []
                   }
                 ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
-              {
-                "type": "Stats",
-                "props": {
-                  "items": [
-                    {
-                      "label": "Acres Farmed",
-                      "value": "150"
-                    },
-                    {
-                      "label": "Years in Business",
-                      "value": "38"
-                    },
-                    {
-                      "label": "Crop Varieties",
-                      "value": "45+"
-                    },
-                    {
-                      "label": "Community Partners",
-                      "value": "20"
-                    }
-                  ]
-                },
-                "children": []
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
-              {
-                "type": "Heading",
-                "props": {
-                  "text": "What We Grow",
-                  "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "FeatureList",
-                "props": {
-                  "items": [
-                    "Heirloom tomatoes and peppers",
-                    "Seasonal leafy greens and salad mixes",
-                    "Root vegetables including carrots, beets, and potatoes",
-                    "Summer squash and winter storage crops",
-                    "Fresh herbs and edible flowers",
-                    "Heritage grain varieties for local mills"
-                  ]
-                },
-                "children": []
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
-              {
-                "type": "Heading",
-                "props": {
-                  "text": "Farm Life",
-                  "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "Gallery",
-                "props": {
-                  "images": [
-                    "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1595855759920-86582396756a?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1605000797499-95a51c5269ae?auto=format&fit=crop&w=1600&q=80"
-                  ]
-                },
-                "children": []
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
-              {
-                "type": "Heading",
-                "props": {
-                  "text": "Our Offerings",
-                  "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "Grid",
-                "props": {
-                  "columns": 3
-                },
-                "children": [
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Farm Share CSA",
-                      "description": "Weekly boxes of fresh seasonal produce delivered to your door or available for pickup. Support sustainable farming while enjoying the best our fields have to offer.",
-                      "image": "https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1600&q=80",
-                      "buttonText": "Join Our CSA"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Farmers Market",
-                      "description": "Find us every Saturday morning at the downtown farmers market with our freshest picks, preserves, and farm-made products.",
-                      "image": "https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1600&q=80",
-                      "buttonText": "Market Schedule"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Farm Visits",
-                      "description": "Schedule a tour to see sustainable farming in action. Perfect for schools, groups, or anyone curious about where their food comes from.",
-                      "image": "https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=1600&q=80",
-                      "buttonText": "Book a Tour"
-                    },
-                    "children": []
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
-              {
-                "type": "Heading",
-                "props": {
-                  "text": "Frequently Asked Questions",
-                  "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "FAQ",
-                "props": {
-                  "items": [
-                    {
-                      "question": "Are your products certified organic?",
-                      "answer": "Yes, we are USDA certified organic and follow strict organic farming practices. We also go beyond certification requirements by implementing regenerative agriculture techniques."
-                    },
-                    {
-                      "question": "How can I purchase your produce?",
-                      "answer": "You can join our CSA program for weekly deliveries, visit us at the Saturday farmers market, or contact us directly for wholesale inquiries and special orders."
-                    },
-                    {
-                      "question": "What is your growing season?",
-                      "answer": "Our main season runs from April through November, with some cold-hardy crops available through winter. We use season extension techniques like hoop houses to maximize our growing window."
-                    },
-                    {
-                      "question": "Do you offer farm tours?",
-                      "answer": "Yes! We welcome visitors and offer scheduled tours for individuals, families, and groups. Tours typically run during growing season on weekends and include a walk through our fields and greenhouses."
-                    }
-                  ]
-                },
-                "children": []
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
-              {
-                "type": "Heading",
-                "props": {
-                  "text": "Get In Touch",
-                  "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "Paragraph",
-                "props": {
-                  "text": "Have questions about our farm, products, or CSA program? We'd love to hear from you."
-                },
-                "children": []
-              },
-              {
-                "type": "ContactForm",
-                "props": {},
-                "children": []
               }
             ]
           }

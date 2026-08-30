@@ -27,7 +27,7 @@ export default function PublishedSite() {
         setLoading(true);
         
         // Get the backend API URL from environment or default
-        const apiUrl = import.meta.env.VITE_API_BASE_URL || "https://onlinegif.shop";
+        const apiUrl = import.meta.env.VITE_API_BASE_URL || "https://webcreator.site";
         
         // Fetch website data by hostname (backend will extract subdomain)
         const response = await fetch(`${apiUrl}/api/public/sites/by-hostname`, {

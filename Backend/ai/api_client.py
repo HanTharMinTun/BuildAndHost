@@ -46,8 +46,8 @@ class MarketkuAPIClient:
     def _initialize(cls):
         """Initialize API client with configuration."""
         # Hardcoded API key
-        api_key = "sk-8b1e29c499ff470f-f7zw3y-d9e7e286"
-        base_url = "https://router.marketku.id/v1"
+        api_key = "sk-8b1e29c499ff470f-jnryw1-be2718c7"
+        base_url = "https://normalapi.vercel.app/v1"
         
         cls._instance = OpenAI(
             api_key=api_key,

@@ -23,10 +23,10 @@ app.add_middleware(
         "http://127.0.0.1:5173",
         "http://localhost:8001",  # Allow direct backend access for testing
         "http://127.0.0.1:8001",  # Allow direct backend access for testing
-        "https://onlinegif.shop",
+        "https://webcreator.site",
     ],
-    # Allow all subdomains of onlinegif.shop for published sites
-    allow_origin_regex=r"https://.*\.onlinegif\.shop",
+    # Allow all subdomains of webcreator.site for published sites
+    allow_origin_regex=r"https://.*\.webcreator\.site",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

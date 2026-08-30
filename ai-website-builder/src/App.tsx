@@ -11,7 +11,7 @@ import PublishedSite from "./pages/published";
 
 /**
  * Detect if the current hostname is a published subdomain
- * Returns true for subdomains like hantharmintun.onlinegif.shop
+ * Returns true for subdomains like hantharmintun.webcreator.site
  * Returns false for localhost, main domain, or development environments
  */
 function isPublishedSiteSubdomain(): boolean {
@@ -23,16 +23,16 @@ function isPublishedSiteSubdomain(): boolean {
   }
   
   // Main domain without subdomain - show the app
-  if (hostname === "onlinegif.shop") {
+  if (hostname === "webcreator.site") {
     return false;
   }
   
-  // Check if it's a subdomain of onlinegif.shop
-  // Expected format: subdomain.onlinegif.shop
+  // Check if it's a subdomain of webcreator.site
+  // Expected format: subdomain.webcreator.site
   const parts = hostname.split(".");
   
-  // If it has 3+ parts and ends with onlinegif.shop, it's a subdomain
-  if (parts.length >= 3 && hostname.endsWith(".onlinegif.shop")) {
+  // If it has 3+ parts and ends with webcreator.site, it's a subdomain
+  if (parts.length >= 3 && hostname.endsWith(".webcreator.site")) {
     return true;
   }
   

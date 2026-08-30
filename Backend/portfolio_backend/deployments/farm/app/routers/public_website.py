@@ -21,7 +21,7 @@ async def get_published_website(request: Request):
     # Get the subdomain from the host header
     host = request.headers.get("host", "")
     
-    # Extract subdomain from host (e.g., "armyranger.onlinegif.shop" → "armyranger")
+    # Extract subdomain from host (e.g., "armyranger.webcreator.site" → "armyranger")
     subdomain = host.split(".")[0] if "." in host else None
     
     if not subdomain:

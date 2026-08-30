@@ -199,7 +199,7 @@ async def deploy_website(
             website_id=website_id,
             user_id=current_user.id,
             subdomain=subdomain,
-            domain=f"https://{subdomain}.onlinegif.shop",
+            domain=f"https://{subdomain}.webcreator.site",
             database_name="",
             port=port,
             systemd_service="",
