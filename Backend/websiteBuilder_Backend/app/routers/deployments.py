@@ -47,18 +47,21 @@ def is_port_in_use(port: int) -> bool:
 
 
 async def allocate_port_for_deployment(db: AsyncSession) -> int:
-    """Allocate a unique port for a new deployment"""
-    # Get all allocated ports in DEPLOYING or RUNNING state
-    result = await db.scalars(
-        select(Deployment.port).where(
-            Deployment.status.in_(["DEPLOYING", "RUNNING"])
-        )
+    """
+    Allocate a unique port for a new deployment.
+    Uses SELECT FOR UPDATE to prevent race conditions.
+    """
+    # Get all allocated ports from ALL deployments (including FAILED ones)
+    # Use FOR UPDATE to lock the rows and prevent concurrent allocation
+    result = await db.execute(
+        select(Deployment.port)
+        .with_for_update()
     )
-    allocated_ports = set(result.all())
+    allocated_ports = set(row[0] for row in result.fetchall() if row[0] is not None and row[0] != 0)
     
     # Find first available port
     for port in range(PORT_RANGE_START, PORT_RANGE_END + 1):
-        if port not in allocated_ports and port != 0:
+        if port not in allocated_ports:
             # Double-check port is not in use by system
             if not is_port_in_use(port):
                 return port
@@ -177,8 +180,8 @@ async def deploy_website(
             existing_deployment.systemd_service = ""
             existing_deployment.backend_path = ""
             
-            # Allocate new port
-            existing_deployment.port = await allocate_port_for_deployment(db)
+            # Reuse existing port (no need to allocate a new one)
+            # The port is already allocated and held by this deployment record
             
             await db.flush()
             await db.refresh(existing_deployment)

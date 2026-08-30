@@ -34,7 +34,6 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(public_website.router)  # Public website endpoint (no auth required)
 app.include_router(auth.router)
 app.include_router(personal_info.router)
 app.include_router(projects.router)
@@ -44,6 +43,7 @@ app.include_router(education.router)
 app.include_router(testimonials.router)
 app.include_router(blog.router)
 app.include_router(contact.router)
+app.include_router(public_website.router)
 
 @app.get("/")
 async def root():

@@ -87,16 +87,17 @@ class DeploymentManager:
         return result is None
 
     async def allocate_port(self) -> int:
-        """Allocate a unique port for this deployment"""
+        """
+        Allocate a unique port for this deployment.
+        Checks all deployments (including FAILED) to avoid constraint violations.
+        """
         await self.log("Allocating port...")
         
-        # Get all allocated ports in DEPLOYING or RUNNING state
-        result = await self.db.scalars(
-            select(Deployment.port).where(
-                Deployment.status.in_(["DEPLOYING", "RUNNING"])
-            )
+        # Get all allocated ports from ALL deployments (including FAILED ones)
+        result = await self.db.execute(
+            select(Deployment.port)
         )
-        allocated_ports = set(result.all())
+        allocated_ports = set(row[0] for row in result.fetchall() if row[0] is not None and row[0] != 0)
         
         # Find first available port
         for port in range(PORT_RANGE_START, PORT_RANGE_END + 1):
@@ -384,16 +385,52 @@ WantedBy=multi-user.target
         return False
 
     def create_nginx_config(self, subdomain: str, port: int) -> str:
-        """Create Nginx configuration for deployment"""
+        """Create Nginx configuration for deployment - proxies to shared React server"""
         domain = f"{subdomain}.{BASE_DOMAIN}"
         config_name = f"buildandhost-{subdomain}"
         config_path = NGINX_SITES_AVAILABLE / config_name
+        
+        # Shared React/Vite UI server port
+        REACT_SERVER_PORT = 5173
+        
+        # Main builder backend port for public API
+        BUILDER_BACKEND_PORT = 8001
         
         nginx_content = f"""server {{
     listen 80;
     server_name {domain};
 
+    # Proxy all root requests to the shared React/Vite UI server
+    # The React app will detect the subdomain and load the appropriate website
     location / {{
+        proxy_pass http://127.0.0.1:{REACT_SERVER_PORT};
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }}
+
+    # Public API requests (for fetching website data) go to main builder backend
+    # This must come before the general /api/ location block (Nginx matches most specific first)
+    location /api/public/ {{
+        proxy_pass http://127.0.0.1:{BUILDER_BACKEND_PORT};
+        
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }}
+
+    # Other API requests are proxied to this deployment's specific backend
+    # (for future CRUD operations on this website's data)
+    location /api/ {{
         proxy_pass http://127.0.0.1:{port};
         
         proxy_set_header Host $host;

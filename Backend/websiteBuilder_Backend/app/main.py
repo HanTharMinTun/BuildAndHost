@@ -21,6 +21,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
+        "http://localhost:8001",  # Allow direct backend access for testing
+        "http://127.0.0.1:8001",  # Allow direct backend access for testing
         "https://onlinegif.shop",
     ],
     # Allow all subdomains of onlinegif.shop for published sites

@@ -9,8 +9,8 @@
           "items": [
             "Home",
             "About",
-            "Experience",
-            "Projects",
+            "Products",
+            "Gallery",
             "Contact"
           ]
         },
@@ -19,14 +19,11 @@
       {
         "type": "Hero",
         "props": {
-          "title": "Security Engineer & Cybersecurity Specialist",
-          "subtitle": "Protecting digital infrastructure through proactive security measures, threat detection, and secure architecture design",
-          "buttonText": "View My Work",
-          "buttonAction": "#projects",
-          "image": {
-            "src": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1600&q=80",
-            "alt": "Security locks and digital technology concept"
-          }
+          "title": "Harvest Fresh Farm",
+          "subtitle": "Sustainable farming practices bringing fresh, organic produce from our fields to your table since 1985",
+          "buttonText": "View Our Products",
+          "buttonAction": "#products",
+          "image": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=80"
         },
         "children": []
       },
@@ -51,7 +48,7 @@
                       {
                         "type": "Heading",
                         "props": {
-                          "text": "About Me",
+                          "text": "Growing With Purpose",
                           "level": 2
                         },
                         "children": []
@@ -59,40 +56,24 @@
                       {
                         "type": "Paragraph",
                         "props": {
-                          "text": "I'm a dedicated security engineer with expertise in penetration testing, security architecture, and incident response. With years of experience securing enterprise systems, I specialize in identifying vulnerabilities before attackers do and building robust defense mechanisms."
+                          "text": "For over three decades, our family farm has been committed to sustainable agricultural practices that respect the land and nourish our community. We grow a diverse range of seasonal vegetables, fruits, and grains using organic methods that prioritize soil health and biodiversity."
                         },
                         "children": []
                       },
                       {
                         "type": "Paragraph",
                         "props": {
-                          "text": "My approach combines deep technical knowledge with strategic thinking to create comprehensive security solutions that protect organizations from evolving threats."
+                          "text": "Our 150-acre farm is home to rotating crops, heritage seed varieties, and integrated pest management systems. We believe in working with nature, not against it, to produce the highest quality food while preserving our land for future generations."
                         },
                         "children": []
                       }
                     ]
                   },
                   {
-                    "type": "Stats",
+                    "type": "Image",
                     "props": {
-                      "items": [
-                        {
-                          "label": "Years Experience",
-                          "value": "8+"
-                        },
-                        {
-                          "label": "Security Audits",
-                          "value": "150+"
-                        },
-                        {
-                          "label": "Vulnerabilities Found",
-                          "value": "500+"
-                        },
-                        {
-                          "label": "Certifications",
-                          "value": "6"
-                        }
-                      ]
+                      "src": "https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=1600&q=80",
+                      "alt": "Farmer working in vegetable field"
                     },
                     "children": []
                   }
@@ -111,72 +92,24 @@
             "props": {},
             "children": [
               {
-                "type": "Heading",
-                "props": {
-                  "text": "Core Expertise",
-                  "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "FeatureList",
-                "props": {
-                  "items": [
-                    "Penetration Testing & Vulnerability Assessment",
-                    "Security Architecture & Infrastructure Design",
-                    "Incident Response & Threat Hunting",
-                    "Cloud Security (AWS, Azure, GCP)",
-                    "Network Security & Firewall Management",
-                    "Application Security & Secure Code Review",
-                    "Security Automation & SIEM Implementation",
-                    "Compliance & Risk Management (ISO 27001, SOC 2)"
-                  ]
-                },
-                "children": []
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
-              {
-                "type": "Heading",
-                "props": {
-                  "text": "Professional Experience",
-                  "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "Timeline",
+                "type": "Stats",
                 "props": {
                   "items": [
                     {
-                      "year": "2022",
-                      "title": "Senior Security Engineer - Tech Corp",
-                      "description": "Leading security architecture for cloud infrastructure, conducting advanced penetration tests, and managing incident response team"
+                      "label": "Acres Farmed",
+                      "value": "150"
                     },
                     {
-                      "year": "2019",
-                      "title": "Security Engineer - Financial Services Inc",
-                      "description": "Implemented comprehensive security monitoring solutions, performed regular security audits, and developed secure coding guidelines"
+                      "label": "Years in Business",
+                      "value": "38"
                     },
                     {
-                      "year": "2017",
-                      "title": "Junior Security Analyst - Cybersecurity Firm",
-                      "description": "Conducted vulnerability assessments, assisted with penetration testing engagements, and developed security documentation"
+                      "label": "Crop Varieties",
+                      "value": "45+"
                     },
                     {
-                      "year": "2016",
-                      "title": "IT Security Intern - Enterprise Solutions",
-                      "description": "Supported security operations team, monitored security alerts, and participated in security awareness training programs"
+                      "label": "Community Partners",
+                      "value": "20"
                     }
                   ]
                 },
@@ -197,96 +130,24 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Featured Projects",
+                  "text": "What We Grow",
                   "level": 2
                 },
                 "children": []
               },
               {
-                "type": "Grid",
+                "type": "FeatureList",
                 "props": {
-                  "columns": 3
+                  "items": [
+                    "Heirloom tomatoes and peppers",
+                    "Seasonal leafy greens and salad mixes",
+                    "Root vegetables including carrots, beets, and potatoes",
+                    "Summer squash and winter storage crops",
+                    "Fresh herbs and edible flowers",
+                    "Heritage grain varieties for local mills"
+                  ]
                 },
-                "children": [
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Enterprise Security Framework",
-                      "description": "Designed and implemented a comprehensive security framework for a Fortune 500 company, reducing security incidents by 75%",
-                      "image": {
-                        "src": "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80",
-                        "alt": "Network security infrastructure"
-                      },
-                      "buttonText": "Learn More"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Automated Threat Detection",
-                      "description": "Built machine learning-based threat detection system that identifies anomalies in real-time across distributed systems",
-                      "image": {
-                        "src": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80",
-                        "alt": "Threat detection dashboard"
-                      },
-                      "buttonText": "Learn More"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Cloud Security Audit Tool",
-                      "description": "Developed automated cloud security audit tool for AWS and Azure environments, identifying misconfigurations and compliance gaps",
-                      "image": {
-                        "src": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
-                        "alt": "Cloud infrastructure visualization"
-                      },
-                      "buttonText": "Learn More"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Zero Trust Architecture",
-                      "description": "Implemented zero trust security model for multi-cloud environment, enhancing access control and reducing attack surface",
-                      "image": {
-                        "src": "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&w=800&q=80",
-                        "alt": "Security architecture diagram"
-                      },
-                      "buttonText": "Learn More"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Incident Response Playbooks",
-                      "description": "Created comprehensive incident response playbooks and automated workflows for common security scenarios",
-                      "image": {
-                        "src": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
-                        "alt": "Incident response workflow"
-                      },
-                      "buttonText": "Learn More"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Security Training Platform",
-                      "description": "Built interactive security awareness training platform with gamification elements to improve employee security practices",
-                      "image": {
-                        "src": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80",
-                        "alt": "Training and education concept"
-                      },
-                      "buttonText": "Learn More"
-                    },
-                    "children": []
-                  }
-                ]
+                "children": []
               }
             ]
           }
@@ -303,7 +164,40 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Certifications & Recognition",
+                  "text": "Farm Life",
+                  "level": 2
+                },
+                "children": []
+              },
+              {
+                "type": "Gallery",
+                "props": {
+                  "images": [
+                    "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1595855759920-86582396756a?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1605000797499-95a51c5269ae?auto=format&fit=crop&w=1600&q=80"
+                  ]
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Heading",
+                "props": {
+                  "text": "Our Offerings",
                   "level": 2
                 },
                 "children": []
@@ -311,35 +205,36 @@
               {
                 "type": "Grid",
                 "props": {
-                  "columns": 2
+                  "columns": 3
                 },
                 "children": [
                   {
-                    "type": "Stack",
-                    "props": {},
-                    "children": [
-                      {
-                        "type": "Heading",
-                        "props": {
-                          "text": "Professional Certifications",
-                          "level": 3
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "Paragraph",
-                        "props": {
-                          "text": "• OSCP - Offensive Security Certified Professional\n• CISSP - Certified Information Systems Security Professional\n• CEH - Certified Ethical Hacker\n• AWS Security Specialty\n• GIAC Security Expert (GSE)\n• CompTIA Security+"
-                        },
-                        "children": []
-                      }
-                    ]
+                    "type": "Card",
+                    "props": {
+                      "title": "Farm Share CSA",
+                      "description": "Weekly boxes of fresh seasonal produce delivered to your door or available for pickup. Support sustainable farming while enjoying the best our fields have to offer.",
+                      "image": "https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1600&q=80",
+                      "buttonText": "Join Our CSA"
+                    },
+                    "children": []
                   },
                   {
-                    "type": "Image",
+                    "type": "Card",
                     "props": {
-                      "src": "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=800&q=80",
-                      "alt": "Professional certification badges"
+                      "title": "Farmers Market",
+                      "description": "Find us every Saturday morning at the downtown farmers market with our freshest picks, preserves, and farm-made products.",
+                      "image": "https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1600&q=80",
+                      "buttonText": "Market Schedule"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Farm Visits",
+                      "description": "Schedule a tour to see sustainable farming in action. Perfect for schools, groups, or anyone curious about where their food comes from.",
+                      "image": "https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=1600&q=80",
+                      "buttonText": "Book a Tour"
                     },
                     "children": []
                   }
@@ -370,20 +265,20 @@
                 "props": {
                   "items": [
                     {
-                      "question": "What types of security assessments do you perform?",
-                      "answer": "I conduct comprehensive penetration testing, vulnerability assessments, security architecture reviews, and compliance audits. Each engagement is tailored to your specific infrastructure and risk profile."
+                      "question": "Are your products certified organic?",
+                      "answer": "Yes, we are USDA certified organic and follow strict organic farming practices. We also go beyond certification requirements by implementing regenerative agriculture techniques."
                     },
                     {
-                      "question": "How do you stay current with emerging threats?",
-                      "answer": "I actively participate in security research, maintain certifications through continuous education, contribute to security communities, and regularly test new attack vectors in controlled lab environments."
+                      "question": "How can I purchase your produce?",
+                      "answer": "You can join our CSA program for weekly deliveries, visit us at the Saturday farmers market, or contact us directly for wholesale inquiries and special orders."
                     },
                     {
-                      "question": "Can you help with security compliance requirements?",
-                      "answer": "Yes, I have extensive experience with various compliance frameworks including ISO 27001, SOC 2, PCI DSS, HIPAA, and GDPR. I can help assess current compliance posture and implement necessary controls."
+                      "question": "What is your growing season?",
+                      "answer": "Our main season runs from April through November, with some cold-hardy crops available through winter. We use season extension techniques like hoop houses to maximize our growing window."
                     },
                     {
-                      "question": "What is your approach to security architecture?",
-                      "answer": "I follow a defense-in-depth strategy, implementing multiple layers of security controls. This includes network segmentation, least privilege access, encryption, monitoring, and incident response capabilities."
+                      "question": "Do you offer farm tours?",
+                      "answer": "Yes! We welcome visitors and offer scheduled tours for individuals, families, and groups. Tours typically run during growing season on weekends and include a walk through our fields and greenhouses."
                     }
                   ]
                 },
@@ -412,7 +307,7 @@
               {
                 "type": "Paragraph",
                 "props": {
-                  "text": "Interested in collaborating on a security project or need a security assessment? Reach out and let's discuss how I can help strengthen your security posture."
+                  "text": "Have questions about our farm, products, or CSA program? We'd love to hear from you."
                 },
                 "children": []
               },

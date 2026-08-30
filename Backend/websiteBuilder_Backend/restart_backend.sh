@@ -7,7 +7,7 @@ sleep 2
 
 echo "Starting websiteBuilder Backend..."
 cd /home/ubuntu/BuildAndHost/Backend/websiteBuilder_Backend
-nohup uvicorn app.main:app --host 0.0.0.0 --port 8080 > /tmp/websitebuilder_backend.log 2>&1 &
+nohup /home/ubuntu/BuildAndHost/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8080 > /tmp/websitebuilder_backend.log 2>&1 &
 
 sleep 3
 
