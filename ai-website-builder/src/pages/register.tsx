@@ -20,6 +20,7 @@ export default function Register() {
   const navigate = useNavigate();
   const { register } = useAuth();
   const [fullName, setFullName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -68,10 +69,15 @@ export default function Register() {
 
     await new Promise(resolve => setTimeout(resolve, 1500));
     
-    const result = await register(email, password, fullName);
+    const result = await register({
+      email,
+      username,
+      password,
+      full_name: fullName,
+    });
 
     if (result.success) {
-      navigate('/dashboard');
+      navigate('/');
     } else {
       setError(result.error || 'Registration failed');
     }
@@ -280,6 +286,36 @@ export default function Register() {
                   className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl focus:border-amber-400 focus:ring-4 focus:ring-amber-400/20 transition-all duration-300 outline-none text-white placeholder:text-white/20 font-serif-light tracking-wide hover:border-white/20"
                 />
                 {fullName && (
+                  <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-400 animate-fade-in" />
+                )}
+              </div>
+            </div>
+
+            {/* Username */}
+            <div className="transform transition-all duration-300 hover:scale-[1.01]">
+              <label className="block text-sm font-serif-light text-amber-200/70 mb-2 tracking-wide">
+                Username
+              </label>
+              <div className={`relative group transition-all duration-300 ${
+                focusedField === 'username' ? 'scale-[1.02]' : ''
+              }`}>
+                <div className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-all duration-300 ${
+                  focusedField === 'username' ? 'text-amber-400' : 'text-amber-300/30'
+                }`}>
+                  <User className="h-5 w-5 transition-all duration-300 group-hover:scale-110" />
+                </div>
+                <input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  onFocus={() => setFocusedField('username')}
+                  onBlur={() => setFocusedField(null)}
+                  required
+                  placeholder="johndoe"
+                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl focus:border-amber-400 focus:ring-4 focus:ring-amber-400/20 transition-all duration-300 outline-none text-white placeholder:text-white/20 font-serif-light tracking-wide hover:border-white/20"
+                />
+                {username && (
                   <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-400 animate-fade-in" />
                 )}
               </div>

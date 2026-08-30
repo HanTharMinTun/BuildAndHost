@@ -247,7 +247,7 @@ export default function Home() {
                                         </div>
                                         <span className="text-sm font-body text-white/80">{user.username}</span>
                                     </div>
-                                    <button onClick={() => { logout(); navigate('/login'); }} className="px-4 py-2.5 rounded-lg border border-white/[0.12] bg-white/[0.05] hover:bg-white/[0.10] text-sm font-body font-medium text-white/90 transition-all">Logout</button>
+                                    <button onClick={() => { logout(); navigate('/'); }} className="px-4 py-2.5 rounded-lg border border-white/[0.12] bg-white/[0.05] hover:bg-white/[0.10] text-sm font-body font-medium text-white/90 transition-all">Logout</button>
                                 </>
                             ) : (
                                 <>
