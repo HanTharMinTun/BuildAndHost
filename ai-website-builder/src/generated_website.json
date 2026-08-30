@@ -9,8 +9,8 @@
           "items": [
             "Home",
             "About",
+            "Skills",
             "Projects",
-            "Experience",
             "Contact"
           ]
         },
@@ -19,11 +19,11 @@
       {
         "type": "Hero",
         "props": {
-          "title": "Full-Stack Developer & Security Researcher",
-          "subtitle": "Building secure, scalable systems and exploring the boundaries of technology. Passionate about open source, cryptography, and ethical hacking.",
-          "buttonText": "View Projects",
+          "title": "Phone Myat Thura Kyaw",
+          "subtitle": "Computer Science Student | Developer | Problem Solver",
+          "buttonText": "View My Work",
           "buttonAction": "#projects",
-          "image": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1600&q=80"
+          "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1600&q=80"
         },
         "children": []
       },
@@ -36,17 +36,86 @@
             "props": {},
             "children": [
               {
+                "type": "Grid",
+                "props": {
+                  "columns": 2
+                },
+                "children": [
+                  {
+                    "type": "Image",
+                    "props": {
+                      "src": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80",
+                      "alt": "Student collaboration and teamwork"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Stack",
+                    "props": {},
+                    "children": [
+                      {
+                        "type": "Heading",
+                        "props": {
+                          "text": "About Me",
+                          "level": 2
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "Paragraph",
+                        "props": {
+                          "text": "I'm a passionate Computer Science student dedicated to building innovative solutions through code. With a strong foundation in software development and a keen interest in emerging technologies, I thrive on solving complex problems and creating impactful applications."
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "Paragraph",
+                        "props": {
+                          "text": "My journey in computer science has equipped me with both theoretical knowledge and practical experience. I enjoy collaborating on projects, learning new technologies, and contributing to the developer community."
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "Stats",
+                        "props": {
+                          "items": [
+                            {
+                              "label": "Projects Completed",
+                              "value": "15+"
+                            },
+                            {
+                              "label": "Technologies Learned",
+                              "value": "20+"
+                            },
+                            {
+                              "label": "GitHub Contributions",
+                              "value": "500+"
+                            }
+                          ]
+                        },
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
                 "type": "Heading",
                 "props": {
-                  "text": "About Me",
+                  "text": "Technical Skills",
                   "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "Paragraph",
-                "props": {
-                  "text": "I'm a software engineer with expertise in building secure applications, reverse engineering, and penetration testing. I contribute to open-source security tools and participate in bug bounty programs."
                 },
                 "children": []
               },
@@ -54,12 +123,16 @@
                 "type": "FeatureList",
                 "props": {
                   "items": [
-                    "Full-stack development (React, Node.js, Python, Go)",
-                    "Security auditing and vulnerability assessment",
-                    "Cloud architecture (AWS, GCP, Docker, Kubernetes)",
-                    "Cryptography and secure protocol design",
-                    "Reverse engineering and binary analysis",
-                    "Open-source contributions and community engagement"
+                    "Programming Languages: Python, Java, JavaScript, C++",
+                    "Web Development: React, Node.js, HTML, CSS",
+                    "Database Management: MySQL, MongoDB, PostgreSQL",
+                    "Version Control: Git, GitHub, GitLab",
+                    "Data Structures and Algorithms",
+                    "Object-Oriented Programming",
+                    "Software Engineering Principles",
+                    "Machine Learning Fundamentals",
+                    "Cloud Computing: AWS, Azure basics",
+                    "Problem Solving and Debugging"
                   ]
                 },
                 "children": []
@@ -93,30 +166,60 @@
                   {
                     "type": "Card",
                     "props": {
-                      "title": "SecureAuth Framework",
-                      "description": "Open-source authentication library with zero-knowledge proof implementation and multi-factor authentication support. Used by over 500 projects.",
-                      "image": "https://images.unsplash.com/photo-1555949963-aa79dcee981c?auto=format&fit=crop&w=1600&q=80",
-                      "buttonText": "View on GitHub"
+                      "title": "E-Commerce Platform",
+                      "description": "Full-stack web application with React frontend and Node.js backend, featuring user authentication, product management, and payment integration.",
+                      "image": "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=1600&q=80",
+                      "buttonText": "View Project"
                     },
                     "children": []
                   },
                   {
                     "type": "Card",
                     "props": {
-                      "title": "Network Scanner Pro",
-                      "description": "Advanced network reconnaissance tool for security professionals. Features port scanning, service detection, and vulnerability mapping.",
-                      "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1600&q=80",
-                      "buttonText": "Learn More"
+                      "title": "Task Management System",
+                      "description": "Collaborative project management tool built with Java and Spring Boot, featuring real-time updates, team collaboration, and task tracking capabilities.",
+                      "image": "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=1600&q=80",
+                      "buttonText": "View Project"
                     },
                     "children": []
                   },
                   {
                     "type": "Card",
                     "props": {
-                      "title": "CryptoChat",
-                      "description": "End-to-end encrypted messaging platform with perfect forward secrecy. Built with WebRTC and Signal protocol.",
-                      "image": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1600&q=80",
-                      "buttonText": "Try Demo"
+                      "title": "Machine Learning Classifier",
+                      "description": "Python-based machine learning project implementing classification algorithms for predictive analysis with data visualization and model evaluation.",
+                      "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1600&q=80",
+                      "buttonText": "View Project"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Mobile Weather App",
+                      "description": "Cross-platform mobile application providing real-time weather forecasts with location-based services and interactive weather maps.",
+                      "image": "https://images.unsplash.com/photo-1592210454359-9043f067919b?auto=format&fit=crop&w=1600&q=80",
+                      "buttonText": "View Project"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Algorithm Visualizer",
+                      "description": "Interactive web tool for visualizing sorting and searching algorithms, helping students understand algorithmic concepts through animation.",
+                      "image": "https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=1600&q=80",
+                      "buttonText": "View Project"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Chat Application",
+                      "description": "Real-time messaging application using WebSocket technology, featuring group chats, file sharing, and end-to-end encryption.",
+                      "image": "https://images.unsplash.com/photo-1611746872915-64382b5c76da?auto=format&fit=crop&w=1600&q=80",
+                      "buttonText": "View Project"
                     },
                     "children": []
                   }
@@ -137,7 +240,7 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Experience",
+                  "text": "Education Journey",
                   "level": 2
                 },
                 "children": []
@@ -148,23 +251,23 @@
                   "items": [
                     {
                       "year": "2024",
-                      "title": "Senior Security Engineer",
-                      "description": "Leading security initiatives and conducting penetration tests for Fortune 500 clients. Discovered and responsibly disclosed 15+ critical vulnerabilities."
+                      "title": "Advanced Computer Science Coursework",
+                      "description": "Deep dive into advanced algorithms, software architecture, and distributed systems. Completed capstone project on cloud-based microservices."
+                    },
+                    {
+                      "year": "2023",
+                      "title": "Core CS Curriculum",
+                      "description": "Studied data structures, database systems, computer networks, and operating systems. Led team projects and participated in hackathons."
                     },
                     {
                       "year": "2022",
-                      "title": "Full-Stack Developer",
-                      "description": "Built scalable microservices architecture handling 10M+ requests per day. Implemented CI/CD pipelines and infrastructure as code."
+                      "title": "Foundation Year",
+                      "description": "Built strong foundation in programming, discrete mathematics, and computer organization. Achieved academic excellence and joined coding club."
                     },
                     {
-                      "year": "2020",
-                      "title": "Security Researcher",
-                      "description": "Participated in bug bounty programs and CTF competitions. Ranked in top 100 on HackerOne with $50K+ in bounties."
-                    },
-                    {
-                      "year": "2018",
-                      "title": "Software Engineer Intern",
-                      "description": "Developed internal tools and contributed to backend services. Learned best practices in secure coding and DevOps."
+                      "year": "2021",
+                      "title": "University Enrollment",
+                      "description": "Began Bachelor of Science in Computer Science program. Discovered passion for software development and problem-solving."
                     }
                   ]
                 },
@@ -183,41 +286,13 @@
             "props": {},
             "children": [
               {
-                "type": "Stats",
+                "type": "Heading",
                 "props": {
-                  "items": [
-                    {
-                      "label": "GitHub Stars",
-                      "value": "12K+"
-                    },
-                    {
-                      "label": "Open Source Projects",
-                      "value": "45"
-                    },
-                    {
-                      "label": "Security Audits",
-                      "value": "100+"
-                    },
-                    {
-                      "label": "Bug Bounties",
-                      "value": "$80K"
-                    }
-                  ]
+                  "text": "Let's Connect",
+                  "level": 2
                 },
                 "children": []
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
+              },
               {
                 "type": "Grid",
                 "props": {
@@ -229,17 +304,32 @@
                     "props": {},
                     "children": [
                       {
-                        "type": "Heading",
+                        "type": "Paragraph",
                         "props": {
-                          "text": "Let's Work Together",
-                          "level": 2
+                          "text": "I'm always interested in hearing about new opportunities, collaborations, or just connecting with fellow developers and tech enthusiasts."
                         },
                         "children": []
                       },
                       {
                         "type": "Paragraph",
                         "props": {
-                          "text": "Available for consulting, security audits, and full-stack development projects. Let's build something secure and impactful."
+                          "text": "Whether you have a project idea, want to discuss technology, or are looking for a motivated computer science student for an internship or collaboration, feel free to reach out."
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "Stats",
+                        "props": {
+                          "items": [
+                            {
+                              "label": "Response Time",
+                              "value": "24h"
+                            },
+                            {
+                              "label": "Availability",
+                              "value": "Open"
+                            }
+                          ]
                         },
                         "children": []
                       }
