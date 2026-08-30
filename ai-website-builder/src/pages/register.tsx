@@ -111,7 +111,7 @@ export default function Register() {
       className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
       style={{
         fontFamily: "'Playfair Display', 'Cormorant Garamond', 'Georgia', serif",
-        background: 'radial-gradient(circle at 50% -10%, #1a0a2e 0%, #0a0615 28%, #05030a 65%, #020105 100%)',
+        background: 'radial-gradient(circle at 50% -10%, #31205f 0%, #15142d 28%, #090b18 65%, #05060d 100%)',
       }}
     >
       <style>{`
@@ -192,17 +192,18 @@ export default function Register() {
           animation: bounce 1s ease-in-out infinite;
         }
 
-        .btn-gold-purple {
-          background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 25%, #8b5cf6 50%, #7c3aed 75%, #6d28d9 100%);
+        /* Button Styles from Login.tsx */
+        .btn-primary {
+          background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 25%, #8b5cf6 50%, #7c3aed 75%, #6d28d9 100%);
           background-size: 200% 200%;
-          box-shadow: 0 4px 25px rgba(251, 191, 36, 0.25);
+          box-shadow: 0 4px 25px rgba(6, 182, 212, 0.25);
           transition: all 0.4s ease;
           animation: gradient-shift 3s ease-in-out infinite;
         }
 
-        .btn-gold-purple:hover {
+        .btn-primary:hover {
           transform: translateY(-2px) scale(1.02);
-          box-shadow: 0 8px 35px rgba(251, 191, 36, 0.4);
+          box-shadow: 0 8px 35px rgba(6, 182, 212, 0.4);
         }
 
         @keyframes gradient-shift {
@@ -211,18 +212,22 @@ export default function Register() {
         }
       `}</style>
 
-      {/* Background */}
+      {/* Background - From Login.tsx */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-72 left-1/2 -translate-x-1/2 w-[900px] h-[700px] rounded-full bg-purple-600/[0.12] blur-[160px] animate-pulse-soft" />
-        <div className="absolute top-[25%] -left-72 w-[600px] h-[600px] rounded-full bg-amber-500/[0.06] blur-[150px] animate-float-slow" />
-        <div className="absolute bottom-[-300px] right-[-200px] w-[700px] h-[700px] rounded-full bg-violet-600/[0.10] blur-[160px] animate-float-slower" />
-        <div className="absolute top-[55%] left-[45%] w-[350px] h-[350px] rounded-full bg-amber-400/[0.04] blur-[120px]" />
-        <div className="absolute inset-0 opacity-[0.025]" style={{ backgroundImage: 'linear-gradient(rgba(167,139,250,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(167,139,250,0.3) 1px, transparent 1px)', backgroundSize: '80px 80px' }} />
-        <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-amber-400/40 rounded-full animate-float-slow"></div>
-        <div className="absolute top-1/3 right-1/3 w-1.5 h-1.5 bg-purple-400/40 rounded-full animate-float-slower"></div>
-        <div className="absolute bottom-1/4 left-1/3 w-1 h-1 bg-amber-400/30 rounded-full animate-float-slow" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute top-2/3 right-1/4 w-1.5 h-1.5 bg-purple-400/30 rounded-full animate-float-slower" style={{ animationDelay: '3s' }}></div>
-        <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-amber-400/20 rounded-full animate-float-slow" style={{ animationDelay: '4s' }}></div>
+        {/* Main purple glow */}
+        <div className="absolute -top-72 left-1/2 -translate-x-1/2 w-[900px] h-[700px] rounded-full bg-purple-600/[0.16] blur-[160px] animate-pulse-soft" />
+        
+        {/* Blue glow */}
+        <div className="absolute top-[25%] -left-72 w-[600px] h-[600px] rounded-full bg-blue-600/[0.10] blur-[150px] animate-float-slow" />
+        
+        {/* Violet glow */}
+        <div className="absolute bottom-[-300px] right-[-200px] w-[700px] h-[700px] rounded-full bg-violet-600/[0.12] blur-[160px] animate-float-slower" />
+        
+        {/* Cyan glow */}
+        <div className="absolute top-[55%] left-[45%] w-[350px] h-[350px] rounded-full bg-cyan-500/[0.05] blur-[120px]" />
+        
+        {/* Subtle grid */}
+        <div className="absolute inset-0 opacity-[0.035]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
       </div>
 
       {/* Main Container */}
@@ -232,22 +237,22 @@ export default function Register() {
         {/* Logo/Brand */}
         <div className="text-center mb-8 animate-float">
           <div className="inline-flex items-center justify-center gap-3 group">
-            <div className="bg-gradient-to-r from-amber-400 via-purple-400 to-amber-300 p-3 rounded-2xl shadow-2xl shadow-purple-500/20 group-hover:shadow-amber-400/30 transition-all duration-500 group-hover:scale-110 group-hover:-rotate-6">
+            <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-400 p-3 rounded-2xl shadow-2xl shadow-purple-500/20 group-hover:shadow-cyan-400/30 transition-all duration-500 group-hover:scale-110 group-hover:-rotate-6">
               <Sparkles className="w-8 h-8 text-white" />
             </div>
-            <span className="text-4xl font-luxury font-bold bg-gradient-to-r from-white to-amber-200 bg-clip-text text-transparent">
+            <span className="text-4xl font-luxury font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
               BuildAndHost
             </span>
           </div>
-          <p className="font-serif-light text-amber-200/50 mt-3 text-sm tracking-wider animate-pulse-soft">
+          <p className="font-serif-light text-purple-200/50 mt-3 text-sm tracking-wider animate-pulse-soft">
             Join us and start building amazing things
           </p>
         </div>
 
         {/* Card */}
-        <div className="bg-white/5 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/10 hover:border-amber-400/20 transition-all duration-500 hover:shadow-amber-400/5 relative">
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-amber-400 via-purple-400 to-amber-300 rounded-full"></div>
-          <div className="absolute -top-3 -right-3 w-12 h-12 bg-amber-400/20 rounded-full blur-xl"></div>
+        <div className="bg-white/5 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/10 hover:border-cyan-400/20 transition-all duration-500 hover:shadow-cyan-400/5 relative">
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 rounded-full"></div>
+          <div className="absolute -top-3 -right-3 w-12 h-12 bg-cyan-400/20 rounded-full blur-xl"></div>
           <div className="absolute -bottom-3 -left-3 w-12 h-12 bg-purple-400/20 rounded-full blur-xl"></div>
 
           {/* Error message */}
@@ -263,14 +268,14 @@ export default function Register() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Full Name */}
             <div className="transform transition-all duration-300 hover:scale-[1.01]">
-              <label className="block text-sm font-serif-light text-amber-200/70 mb-2 tracking-wide">
+              <label className="block text-sm font-serif-light text-purple-200/70 mb-2 tracking-wide">
                 Full Name
               </label>
               <div className={`relative group transition-all duration-300 ${
                 focusedField === 'name' ? 'scale-[1.02]' : ''
               }`}>
                 <div className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-all duration-300 ${
-                  focusedField === 'name' ? 'text-amber-400' : 'text-amber-300/30'
+                  focusedField === 'name' ? 'text-cyan-400' : 'text-purple-300/30'
                 }`}>
                   <User className="h-5 w-5 transition-all duration-300 group-hover:scale-110" />
                 </div>
@@ -283,7 +288,7 @@ export default function Register() {
                   onBlur={() => setFocusedField(null)}
                   required
                   placeholder="John Doe"
-                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl focus:border-amber-400 focus:ring-4 focus:ring-amber-400/20 transition-all duration-300 outline-none text-white placeholder:text-white/20 font-serif-light tracking-wide hover:border-white/20"
+                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl focus:border-cyan-400 focus:ring-4 focus:ring-cyan-400/20 transition-all duration-300 outline-none text-white placeholder:text-white/20 font-serif-light tracking-wide hover:border-white/20"
                 />
                 {fullName && (
                   <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-400 animate-fade-in" />
@@ -323,14 +328,14 @@ export default function Register() {
 
             {/* Email */}
             <div className="transform transition-all duration-300 hover:scale-[1.01]">
-              <label className="block text-sm font-serif-light text-amber-200/70 mb-2 tracking-wide">
+              <label className="block text-sm font-serif-light text-purple-200/70 mb-2 tracking-wide">
                 Email Address
               </label>
               <div className={`relative group transition-all duration-300 ${
                 focusedField === 'email' ? 'scale-[1.02]' : ''
               }`}>
                 <div className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-all duration-300 ${
-                  focusedField === 'email' ? 'text-amber-400' : 'text-amber-300/30'
+                  focusedField === 'email' ? 'text-cyan-400' : 'text-purple-300/30'
                 }`}>
                   <Mail className="h-5 w-5 transition-all duration-300 group-hover:scale-110" />
                 </div>
@@ -343,7 +348,7 @@ export default function Register() {
                   onBlur={() => setFocusedField(null)}
                   required
                   placeholder="you@example.com"
-                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl focus:border-amber-400 focus:ring-4 focus:ring-amber-400/20 transition-all duration-300 outline-none text-white placeholder:text-white/20 font-serif-light tracking-wide hover:border-white/20"
+                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl focus:border-cyan-400 focus:ring-4 focus:ring-cyan-400/20 transition-all duration-300 outline-none text-white placeholder:text-white/20 font-serif-light tracking-wide hover:border-white/20"
                 />
                 {email && (
                   <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-400 animate-fade-in" />
@@ -353,14 +358,14 @@ export default function Register() {
 
             {/* Password */}
             <div className="transform transition-all duration-300 hover:scale-[1.01]">
-              <label className="block text-sm font-serif-light text-amber-200/70 mb-2 tracking-wide">
+              <label className="block text-sm font-serif-light text-purple-200/70 mb-2 tracking-wide">
                 Password
               </label>
               <div className={`relative group transition-all duration-300 ${
                 focusedField === 'password' ? 'scale-[1.02]' : ''
               }`}>
                 <div className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-all duration-300 ${
-                  focusedField === 'password' ? 'text-amber-400' : 'text-amber-300/30'
+                  focusedField === 'password' ? 'text-cyan-400' : 'text-purple-300/30'
                 }`}>
                   <Lock className="h-5 w-5 transition-all duration-300 group-hover:scale-110" />
                 </div>
@@ -373,12 +378,12 @@ export default function Register() {
                   onBlur={() => setFocusedField(null)}
                   required
                   placeholder="Create a strong password"
-                  className="w-full pl-10 pr-12 py-3 bg-white/5 border border-white/10 rounded-2xl focus:border-amber-400 focus:ring-4 focus:ring-amber-400/20 transition-all duration-300 outline-none text-white placeholder:text-white/20 font-serif-light tracking-wide hover:border-white/20"
+                  className="w-full pl-10 pr-12 py-3 bg-white/5 border border-white/10 rounded-2xl focus:border-cyan-400 focus:ring-4 focus:ring-cyan-400/20 transition-all duration-300 outline-none text-white placeholder:text-white/20 font-serif-light tracking-wide hover:border-white/20"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-amber-300/30 hover:text-amber-200 transition-all duration-300 hover:scale-110"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-purple-300/30 hover:text-purple-200 transition-all duration-300 hover:scale-110"
                 >
                   {showPassword ? (
                     <EyeOff className="h-5 w-5" />
@@ -409,9 +414,9 @@ export default function Register() {
                     </div>
                     <div className="flex items-center gap-1">
                       <Star className={`w-3 h-3 transition-all duration-300 ${
-                        passwordStrength >= 1 ? 'text-amber-400 fill-amber-400' : 'text-white/20'
+                        passwordStrength >= 1 ? 'text-cyan-400 fill-cyan-400' : 'text-white/20'
                       }`} />
-                      <span className="text-xs font-serif-light text-amber-300/50 font-medium">
+                      <span className="text-xs font-serif-light text-purple-300/50 font-medium">
                         {strengthLabels[passwordStrength - 1] || 'Weak'}
                       </span>
                     </div>
@@ -427,7 +432,7 @@ export default function Register() {
                       <li
                         key={i}
                         className={`text-[10px] font-serif-light transition-all duration-300 flex items-center gap-1 ${
-                          item.check ? 'text-emerald-400' : 'text-amber-300/30'
+                          item.check ? 'text-emerald-400' : 'text-purple-300/30'
                         }`}
                         style={{
                           transitionDelay: `${i * 150}ms`
@@ -448,14 +453,14 @@ export default function Register() {
 
             {/* Confirm Password */}
             <div className="transform transition-all duration-300 hover:scale-[1.01]">
-              <label className="block text-sm font-serif-light text-amber-200/70 mb-2 tracking-wide">
+              <label className="block text-sm font-serif-light text-purple-200/70 mb-2 tracking-wide">
                 Confirm Password
               </label>
               <div className={`relative group transition-all duration-300 ${
                 focusedField === 'confirm' ? 'scale-[1.02]' : ''
               }`}>
                 <div className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-all duration-300 ${
-                  focusedField === 'confirm' ? 'text-amber-400' : 'text-amber-300/30'
+                  focusedField === 'confirm' ? 'text-cyan-400' : 'text-purple-300/30'
                 }`}>
                   <Lock className="h-5 w-5 transition-all duration-300 group-hover:scale-110" />
                 </div>
@@ -473,13 +478,13 @@ export default function Register() {
                       ? 'border-red-500/50 focus:border-red-400 focus:ring-red-500/20'
                       : confirmPassword && password === confirmPassword
                       ? 'border-emerald-500/50 focus:border-emerald-400 focus:ring-emerald-500/20'
-                      : 'border-white/10 focus:border-amber-400 focus:ring-amber-400/20'
+                      : 'border-white/10 focus:border-cyan-400 focus:ring-cyan-400/20'
                   }`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-amber-300/30 hover:text-amber-200 transition-all duration-300 hover:scale-110"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-purple-300/30 hover:text-purple-200 transition-all duration-300 hover:scale-110"
                 >
                   {showConfirmPassword ? (
                     <EyeOff className="h-5 w-5" />
@@ -499,41 +504,41 @@ export default function Register() {
               </div>
             </div>
 
-            {/* Terms - FIXED: Added id to checkbox and htmlFor to label */}
+            {/* Terms */}
             <div className="flex items-start gap-3 pt-2">
               <div className="relative group">
                 <input
-                  id="termsCheckbox"  // <-- Added id
+                  id="termsCheckbox"
                   type="checkbox"
                   checked={agreeTerms}
                   onChange={(e) => setAgreeTerms(e.target.checked)}
-                  className="w-4 h-4 rounded border-white/20 bg-white/5 text-amber-400 focus:ring-amber-400 focus:ring-offset-0 mt-1 cursor-pointer transition-all duration-300"
+                  className="w-4 h-4 rounded border-white/20 bg-white/5 text-cyan-400 focus:ring-cyan-400 focus:ring-offset-0 mt-1 cursor-pointer transition-all duration-300"
                 />
-                <div className={`absolute inset-0 rounded border-2 border-amber-400/0 transition-all duration-300 ${
-                  agreeTerms ? 'border-amber-400/50 scale-110' : ''
+                <div className={`absolute inset-0 rounded border-2 border-cyan-400/0 transition-all duration-300 ${
+                  agreeTerms ? 'border-cyan-400/50 scale-110' : ''
                 }`}></div>
               </div>
               <label 
-                htmlFor="termsCheckbox"  // <-- Added htmlFor matching the id
-                className="text-sm font-serif-light text-amber-200/40 tracking-wide cursor-pointer hover:text-amber-200/70 transition-colors duration-300"
+                htmlFor="termsCheckbox"
+                className="text-sm font-serif-light text-purple-200/40 tracking-wide cursor-pointer hover:text-purple-200/70 transition-colors duration-300"
               >
                 I agree to the{' '}
                 <a 
                   href="#" 
-                  className="text-amber-200 hover:text-white transition-all duration-300 relative group"
+                  className="text-purple-200 hover:text-white transition-all duration-300 relative group"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <span>Terms of Service</span>
-                  <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+                  <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
                 </a>
                 {' '}and{' '}
                 <a 
                   href="#" 
-                  className="text-amber-200 hover:text-white transition-all duration-300 relative group"
+                  className="text-purple-200 hover:text-white transition-all duration-300 relative group"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <span>Privacy Policy</span>
-                  <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+                  <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
                 </a>
               </label>
             </div>
@@ -542,7 +547,7 @@ export default function Register() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full btn-gold-purple text-white font-body font-semibold py-3.5 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group relative overflow-hidden tracking-wide"
+              className="w-full btn-primary text-white font-body font-semibold py-3.5 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group relative overflow-hidden tracking-wide"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
               
@@ -562,15 +567,15 @@ export default function Register() {
 
           {/* Login link */}
           <div className="mt-8 text-center">
-            <p className="font-serif-light text-amber-200/40 tracking-wide">
+            <p className="font-serif-light text-purple-200/40 tracking-wide">
               Already have an account?{' '}
               <Link
                 to="/login"
-                className="text-amber-200 hover:text-white font-semibold transition-all duration-300 relative group"
+                className="text-purple-200 hover:text-white font-semibold transition-all duration-300 relative group"
               >
                 <span className="relative">
                   Sign in
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
                 </span>
               </Link>
             </p>
@@ -578,7 +583,7 @@ export default function Register() {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-[10px] font-serif-light text-amber-300/20 mt-6 tracking-wider">
+        <p className="text-center text-[10px] font-serif-light text-purple-300/20 mt-6 tracking-wider">
           By creating an account, you agree to our Terms of Service and Privacy Policy
         </p>
       </div>
