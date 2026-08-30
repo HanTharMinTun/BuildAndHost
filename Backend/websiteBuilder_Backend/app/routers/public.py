@@ -55,10 +55,11 @@ async def get_website_by_subdomain(
             detail="Website data not found",
         )
     
-    # Return the website JSON and metadata
+    # Return the website JSON, theme, and metadata
     return {
         "id": str(website.id),
         "website_json": website.website_json,
+        "theme_json": website.theme_json,
         "subdomain": deployment.subdomain,
         "domain": deployment.domain,
         "version": website.version,
@@ -71,14 +72,22 @@ async def get_website_by_hostname(
     db: AsyncSession = Depends(get_db),
 ):
     """
-    Get a published website's JSON by detecting the hostname from the request.
+    Get a published website's JSON by detecting the hostname from the request origin.
     This is useful when the frontend doesn't know the subdomain in advance.
     """
-    # Extract hostname from request
-    hostname = request.headers.get("host", "")
+    # Extract hostname from the origin header (where the request came from)
+    # The 'host' header contains the API server, but 'origin' contains the client's domain
+    origin = request.headers.get("origin", "")
     
-    # Remove port if present
-    hostname = hostname.split(":")[0]
+    if not origin:
+        raise HTTPException(
+            status_code=400,
+            detail="Missing origin header - cannot determine subdomain",
+        )
+    
+    # Remove protocol (https://) and port if present
+    # origin format: https://subdomain.onlinegif.shop or https://subdomain.onlinegif.shop:443
+    hostname = origin.replace("https://", "").replace("http://", "").split(":")[0]
     
     # Extract subdomain from hostname
     # Expected format: subdomain.onlinegif.shop
@@ -88,7 +97,7 @@ async def get_website_by_hostname(
     if "localhost" in hostname or len(parts) < 3:
         raise HTTPException(
             status_code=400,
-            detail="Invalid hostname for published site",
+            detail=f"Invalid hostname for published site: {hostname}",
         )
     
     # Extract subdomain (first part)

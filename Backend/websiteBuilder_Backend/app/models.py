@@ -309,6 +309,11 @@ class GeneratedWebsite(Base):
         nullable=False,
     )
 
+    theme_json: Mapped[dict | None] = mapped_column(
+        JSONB,
+        nullable=True,
+    )
+
     version: Mapped[int] = mapped_column(
         Integer,
         nullable=False,

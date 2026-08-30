@@ -88,6 +88,7 @@ class WebsiteCreate(BaseModel):
     project_id: uuid.UUID
     prompt_id: uuid.UUID | None = None
     website_json: dict[str, Any]
+    theme_json: dict[str, Any] | None = None
     version: int = 1
 
 
@@ -99,6 +100,7 @@ class WebsiteResponse(BaseModel):
     prompt_id: uuid.UUID | None
     user_id: uuid.UUID
     website_json: dict[str, Any]
+    theme_json: dict[str, Any] | None
     version: int
     created_at: datetime
 

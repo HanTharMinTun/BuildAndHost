@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Renderer from "../renderer/Renderer";
 import type { ComponentNode } from "../renderer/types";
+import { themeToCss } from "../theme/generatedTheme";
 
 interface PublishedWebsite {
   id: string;
   website_json: ComponentNode;
+  theme_json: any;
   subdomain: string;
   domain: string;
   version: number;
@@ -12,8 +14,12 @@ interface PublishedWebsite {
 
 export default function PublishedSite() {
   const [website, setWebsite] = useState<ComponentNode | null>(null);
+  const [theme, setTheme] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Convert theme JSON to CSS using the same function as the editor
+  const themeCss = useMemo(() => themeToCss(theme), [theme]);
 
   useEffect(() => {
     const fetchPublishedWebsite = async () => {
@@ -46,6 +52,7 @@ export default function PublishedSite() {
         }
 
         setWebsite(data.website_json);
+        setTheme(data.theme_json);
         setError(null);
       } catch (err) {
         console.error("Error loading published website:", err);
@@ -136,8 +143,10 @@ export default function PublishedSite() {
   }
 
   // Render the website using the existing Renderer component
+  // Apply theme CSS just like in the editor
   return (
-    <div className="published-site">
+    <div className="published-site ai-site">
+      {themeCss && <style>{themeCss}</style>}
       <Renderer node={website} />
     </div>
   );

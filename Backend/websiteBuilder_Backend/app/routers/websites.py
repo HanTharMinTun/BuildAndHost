@@ -71,6 +71,7 @@ async def save_website(
         prompt_id=data.prompt_id,
         user_id=current_user.id,
         website_json=data.website_json,
+        theme_json=data.theme_json,
         version=data.version,
     )
 
