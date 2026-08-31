@@ -21,6 +21,11 @@ class UserLogin(BaseModel):
     password: str
 
 
+class GoogleLoginRequest(BaseModel):
+    """Request schema for Google OAuth login"""
+    credential: str  # Google ID token from frontend
+
+
 class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

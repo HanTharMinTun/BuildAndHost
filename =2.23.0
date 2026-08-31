@@ -1,0 +1,14 @@
+Collecting google-auth
+  Downloading google_auth-2.57.0-py3-none-any.whl.metadata (6.0 kB)
+Collecting pyasn1-modules>=0.2.1 (from google-auth)
+  Downloading pyasn1_modules-0.4.2-py3-none-any.whl.metadata (3.5 kB)
+Requirement already satisfied: cryptography>=38.0.3 in ./.venv/lib/python3.12/site-packages (from google-auth) (50.0.0)
+Requirement already satisfied: cffi>=2.0.0 in ./.venv/lib/python3.12/site-packages (from cryptography>=38.0.3->google-auth) (2.1.1)
+Requirement already satisfied: pyasn1<0.7.0,>=0.6.1 in ./.venv/lib/python3.12/site-packages (from pyasn1-modules>=0.2.1->google-auth) (0.6.4)
+Requirement already satisfied: pycparser in ./.venv/lib/python3.12/site-packages (from cffi>=2.0.0->cryptography>=38.0.3->google-auth) (3.0)
+Downloading google_auth-2.57.0-py3-none-any.whl (259 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 259.7/259.7 kB 11.1 MB/s eta 0:00:00
+Downloading pyasn1_modules-0.4.2-py3-none-any.whl (181 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 181.3/181.3 kB 15.6 MB/s eta 0:00:00
+Installing collected packages: pyasn1-modules, google-auth
+Successfully installed google-auth-2.57.0 pyasn1-modules-0.4.2

@@ -7,11 +7,11 @@
         "type": "Navbar",
         "props": {
           "items": [
-            "ပင်မစာမျက်နှာ",
-            "ကျွန်ုပ်တို့အကြောင်း",
-            "မီနူး",
-            "ဓာတ်ပုံများ",
-            "ဆက်သွယ်ရန်"
+            "Home",
+            "About",
+            "Menu",
+            "Gallery",
+            "Contact"
           ]
         },
         "children": []
@@ -19,14 +19,11 @@
       {
         "type": "Hero",
         "props": {
-          "title": "မြန်မာ့ရိုးရာ ကော်ဖီအရသာ",
-          "subtitle": "လတ်ဆတ်သော ကော်ဖီစေ့များဖြင့် ပြုလုပ်ထားသည့် အရည်အသွေးမြင့် ကော်ဖီများကို ရှမ်းကုန်းမြင့်ဒေသမှ တိုက်ရိုက်ရယူ၍ ပြုလုပ်ပေးပါသည်",
-          "buttonText": "မီနူးကြည့်ရန်",
+          "title": "Welcome to Yoe Shin Cafe",
+          "subtitle": "Experience authentic flavors and warm hospitality in every cup and dish",
+          "buttonText": "View Menu",
           "buttonAction": "#menu",
-          "image": {
-            "src": "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1600&q=80",
-            "alt": "လတ်ဆတ်သော ကော်ဖီခွက်နှင့် ကော်ဖီစေ့များ"
-          }
+          "image": "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1600&q=80"
         },
         "children": []
       },
@@ -51,7 +48,7 @@
                       {
                         "type": "Heading",
                         "props": {
-                          "text": "ကျွန်ုပ်တို့အကြောင်း",
+                          "text": "Our Story",
                           "level": 2
                         },
                         "children": []
@@ -59,14 +56,14 @@
                       {
                         "type": "Paragraph",
                         "props": {
-                          "text": "၂၀၁၅ ခုနှစ်မှစတင်၍ မြန်မာနိုင်ငံ၏ အကောင်းဆုံး ကော်ဖီဆိုင်များထဲမှ တစ်ခုအဖြစ် ဝန်ဆောင်မှုပေးလျက်ရှိပါသည်။ ရှမ်းပြည်နယ် ကုန်းမြင့်ဒေသမှ လတ်ဆတ်သော ကော်ဖီစေ့များကို အသုံးပြု၍ ကျွမ်းကျင်သော ဘာရစ်တာများက ချက်ပြုတ်ပေးပါသည်။"
+                          "text": "Yoe Shin Cafe opened its doors in 2018 with a simple mission: to create a welcoming space where friends and family can gather over exceptional coffee and delicious homemade food. Our recipes are inspired by traditional flavors with a modern twist."
                         },
                         "children": []
                       },
                       {
                         "type": "Paragraph",
                         "props": {
-                          "text": "ကျွန်ုပ်တို့၏ ရည်မှန်းချက်မှာ မြန်မာ့ရိုးရာ ကော်ဖီယဉ်ကျေးမှုကို ခေတ်မီနည်းလမ်းများဖြင့် ပေါင်းစပ်ကာ သင့်အတွက် အထူးအရသာရှိသော ကော်ဖီအတွေ့အကြုံကို ပေးဆောင်ရန်ဖြစ်ပါသည်။"
+                          "text": "Every dish is prepared fresh daily using locally sourced ingredients. We take pride in our craft, from hand-pulled espresso shots to our signature pastries baked on-site each morning."
                         },
                         "children": []
                       }
@@ -75,8 +72,8 @@
                   {
                     "type": "Image",
                     "props": {
-                      "src": "https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=1600&q=80",
-                      "alt": "ကော်ဖီဆိုင်အတွင်းပိုင်း ပတ်ဝန်းကျင်"
+                      "src": "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1600&q=80",
+                      "alt": "Interior of Yoe Shin Cafe with wooden tables and warm lighting"
                     },
                     "children": []
                   }
@@ -95,25 +92,23 @@
             "props": {},
             "children": [
               {
-                "type": "Stats",
+                "type": "Heading",
+                "props": {
+                  "text": "What We Offer",
+                  "level": 2
+                },
+                "children": []
+              },
+              {
+                "type": "FeatureList",
                 "props": {
                   "items": [
-                    {
-                      "label": "နှစ်များအတွေ့အကြုံ",
-                      "value": "၁၁"
-                    },
-                    {
-                      "label": "ကျေနပ်သောဖောက်သည်များ",
-                      "value": "၃၀,၀၀၀+"
-                    },
-                    {
-                      "label": "ကော်ဖီမျိုးစုံ",
-                      "value": "၂၅"
-                    },
-                    {
-                      "label": "ဘာရစ်တာများ",
-                      "value": "၁၂"
-                    }
+                    "Specialty coffee and espresso drinks",
+                    "Fresh baked pastries and desserts",
+                    "All-day breakfast menu",
+                    "Artisan sandwiches and salads",
+                    "Vegan and gluten-free options",
+                    "Free WiFi and cozy seating"
                   ]
                 },
                 "children": []
@@ -133,15 +128,8 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "ကျွန်ုပ်တို့၏ မီနူး",
+                  "text": "Menu Highlights",
                   "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "Paragraph",
-                "props": {
-                  "text": "ရွေးချယ်စရာများစွာဖြင့် သင့်အတွက် အကောင်းဆုံး ကော်ဖီအရသာကို ရှာဖွေပါ"
                 },
                 "children": []
               },
@@ -154,78 +142,30 @@
                   {
                     "type": "Card",
                     "props": {
-                      "title": "အက်စပရက်ဆို",
-                      "description": "လတ်ဆတ်သော ကော်ဖီစေ့များဖြင့် ပြုလုပ်ထားသော ရှမ်းကော်ဖီ၏ အစစ်အမှန် အရသာ။ အားကောင်းပြီး အရသာရှိသော ကော်ဖီကို နှစ်သက်သူများအတွက် အကောင်းဆုံး။",
-                      "image": {
-                        "src": "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=800&q=80",
-                        "alt": "အက်စပရက်ဆို ကော်ဖီခွက်"
-                      },
-                      "buttonText": "အော်ဒါမှာရန်"
+                      "title": "Signature Latte",
+                      "description": "House-roasted espresso with steamed milk and your choice of flavor",
+                      "image": "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "Learn more"
                     },
                     "children": []
                   },
                   {
                     "type": "Card",
                     "props": {
-                      "title": "လက်တေး",
-                      "description": "နို့နှင့် အက်စပရက်ဆို၏ ပြီးပြည့်စုံသော ပေါင်းစပ်မှု။ နူးညံ့ချော်မွေ့ပြီး အရသာချိုမြိန်သော ကော်ဖီ။ မနက်ခင်းအတွက် အကောင်းဆုံး။",
-                      "image": {
-                        "src": "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=800&q=80",
-                        "alt": "လက်တေး ကော်ဖီ"
-                      },
-                      "buttonText": "အော်ဒါမှာရန်"
+                      "title": "Avocado Toast",
+                      "description": "Fresh avocado on sourdough with cherry tomatoes and herbs",
+                      "image": "https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "Learn more"
                     },
                     "children": []
                   },
                   {
                     "type": "Card",
                     "props": {
-                      "title": "ကက်ပူချီနို",
-                      "description": "နို့အမွှေးနှင့် အက်စပရက်ဆို၏ အလွှာများ။ ချောကလက်အမှုန့်ဖြင့် အထူးအရသာပြည့်ဝစေသည်။ ညနေခင်းအတွက် အကောင်းဆုံး။",
-                      "image": {
-                        "src": "https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=800&q=80",
-                        "alt": "ကက်ပူချီနို ကော်ဖီ"
-                      },
-                      "buttonText": "အော်ဒါမှာရန်"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "ရှမ်းကော်ဖီ (ရိုးရာ)",
-                      "description": "ငါးပေါင်းကြိုးကော်ဖီစေ့ဖြင့် ပြုလုပ်ထားသော မြန်မာ့ရိုးရာ ကော်ဖီ။ ချိုမြိန်ပြီး အားကောင်းသော အရသာ။ မြန်မာစစ်မှန်သော အရသာ။",
-                      "image": {
-                        "src": "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80",
-                        "alt": "မြန်မာ့ရိုးရာ ကော်ဖီ"
-                      },
-                      "buttonText": "အော်ဒါမှာရန်"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "အေးခဲကော်ဖီ",
-                      "description": "ပူပြင်းသော ရာသီဥတုအတွက် လတ်ဆတ်အေးမြသော ကော်ဖီ။ နို့နှင့် ရေခဲတို့ဖြင့် ပြုလုပ်ထားပြီး အရသာပြည့်ဝသည်။",
-                      "image": {
-                        "src": "https://images.unsplash.com/photo-1517487881594-2787fef5ebf7?auto=format&fit=crop&w=800&q=80",
-                        "alt": "အေးခဲကော်ဖီ"
-                      },
-                      "buttonText": "အော်ဒါမှာရန်"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "မိုကာ",
-                      "description": "ကော်ဖီနှင့် ချောကလက်၏ ပြီးပြည့်စုံသော ပေါင်းစပ်မှု။ ချိုသာပြီး အရသာရှိသော ကော်ဖီကို နှစ်သက်သူများအတွက်။",
-                      "image": {
-                        "src": "https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?auto=format&fit=crop&w=800&q=80",
-                        "alt": "မိုကာ ကော်ဖီ"
-                      },
-                      "buttonText": "အော်ဒါမှာရန်"
+                      "title": "Homemade Croissant",
+                      "description": "Buttery layers baked fresh every morning, plain or chocolate",
+                      "image": "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "Learn more"
                     },
                     "children": []
                   }
@@ -236,38 +176,17 @@
         ]
       },
       {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
-              {
-                "type": "Heading",
-                "props": {
-                  "text": "အထူးလက်ဆောင်များ",
-                  "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "FeatureList",
-                "props": {
-                  "items": [
-                    "လတ်ဆတ်သော ကော်ဖီစေ့များကို နေ့စဉ် ကြိတ်ပြုလုပ်ပါသည်",
-                    "ရှမ်းပြည်နယ်မှ တိုက်ရိုက်ရယူထားသော အရည်အသွေးမြင့် ကော်ဖီစေ့များ",
-                    "ကျွမ်းကျင်သော ဘာရစ်တာများက ချက်ပြုလုပ်ပေးပါသည်",
-                    "သန့်ရှင်းပြီး သာယာသော ပတ်ဝန်းကျင်",
-                    "အခမဲ့ Wi-Fi ဝန်ဆောင်မှု",
-                    "သာမန်ဖောက်သည်များအတွက် အထူးလျှော့စျေး"
-                  ]
-                },
-                "children": []
-              }
-            ]
-          }
-        ]
+        "type": "Gallery",
+        "props": {
+          "images": [
+            "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1600&q=80",
+            "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1600&q=80",
+            "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=1600&q=80",
+            "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1600&q=80",
+            "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=1600&q=80"
+          ]
+        },
+        "children": []
       },
       {
         "type": "Section",
@@ -280,34 +199,30 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "ကျွန်ုပ်တို့၏ ဓာတ်ပုံများ",
+                  "text": "Visit Us",
                   "level": 2
                 },
                 "children": []
               },
               {
-                "type": "Gallery",
+                "type": "Stats",
                 "props": {
-                  "images": [
+                  "items": [
                     {
-                      "src": "https://images.unsplash.com/photo-1453614512568-c4024d13c247?auto=format&fit=crop&w=1600&q=80",
-                      "alt": "ကော်ဖီဆိုင်အတွင်းပိုင်း"
+                      "label": "Years Serving",
+                      "value": "8"
                     },
                     {
-                      "src": "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1600&q=80",
-                      "alt": "လတ်ဆတ်သော ကော်ဖီစေ့များ"
+                      "label": "Daily Customers",
+                      "value": "200+"
                     },
                     {
-                      "src": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1600&q=80",
-                      "alt": "ဘာရစ်တာ ကော်ဖီချက်နေစဉ်"
+                      "label": "Menu Items",
+                      "value": "45"
                     },
                     {
-                      "src": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1600&q=80",
-                      "alt": "ကော်ဖီခွက်များ"
-                    },
-                    {
-                      "src": "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1600&q=80",
-                      "alt": "လက်တေး အနုပညာ"
+                      "label": "Coffee Varieties",
+                      "value": "12"
                     }
                   ]
                 },
@@ -328,7 +243,7 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "မကြာခဏမေးလေ့ရှိသောမေးခွန်းများ",
+                  "text": "Frequently Asked Questions",
                   "level": 2
                 },
                 "children": []
@@ -338,28 +253,20 @@
                 "props": {
                   "items": [
                     {
-                      "question": "ဖွင့်ချိန်နှင့် ပိုင်ချိန်များ",
-                      "answer": "ကျွန်ုပ်တို့သည် တနင်္လာနေ့မှ တနင်္ဂနွေနေ့အထိ နံနက် ၇ နာရီမှ ညနေ ၉ နာရီအထိ ဖွင့်လှစ်ပါသည်။ အစိုးရရုံးပိတ်ရက်များတွင်လည်း ပုံမှန်အတိုင်း ဖွင့်လှစ်ပါသည်။"
+                      "question": "What are your opening hours?",
+                      "answer": "We are open Monday to Friday from 7:00 AM to 6:00 PM, and weekends from 8:00 AM to 7:00 PM."
                     },
                     {
-                      "question": "အွန်လိုင်းမှာယူနိုင်ပါသလား",
-                      "answer": "ရပါသည်။ ကျွန်ုပ်တို့၏ ဝက်ဘ်ဆိုက်မှတစ်ဆင့် သို့မဟုတ် ဖုန်းဖြင့် ကြိုတင်မှာယူနိုင်ပါသည်။ အသင့်ပြင်ဆင်ပြီးသောအခါ လာယူနိုင်ပါသည်။"
+                      "question": "Do you offer WiFi?",
+                      "answer": "Yes, we provide free high-speed WiFi for all customers. Perfect for remote work or casual browsing."
                     },
                     {
-                      "question": "ကော်ဖီစေ့များကို ဝယ်ယူနိုင်ပါသလား",
-                      "answer": "ရပါသည်။ ကျွန်ုပ်တို့၏ ရှမ်းကော်ဖီစေ့များကို အိမ်တွင် ချက်ပြုတ်ရန် တိုက်ရိုက်ဝယ်ယူနိုင်ပါသည်။ ကြိတ်ထားသော သို့မဟုတ် မကြိတ်ရသေးသော ကော်ဖီစေ့များကို ရွေးချယ်နိုင်ပါသည်။"
+                      "question": "Do you have vegan options?",
+                      "answer": "Absolutely! We offer plant-based milk alternatives, vegan pastries, and several vegan menu items clearly marked."
                     },
                     {
-                      "question": "ကော်ဖီမသောက်သူများအတွက် အခြားရွေးချယ်စရာများရှိပါသလား",
-                      "answer": "ရှိပါသည်။ လက်ဖက်ရည်များ၊ ချောကလက်ပူ၊ ဖရုံသီးဖျော်ရည်များနှင့် အခြားအချိုရည်များကို ရရှိနိုင်ပါသည်။ မုန့်များနှင့် အခြားလက်ဆောင်များလည်း ရှိပါသည်။"
-                    },
-                    {
-                      "question": "Wi-Fi ရှိပါသလား",
-                      "answer": "ရှိပါသည်။ ဖောက်သည်များအားလုံးအတွက် အခမဲ့ Wi-Fi ဝန်ဆောင်မှု ပေးပါသည်။ လျှပ်စစ်ပလပ်များလည်း ရရှိနိုင်ပါသည်။"
-                    },
-                    {
-                      "question": "ကားရပ်နားရန်နေရာရှိပါသလား",
-                      "answer": "ရှိပါသည်။ ကျွန်ုပ်တို့ဆိုင်ရှေ့တွင် ကားရပ်နားရန် နေရာအနည်းငယ်ရှိပါသည်။ အနီးအနားရှိ အများသုံး ကားရပ်နားရန်နေရာများလည်း ရရှိနိုင်ပါသည်။"
+                      "question": "Can I make reservations for groups?",
+                      "answer": "For groups of 8 or more, please contact us in advance so we can ensure adequate seating."
                     }
                   ]
                 },
@@ -380,15 +287,8 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "ဆက်သွယ်ရန်",
+                  "text": "Get In Touch",
                   "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "Paragraph",
-                "props": {
-                  "text": "သင့်ထံမှ ကြားရတာဝမ်းသာပါတယ်။ မေးခွန်းများ၊ တင်ပြချက်များ သို့မဟုတ် ကြိုတင်မှာယူလိုပါက ကျွန်ုပ်တို့ထံ ဆက်သွယ်ပါ။"
                 },
                 "children": []
               },

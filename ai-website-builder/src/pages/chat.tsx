@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
 import { api } from '../lib/api';
 import type { Project, GeneratedWebsite } from '../lib/types';
@@ -18,6 +18,7 @@ const LOADING_PHRASES = [
 
 export default function Home() {
     const navigate = useNavigate();
+    const location = useLocation();
     const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth();
     const [currentProject, setCurrentProject] = useState<Project | null>(null);
     const [showSidebar, setShowSidebar] = useState(false);
@@ -293,61 +294,62 @@ export default function Home() {
     return (
         <>
             {/* =========================================================
-                CYBERPUNK NAVIGATION
+                NAVIGATION - SAME AS HOME PAGE
             ========================================================= */}
-            <nav className="fixed top-0 left-0 right-0 z-50 border-b border-cyan-500/20 bg-black/80 backdrop-blur-xl">
+            <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.08] bg-[#080a15]/75 backdrop-blur-2xl">
                 <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
                     <div className="h-[76px] flex items-center justify-between">
-                        {/* Logo */}
+
+                        {/* Logo - Show user profile circle instead of B&H when logged in */}
                         <div className="flex items-center gap-3 group">
                             {isAuthenticated && user ? (
+                                // User Profile Circle - replaces B&H logo
                                 <div
-                                    className="relative w-11 h-11 rounded-lg bg-gradient-to-br from-cyan-400 to-purple-600 p-[1px] shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 transition-all duration-300 cursor-pointer hover:scale-105 clip-path-polygon"
+                                    className="relative w-11 h-11 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-400 p-[1px] shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 transition-all duration-300 cursor-pointer hover:scale-105"
                                     onClick={() => setShowSidebar(!showSidebar)}
-                                    style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}
                                 >
-                                    <div className="w-full h-full rounded-lg bg-black flex items-center justify-center" style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}>
-                                        <span className="text-base font-mono font-bold bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">
+                                    <div className="w-full h-full rounded-full bg-[#0a0d18] flex items-center justify-center">
+                                        <span className="text-base font-luxury font-bold bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">
                                             {user.username?.charAt(0)?.toUpperCase() || 'U'}
                                         </span>
                                     </div>
-                                    <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-green-400 border-2 border-black"></div>
+                                    {/* Status indicator */}
+                                    <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-[#0a0d18]"></div>
                                 </div>
                             ) : (
-                                <Link to="/" className="relative w-11 h-11 rounded-lg bg-gradient-to-br from-cyan-400 to-purple-600 p-[1px] shadow-lg shadow-cyan-500/30 group-hover:scale-105 transition-transform">
-                                    <div className="w-full h-full rounded-lg bg-black flex items-center justify-center">
-                                        <span className="text-xs font-mono font-bold tracking-widest bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">B&H</span>
+                                // Show B&H logo when not logged in
+                                <Link to="/" className="relative w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-400 p-[1px] shadow-lg shadow-purple-500/20 group-hover:scale-105 transition-transform">
+                                    <div className="w-full h-full rounded-[11px] bg-[#0a0d18] flex items-center justify-center">
+                                        <span className="text-xs font-luxury font-bold tracking-widest bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">B&H</span>
                                     </div>
                                 </Link>
                             )}
                             <div>
-                                <div className="font-mono text-lg font-bold tracking-wide text-white">
-                                    <span className="text-cyan-400">Build</span>
-                                    <span className="text-purple-400">And</span>
-                                    <span className="text-cyan-400">Host</span>
+                                <div className="font-luxury text-lg font-bold tracking-wide text-white">
+                                    Build<span className="text-purple-400">And</span>Host
                                 </div>
-                                <div className="text-[9px] font-mono uppercase tracking-[0.3em] text-cyan-500/60">AI Website Builder</div>
+                                <div className="text-[9px] font-serif-light uppercase tracking-[0.3em] text-white/40">AI Website Builder</div>
                             </div>
                         </div>
 
-                        {/* Desktop Navigation */}
+                        {/* Desktop Navigation - Only show when authenticated */}
                         {isAuthenticated && (
                             <div className="hidden md:flex items-center gap-2">
-                                <Link to="/" className="px-4 py-2 rounded-lg text-cyan-400/60 hover:text-cyan-300 hover:bg-cyan-500/10 text-sm font-mono font-medium transition-all border border-transparent hover:border-cyan-500/30">~/home</Link>
-                                <Link to="/chat" className={`px-4 py-2 rounded-lg text-sm font-mono font-medium transition-all ${isActive('/chat')
-                                    ? 'bg-cyan-500/10 text-cyan-300 border border-cyan-500/30'
-                                    : 'text-cyan-400/60 hover:text-cyan-300 hover:bg-cyan-500/10 border border-transparent hover:border-cyan-500/30'
-                                    }`}>~/ai-builder</Link>
-                                <Link to="/websites" className="px-4 py-2 rounded-lg text-cyan-400/60 hover:text-cyan-300 hover:bg-cyan-500/10 text-sm font-mono font-medium transition-all border border-transparent hover:border-cyan-500/30">~/my-websites</Link>
+                                <Link to="/" className="px-4 py-2 rounded-lg text-white/65 hover:text-white hover:bg-white/[0.06] text-sm font-body font-medium transition-all">Home</Link>
+                                <Link to="/chat" className={`px-4 py-2 rounded-lg text-sm font-body font-medium transition-all ${isActive('/chat')
+                                    ? 'bg-white/[0.09] text-white border border-white/[0.08]'
+                                    : 'text-white/65 hover:text-white hover:bg-white/[0.06]'
+                                    }`}>AI Builder</Link>
+                                <Link to="/websites" className="px-4 py-2 rounded-lg text-white/65 hover:text-white hover:bg-white/[0.06] text-sm font-body font-medium transition-all">My Websites</Link>
                             </div>
                         )}
 
-                        {/* Authentication */}
+                        {/* Authentication - Only show Login/Get Started when not authenticated */}
                         <div className="flex items-center gap-3">
                             {!isAuthenticated ? (
                                 <>
-                                    <Link to="/login" className="hidden sm:block px-4 py-2.5 text-sm font-mono text-cyan-400/70 hover:text-cyan-300 transition-colors">./login</Link>
-                                    <Link to="/register" className="px-5 py-2.5 rounded-lg text-white text-sm font-mono font-semibold bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 transition-all shadow-lg shadow-cyan-500/30">./get-started</Link>
+                                    <Link to="/login" className="hidden sm:block px-4 py-2.5 text-sm font-body font-light text-white/75 hover:text-white transition-colors tracking-wide">Login</Link>
+                                    <Link to="/register" className="btn-get-started px-5 py-2.5 rounded-lg text-white text-sm font-body font-semibold tracking-wide">Get Started</Link>
                                 </>
                             ) : null}
                         </div>
@@ -356,40 +358,43 @@ export default function Home() {
             </nav>
 
             {/* =========================================================
-                CYBERPUNK SIDEBAR
+                PREMIUM TOGGLE SIDEBAR - SAME AS HOME PAGE
             ========================================================= */}
             {isAuthenticated && showSidebar && (
                 <>
+                    {/* Backdrop with blur */}
                     <div
-                        className="fixed inset-0 z-40 bg-black/80 backdrop-blur-md"
+                        className="fixed inset-0 z-40 bg-black/60 backdrop-blur-md"
                         onClick={() => setShowSidebar(false)}
                     />
 
-                    <div className="fixed right-0 top-0 z-50 h-full w-80 bg-black border-l border-cyan-500/30 shadow-2xl shadow-cyan-500/20 sidebar-slide-in">
+                    {/* Premium Sidebar - Fixed height layout with hidden scrollbar */}
+                    <div className="fixed right-0 top-0 z-50 h-full w-80 bg-gradient-to-b from-[#0a0d18] via-[#0d1120] to-[#0a0d18] backdrop-blur-2xl border-l border-white/[0.08] shadow-2xl shadow-black/80 sidebar-slide-in">
                         <div className="flex flex-col h-full">
-                            {/* Sidebar Header */}
-                            <div className="relative p-6 border-b border-cyan-500/20 bg-gradient-to-br from-cyan-500/5 to-purple-500/5 flex-shrink-0">
-                                <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-cyan-500/10 blur-[80px]" />
-                                <div className="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-purple-500/10 blur-[80px]" />
+                            {/* Premium Sidebar Header - Fixed */}
+                            <div className="relative p-6 border-b border-white/[0.06] bg-gradient-to-br from-purple-500/5 to-cyan-500/5 flex-shrink-0">
+                                {/* Decorative glow */}
+                                <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-purple-500/10 blur-[80px]" />
+                                <div className="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-cyan-500/10 blur-[80px]" />
 
                                 <div className="relative flex items-center gap-4">
-                                    <div className="relative w-14 h-14 rounded-lg bg-gradient-to-br from-cyan-400 to-purple-600 p-[2px] shadow-xl shadow-cyan-500/30">
-                                        <div className="w-full h-full rounded-lg bg-black flex items-center justify-center">
-                                            <span className="text-xl font-mono font-bold bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">
+                                    <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-400 p-[2px] shadow-xl shadow-purple-500/30">
+                                        <div className="w-full h-full rounded-full bg-[#0a0d18] flex items-center justify-center">
+                                            <span className="text-xl font-luxury font-bold bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">
                                                 {user?.username?.charAt(0)?.toUpperCase() || 'U'}
                                             </span>
                                         </div>
                                     </div>
                                     <div className="flex-1">
-                                        <div className="font-mono text-base font-semibold text-white tracking-wide">{user?.username}</div>
+                                        <div className="font-body text-base font-semibold text-white tracking-wide">{user?.username}</div>
                                         <div className="flex items-center gap-2 mt-0.5">
-                                            <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
-                                            <div className="text-[10px] font-mono text-cyan-500/60 tracking-wider">ONLINE</div>
+                                            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+                                            <div className="text-[10px] font-serif-light text-white/40 tracking-wider">Online</div>
                                         </div>
                                     </div>
                                     <button
                                         onClick={() => setShowSidebar(false)}
-                                        className="text-cyan-500/30 hover:text-cyan-300 transition-colors"
+                                        className="text-white/30 hover:text-white/60 transition-colors"
                                     >
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -398,80 +403,84 @@ export default function Home() {
                                 </div>
                             </div>
 
-                            {/* Sidebar Navigation */}
+                            {/* Sidebar Navigation - Scrollable with hidden scrollbar */}
                             <div className="flex-1 overflow-y-auto sidebar-scroll p-4 space-y-1.5">
-                                <div className="px-3 py-2 text-[10px] font-mono text-cyan-500/40 tracking-[0.15em] uppercase">Navigation</div>
+                                <div className="px-3 py-2 text-[10px] font-serif-light text-white/20 tracking-[0.15em] uppercase">Navigation</div>
 
                                 <Link
                                     to="/"
-                                    className="flex items-center gap-3 px-4 py-3.5 rounded-lg hover:bg-cyan-500/10 transition-all duration-300 text-cyan-400/70 hover:text-cyan-300 group border border-transparent hover:border-cyan-500/20"
+                                    className="flex items-center gap-3 px-4 py-3.5 rounded-xl hover:bg-white/[0.06] transition-all duration-300 text-white/70 hover:text-white group"
                                     onClick={() => setShowSidebar(false)}
                                 >
-                                    <div className="w-9 h-9 rounded-lg bg-cyan-500/10 flex items-center justify-center">
-                                        <svg className="w-5 h-5 text-cyan-400/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center">
+                                        <svg className="w-5 h-5 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                         </svg>
                                     </div>
-                                    <span className="font-mono text-sm font-medium flex-1">~/home</span>
-                                    <span className="text-cyan-500/20 group-hover:text-cyan-300/40 transition-colors">→</span>
+                                    <span className="font-body text-sm font-medium flex-1">Home</span>
+                                    <span className="text-white/20 group-hover:text-white/40 transition-colors">→</span>
                                 </Link>
 
                                 <Link
                                     to="/chat"
-                                    className={`flex items-center gap-3 px-4 py-3.5 rounded-lg transition-all duration-300 group border ${isActive('/chat')
-                                        ? 'bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border-cyan-400/40 text-cyan-300'
-                                        : 'hover:bg-cyan-500/10 text-cyan-400/70 hover:text-cyan-300 border-transparent hover:border-cyan-500/20'
+                                    className={`flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 group ${isActive('/chat')
+                                        ? 'bg-gradient-to-r from-purple-500/20 to-cyan-500/20 border border-purple-400/30 text-white'
+                                        : 'hover:bg-white/[0.06] text-white/70 hover:text-white'
                                         }`}
                                     onClick={() => setShowSidebar(false)}
                                 >
                                     <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${isActive('/chat')
-                                        ? 'bg-gradient-to-br from-cyan-500/30 to-purple-500/30'
-                                        : 'bg-cyan-500/10'
+                                        ? 'bg-gradient-to-br from-purple-500/30 to-cyan-500/30'
+                                        : 'bg-white/5'
                                         }`}>
-                                        <svg className={`w-5 h-5 ${isActive('/chat') ? 'text-cyan-300' : 'text-cyan-400/60'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className={`w-5 h-5 ${isActive('/chat') ? 'text-purple-300' : 'text-white/40'
+                                            }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                         </svg>
                                     </div>
-                                    <span className="font-mono text-sm font-medium flex-1">~/ai-builder</span>
-                                    <span className="text-cyan-500/20 group-hover:text-cyan-300/40 transition-colors">→</span>
+                                    <span className={`font-body text-sm font-medium flex-1 ${isActive('/chat') ? 'text-white' : ''
+                                        }`}>AI Builder</span>
+                                    <span className={`transition-colors ${isActive('/chat') ? 'text-white/40' : 'text-white/20 group-hover:text-white/40'
+                                        }`}>→</span>
                                 </Link>
 
                                 <Link
                                     to="/websites"
-                                    className="flex items-center gap-3 px-4 py-3.5 rounded-lg hover:bg-cyan-500/10 transition-all duration-300 text-cyan-400/70 hover:text-cyan-300 group border border-transparent hover:border-cyan-500/20"
+                                    className="flex items-center gap-3 px-4 py-3.5 rounded-xl hover:bg-white/[0.06] transition-all duration-300 text-white/70 hover:text-white group"
                                     onClick={() => setShowSidebar(false)}
                                 >
-                                    <div className="w-9 h-9 rounded-lg bg-cyan-500/10 flex items-center justify-center">
-                                        <svg className="w-5 h-5 text-cyan-400/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center">
+                                        <svg className="w-5 h-5 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                                         </svg>
                                     </div>
-                                    <span className="font-mono text-sm font-medium flex-1">~/my-websites</span>
-                                    <span className="text-cyan-500/20 group-hover:text-cyan-300/40 transition-colors">→</span>
+                                    <span className="font-body text-sm font-medium flex-1">My Websites</span>
+                                    <span className="text-white/20 group-hover:text-white/40 transition-colors">→</span>
                                 </Link>
                             </div>
 
-                            {/* Sidebar Footer */}
-                            <div className="p-4 border-t border-cyan-500/20 bg-gradient-to-t from-purple-500/5 to-transparent flex-shrink-0">
+                            {/* Premium Sidebar Footer - Fixed with logout button */}
+                            <div className="p-4 border-t border-white/[0.06] bg-gradient-to-t from-purple-500/5 to-transparent flex-shrink-0">
                                 <button
                                     onClick={() => {
                                         logout();
                                         navigate('/');
                                         setShowSidebar(false);
                                     }}
-                                    className="w-full flex items-center gap-3 px-4 py-3.5 rounded-lg bg-gradient-to-r from-red-500/10 to-rose-500/10 hover:from-red-500/20 hover:to-rose-500/20 transition-all duration-300 text-red-400 hover:text-red-300 border border-red-500/10 hover:border-red-500/30"
+                                    className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl bg-gradient-to-r from-red-500/10 to-rose-500/10 hover:from-red-500/20 hover:to-rose-500/20 transition-all duration-300 text-red-400 hover:text-red-300 border border-red-500/10 hover:border-red-500/30"
                                 >
                                     <div className="w-9 h-9 rounded-lg bg-red-500/10 flex items-center justify-center">
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                                         </svg>
                                     </div>
-                                    <span className="font-mono text-sm font-medium flex-1">./logout</span>
+                                    <span className="font-body text-sm font-medium flex-1">Logout</span>
                                     <span className="text-red-400/20">↗</span>
                                 </button>
 
-                                <div className="mt-4 text-center text-[9px] font-mono text-cyan-500/30 tracking-wider">
-                                    BuildAndHost v2.0 • Cyberpunk Edition
+                                {/* Version info */}
+                                <div className="mt-4 text-center text-[9px] font-serif-light text-white/15 tracking-wider">
+                                    BuildAndHost v2.0 • AI Powered
                                 </div>
                             </div>
                         </div>
@@ -479,6 +488,9 @@ export default function Home() {
                 </>
             )}
 
+            {/* =========================================================
+                CHAT CONTENT - UNCHANGED
+            ========================================================= */}
             <div
                 className="chat-root min-h-screen flex items-center justify-center p-4 sm:p-6 relative overflow-hidden pt-[76px]"
                 style={{
@@ -868,7 +880,7 @@ export default function Home() {
                 )}
 
                 {/* =========================================================
-                    CYBERPUNK CHAT WINDOW
+                    CYBERPUNK CHAT WINDOW - UNCHANGED
                 ========================================================= */}
                 <div className="chat-window w-full max-w-4xl bg-black rounded-lg shadow-[0_0_50px_rgba(0,255,255,0.3)] overflow-hidden relative border border-cyan-500/30">
                     {/* Header */}
@@ -897,7 +909,7 @@ export default function Home() {
                             </div>
                             <div className="flex items-center gap-3">
                                 {/* =========================================================
-                                    CYBERPUNK TERMINAL DROPDOWN
+                                    CYBERPUNK TERMINAL DROPDOWN - UNCHANGED
                                 ========================================================= */}
                                 <div className="relative" ref={dropdownRef}>
                                     <button
@@ -939,8 +951,8 @@ export default function Home() {
                                                             handleTypeSelect(item.value);
                                                         }}
                                                         className={`w-full text-left px-3 py-2.5 rounded transition-all duration-200 group relative border-l-2 ${type === item.value
-                                                                ? 'border-cyan-400 bg-cyan-500/20'
-                                                                : 'border-transparent hover:border-cyan-400/50 hover:bg-cyan-500/5'
+                                                            ? 'border-cyan-400 bg-cyan-500/20'
+                                                            : 'border-transparent hover:border-cyan-400/50 hover:bg-cyan-500/5'
                                                             }`}
                                                         style={{ pointerEvents: 'auto', cursor: 'pointer', position: 'relative', zIndex: 10000 }}
                                                     >
@@ -982,7 +994,8 @@ export default function Home() {
                             </div>
                         </div>
                     </div>
-                    {/* Chat Body */}
+
+                    {/* Chat Body - Unchanged */}
                     <div ref={containerRef} className="chat-body p-6 h-[60vh] overflow-auto bg-black relative z-[1]">
                         <div className="space-y-4 max-w-full">
                             {messages.map((m, i) => (
@@ -993,8 +1006,8 @@ export default function Home() {
                                         </div>
                                     )}
                                     <div className={`px-4 py-3 rounded shadow-md transition-all hover:shadow-lg ${m.role === "assistant"
-                                            ? "bg-cyan-500/10 border border-cyan-500/30 text-cyan-100/90 rounded-tl-none font-mono"
-                                            : "bg-gradient-to-br from-cyan-500 to-purple-600 text-white rounded-tr-none font-mono"
+                                        ? "bg-cyan-500/10 border border-cyan-500/30 text-cyan-100/90 rounded-tl-none font-mono"
+                                        : "bg-gradient-to-br from-cyan-500 to-purple-600 text-white rounded-tr-none font-mono"
                                         }`} style={{ maxWidth: '55%', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
                                         <p className="leading-relaxed text-sm">{m.text}</p>
                                     </div>
@@ -1003,7 +1016,7 @@ export default function Home() {
                         </div>
                     </div>
 
-                    {/* File Error */}
+                    {/* File Error - Unchanged */}
                     {fileError && (
                         <div className="px-6 py-3 bg-red-500/10 border-t border-red-500/30">
                             <div className="flex items-center gap-2 text-red-400 text-sm font-mono">
@@ -1013,7 +1026,7 @@ export default function Home() {
                         </div>
                     )}
 
-                    {/* File Preview */}
+                    {/* File Preview - Unchanged */}
                     {selectedFiles.length > 0 && (
                         <div className="px-6 py-2 bg-black border-t border-cyan-500/20">
                             <div className="flex flex-wrap gap-2">
@@ -1037,7 +1050,7 @@ export default function Home() {
                         </div>
                     )}
 
-                    {/* Input Area */}
+                    {/* Input Area - Unchanged */}
                     <div className="chat-input p-4 border-t border-cyan-500/20 bg-black">
                         <div className="flex items-center gap-3">
                             <input

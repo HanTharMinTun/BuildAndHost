@@ -57,6 +57,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const googleLogin = async (credential: string) => {
+    try {
+      const response = await api.post<LoginResponse>('/api/auth/google/login', {
+        credential,
+      });
+
+      if (response.error || !response.data) {
+        return { success: false, error: response.error || 'Google login failed' };
+      }
+
+      const { access_token, user: userData } = response.data;
+
+      // Store token and user data (same as normal login)
+      localStorage.setItem('authToken', access_token);
+      localStorage.setItem('authUser', JSON.stringify(userData));
+
+      setToken(access_token);
+      setUser(userData);
+
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Google login failed',
+      };
+    }
+  };
+
   const register = async (data: RegisterRequest) => {
     try {
       const response = await api.post<RegisterResponse>('/api/auth/register', data);
@@ -89,6 +117,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isAuthenticated: !!token && !!user,
     isLoading,
     login,
+    googleLogin,
     register,
     logout,
   };
