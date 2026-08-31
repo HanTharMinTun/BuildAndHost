@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional
 
 from pydantic import BaseModel, EmailStr, ConfigDict
 
@@ -46,6 +46,31 @@ class ProjectUpdate(BaseModel):
     status: str | None = None
 
 
+# Upload schema for nested responses
+class UploadInfo(BaseModel):
+    """Simplified upload info for nested responses"""
+    model_config = ConfigDict(from_attributes=True)
+    
+    id: uuid.UUID
+    filename: str
+    file_type: str | None
+    file_size: int
+    created_at: datetime
+
+
+# Deployment info for nested responses
+class DeploymentInfo(BaseModel):
+    """Simplified deployment info for nested responses"""
+    model_config = ConfigDict(from_attributes=True)
+    
+    id: uuid.UUID
+    subdomain: str
+    domain: str
+    status: str
+    created_at: datetime
+    updated_at: datetime
+
+
 class ProjectResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -56,6 +81,13 @@ class ProjectResponse(BaseModel):
     status: str
     created_at: datetime
     updated_at: datetime
+    
+    # Enhanced fields for MVP
+    prompt: Optional[str] = None  # Latest or creation prompt text
+    attachments: list[UploadInfo] = []  # Files attached to this project
+    deployment_url: Optional[str] = None  # Full deployment URL if deployed
+    deployment_status: Optional[str] = None  # Deployment status
+    deployment_info: Optional[DeploymentInfo] = None  # Full deployment details
 
 
 # =========================

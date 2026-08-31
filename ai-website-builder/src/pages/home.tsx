@@ -29,15 +29,15 @@ export default function Home() {
                 'Manage, preview and organize all of your generated websites from one simple workspace.',
             link: '/websites',
             accent: 'from-emerald-400 to-teal-500',
-        },
-        {
-            icon: '↗',
-            title: 'Publish & Deploy',
-            description:
-                'Take your website from development to the web and make your digital presence accessible online.',
-            link: '/deploy',
-            accent: 'from-orange-400 to-pink-500',
-        },
+        }
+        // {
+        //     icon: '↗',
+        //     title: 'Publish & Deploy',
+        //     description:
+        //         'Take your website from development to the web and make your digital presence accessible online.',
+        //     link: '/deploy',
+        //     accent: 'from-orange-400 to-pink-500',
+        // },
     ];
 
     return (
@@ -409,7 +409,7 @@ export default function Home() {
                             </p>
                         </div>
 
-                        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             {features.map((feature, index) => (
                                 <Link key={feature.title} to={feature.link} className="group relative overflow-hidden min-h-[300px] rounded-2xl border border-white/[0.09] bg-[#0b0e18] p-7 hover:border-white/[0.18] hover:-translate-y-1 transition-all duration-300">
                                     <div className={`absolute -top-24 -right-24 w-48 h-48 rounded-full bg-gradient-to-br ${feature.accent} opacity-0 blur-[70px] group-hover:opacity-20 transition-opacity duration-500`} />

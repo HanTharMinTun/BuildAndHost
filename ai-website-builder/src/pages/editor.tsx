@@ -494,7 +494,7 @@ export default function Editor() {
         if (cancelled) return;
         if (data?.theme) {
           setTheme(data.theme);
-          try { localStorage.setItem("websiteTheme", JSON.stringify(data.theme)); } catch {}
+          try { localStorage.setItem("websiteTheme", JSON.stringify(data.theme)); } catch { }
         }
       } catch (e) {
         // ignore network errors in dev
@@ -566,7 +566,7 @@ export default function Editor() {
           // clear any previously set inline color so theme can control it
           (el as HTMLElement).style.color = '';
         }
-      } catch {}
+      } catch { }
     }
   }, [website, themeCss]);
   const [selectedPath, setSelectedPath] = useState<string | null>("0");
@@ -601,16 +601,16 @@ export default function Editor() {
     if (!selected || !selectedPath) return;
     const path = selectedPath.split(".").map(Number);
     if (!path.length) return;
-    
+
     const next = clone(website);
     const node = getNode(next, path);
     if (!node) return;
-    
+
     const oldValue = node.props?.[key];
     const nextValue = Array.isArray(oldValue)
       ? parseListInput(value)
       : typeof oldValue === "number" ? Number(value) || 0 : value;
-    
+
     // Ensure we create a completely new props object to avoid any reference issues
     node.props = { ...(node.props || {}), [key]: nextValue };
     save(next);
@@ -646,100 +646,100 @@ export default function Editor() {
     localStorage.setItem("website", JSON.stringify(website));
     localStorage.setItem("websiteTheme", JSON.stringify(theme));
     // Navigate to deploy page with the current website context
-    navigate('/deploy');
+    navigate('/websites');
   }
 
   return (
     <>
       <AppNavbar currentPage="/editor" />
       <div className="cms-editor">
-      <aside className="cms-panel cms-panel--palette">
-        <div className="cms-brand">BuildAndHost <span>CMS</span></div>
-        <p>Drag a block onto the page, or click to add it at the bottom.</p>
-        <div className="cms-palette">
-          {palette.map((type) => (
-            <button
-              key={type}
-              draggable
-              onDragStart={(event) => event.dataTransfer.setData("application/x-website-node", JSON.stringify({ kind: "palette", type }))}
-              onClick={() => addToEnd(type)}
-            >
-              <span>+</span>{type}
-            </button>
-          ))}
-        </div>
-      </aside>
+        <aside className="cms-panel cms-panel--palette">
+          <div className="cms-brand">BuildAndHost <span>CMS</span></div>
+          <p>Drag a block onto the page, or click to add it at the bottom.</p>
+          <div className="cms-palette">
+            {palette.map((type) => (
+              <button
+                key={type}
+                draggable
+                onDragStart={(event) => event.dataTransfer.setData("application/x-website-node", JSON.stringify({ kind: "palette", type }))}
+                onClick={() => addToEnd(type)}
+              >
+                <span>+</span>{type}
+              </button>
+            ))}
+          </div>
+        </aside>
 
-      <main
-        className="cms-workspace"
-        onClick={() => setSelectedPath("")}
-        onDragOver={(event) => event.preventDefault()}
-        onDrop={(event) => {
-          event.preventDefault();
-          const payload = getPayload(event);
-          if (payload?.kind === "palette") addToEnd(payload.type);
-        }}
-      >
-        <div className="cms-toolbar">
-          <span>Page editor</span>
-          <button onClick={() => localStorage.setItem("website", JSON.stringify(website))}>Save changes</button>
+        <main
+          className="cms-workspace"
+          onClick={() => setSelectedPath("")}
+          onDragOver={(event) => event.preventDefault()}
+          onDrop={(event) => {
+            event.preventDefault();
+            const payload = getPayload(event);
+            if (payload?.kind === "palette") addToEnd(payload.type);
+          }}
+        >
+          <div className="cms-toolbar">
+            <span>Page editor</span>
+            <button onClick={() => localStorage.setItem("website", JSON.stringify(website))}>Save changes</button>
 
-          <button onClick={async () => {
-            try {
-              const resp = await fetch("/api/ai/design_theme", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ brief: "Create a polished, modern theme with subtle animations and responsive adjustments.", ...(website as any) }),
-              });
-              if (!resp.ok) return;
-              const data = await resp.json();
-              if (data?.theme) {
-                setTheme(data.theme);
-                try { localStorage.setItem("websiteTheme", JSON.stringify(data.theme)); } catch {}
+            <button onClick={async () => {
+              try {
+                const resp = await fetch("/api/ai/design_theme", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ brief: "Create a polished, modern theme with subtle animations and responsive adjustments.", ...(website as any) }),
+                });
+                if (!resp.ok) return;
+                const data = await resp.json();
+                if (data?.theme) {
+                  setTheme(data.theme);
+                  try { localStorage.setItem("websiteTheme", JSON.stringify(data.theme)); } catch { }
+                }
+              } catch { }
+            }}>Generate Theme</button>
+
+            <button onClick={handleDeploy} style={{ backgroundColor: '#4F46E5', color: 'white' }}>Deploy Website</button>
+          </div>
+          <div className="cms-canvas ai-site">
+            {themeCss && <style>{themeCss}</style>}
+            <EditorNode node={website} path={[]} selectedPath={selectedPath ?? ""} onSelect={(path) => setSelectedPath(path.length ? path.join(".") : null)} onDropNode={dropNode} />
+          </div>
+        </main>
+
+        <aside className="cms-panel cms-panel--inspector">
+          <h2>Properties</h2>
+          {selected ? (
+            <>
+              <div className="cms-selected-type">{selected.type}</div>
+              {
+                // Show only the props that exist on this component, excluding UI-only properties
+                (() => {
+                  const excludedProps = ["style", "color", "size", "align", "animations"];
+                  const existing = Object.keys(selected.props ?? {}).filter((k) => !excludedProps.includes(k));
+                  return existing.map((key) => (
+                    <label key={key}>
+                      {key}
+                      <PropertyInput key={`${selectedPath ?? "root"}-${key}`} name={key} value={(selected.props ?? {})[key]} onCommit={updateProp} />
+                    </label>
+                  ));
+                })()
               }
-            } catch {}
-          }}>Generate Theme</button>
-
-          <button onClick={handleDeploy} style={{ backgroundColor: '#4F46E5', color: 'white' }}>Deploy Website</button>
-        </div>
-        <div className="cms-canvas ai-site">
-          {themeCss && <style>{themeCss}</style>}
-          <EditorNode node={website} path={[]} selectedPath={selectedPath ?? ""} onSelect={(path) => setSelectedPath(path.length ? path.join(".") : null)} onDropNode={dropNode} />
-        </div>
-      </main>
-
-      <aside className="cms-panel cms-panel--inspector">
-        <h2>Properties</h2>
-        {selected ? (
-          <>
-            <div className="cms-selected-type">{selected.type}</div>
-            {
-              // Show only the props that exist on this component, excluding UI-only properties
-              (() => {
-                const excludedProps = ["style", "color", "size", "align", "animations"];
-                const existing = Object.keys(selected.props ?? {}).filter((k) => !excludedProps.includes(k));
-                return existing.map((key) => (
-                  <label key={key}>
-                    {key}
-                    <PropertyInput key={`${selectedPath ?? "root"}-${key}`} name={key} value={(selected.props ?? {})[key]} onCommit={updateProp} />
-                  </label>
-                ));
-              })()
-            }
-            {!Object.keys(selected.props ?? {}).length && <p className="cms-empty">This block has no editable properties.</p>}
-            {selectedPath && (
-              <>
-                <div className="cms-position-actions">
-                  <button disabled={selectedIndex === 0} onClick={() => moveSelected(-1)}>↑ Move up</button>
-                  <button disabled={!selectedParent?.children || selectedIndex === selectedParent.children.length - 1} onClick={() => moveSelected(1)}>↓ Move down</button>
-                </div>
-                <button className="cms-delete" onClick={deleteSelected}>Delete block</button>
-              </>
-            )}
-          </>
-        ) : <p className="cms-empty">Select a block on the canvas to edit it.</p>}
-      </aside>
-    </div>
+              {!Object.keys(selected.props ?? {}).length && <p className="cms-empty">This block has no editable properties.</p>}
+              {selectedPath && (
+                <>
+                  <div className="cms-position-actions">
+                    <button disabled={selectedIndex === 0} onClick={() => moveSelected(-1)}>↑ Move up</button>
+                    <button disabled={!selectedParent?.children || selectedIndex === selectedParent.children.length - 1} onClick={() => moveSelected(1)}>↓ Move down</button>
+                  </div>
+                  <button className="cms-delete" onClick={deleteSelected}>Delete block</button>
+                </>
+              )}
+            </>
+          ) : <p className="cms-empty">Select a block on the canvas to edit it.</p>}
+        </aside>
+      </div>
     </>
   );
 }

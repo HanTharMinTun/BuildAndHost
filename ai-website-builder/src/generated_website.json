@@ -10,6 +10,7 @@
             "Home",
             "About",
             "Skills",
+            "Experience",
             "Projects",
             "Contact"
           ]
@@ -19,11 +20,11 @@
       {
         "type": "Hero",
         "props": {
-          "title": "Phone Myat Thura Kyaw",
-          "subtitle": "Computer Science Student | Developer | Problem Solver",
+          "title": "Han Thar Min Tun",
+          "subtitle": "Full Stack Web Developer | Software Engineer specializing in backend architecture, database optimization, and Linux infrastructure",
           "buttonText": "View My Work",
           "buttonAction": "#projects",
-          "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1600&q=80"
+          "image": "/uploads/fb8ae48153484afcb09c108e69ef3d87.png"
         },
         "children": []
       },
@@ -36,66 +37,45 @@
             "props": {},
             "children": [
               {
+                "type": "Heading",
+                "props": {
+                  "text": "About Me",
+                  "level": 2
+                },
+                "children": []
+              },
+              {
+                "type": "Paragraph",
+                "props": {
+                  "text": "Software Engineer with expertise in full-stack web development, backend system architecture, and Linux server administration. Proven competence in creating dynamic, database-driven systems using PHP and Python alongside robust MySQL optimization. Adept at managing infrastructure configurations, continuous integration, and custom automation scripting."
+                },
+                "children": []
+              },
+              {
                 "type": "Grid",
                 "props": {
-                  "columns": 2
+                  "columns": 3
                 },
                 "children": [
                   {
-                    "type": "Image",
+                    "type": "Stats",
                     "props": {
-                      "src": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80",
-                      "alt": "Student collaboration and teamwork"
+                      "items": [
+                        {
+                          "label": "Years Experience",
+                          "value": "4+"
+                        },
+                        {
+                          "label": "Projects Completed",
+                          "value": "20+"
+                        },
+                        {
+                          "label": "Technologies",
+                          "value": "15+"
+                        }
+                      ]
                     },
                     "children": []
-                  },
-                  {
-                    "type": "Stack",
-                    "props": {},
-                    "children": [
-                      {
-                        "type": "Heading",
-                        "props": {
-                          "text": "About Me",
-                          "level": 2
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "Paragraph",
-                        "props": {
-                          "text": "I'm a passionate Computer Science student dedicated to building innovative solutions through code. With a strong foundation in software development and a keen interest in emerging technologies, I thrive on solving complex problems and creating impactful applications."
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "Paragraph",
-                        "props": {
-                          "text": "My journey in computer science has equipped me with both theoretical knowledge and practical experience. I enjoy collaborating on projects, learning new technologies, and contributing to the developer community."
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "Stats",
-                        "props": {
-                          "items": [
-                            {
-                              "label": "Projects Completed",
-                              "value": "15+"
-                            },
-                            {
-                              "label": "Technologies Learned",
-                              "value": "20+"
-                            },
-                            {
-                              "label": "GitHub Contributions",
-                              "value": "500+"
-                            }
-                          ]
-                        },
-                        "children": []
-                      }
-                    ]
                   }
                 ]
               }
@@ -114,25 +94,93 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Technical Skills",
+                  "text": "Core Skills",
                   "level": 2
                 },
                 "children": []
               },
               {
-                "type": "FeatureList",
+                "type": "Grid",
+                "props": {
+                  "columns": 3
+                },
+                "children": [
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Frontend Development",
+                      "description": "HTML5, CSS3, JavaScript (ES6+), UI/UX Component Implementation",
+                      "image": "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "Learn More"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Backend & Scripting",
+                      "description": "PHP, Python (Automation & Backend Logic), C# Programming",
+                      "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "Learn More"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Infrastructure & Database",
+                      "description": "MySQL Schema Design & Optimization, Linux Server Management, Git, GitHub, Bash Scripting",
+                      "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "Learn More"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Heading",
+                "props": {
+                  "text": "Professional Experience",
+                  "level": 2
+                },
+                "children": []
+              },
+              {
+                "type": "Timeline",
                 "props": {
                   "items": [
-                    "Programming Languages: Python, Java, JavaScript, C++",
-                    "Web Development: React, Node.js, HTML, CSS",
-                    "Database Management: MySQL, MongoDB, PostgreSQL",
-                    "Version Control: Git, GitHub, GitLab",
-                    "Data Structures and Algorithms",
-                    "Object-Oriented Programming",
-                    "Software Engineering Principles",
-                    "Machine Learning Fundamentals",
-                    "Cloud Computing: AWS, Azure basics",
-                    "Problem Solving and Debugging"
+                    {
+                      "year": "2023 - Present",
+                      "title": "System Administrator (Freelance)",
+                      "description": "Configure and manage secure Linux-based production environments. Implement Access Control Lists, user workspace configurations, and robust server firewall policies. Facilitate deployment pipelines and execute comprehensive backend diagnostics."
+                    },
+                    {
+                      "year": "2024",
+                      "title": "PHP Developer (Part-Time)",
+                      "description": "Architected and refactored core backend functionalities for responsive PHP web applications. Designed MySQL database normalization strategies and implemented complex authentication, session states, and custom API validation logic."
+                    },
+                    {
+                      "year": "2021 - 2024",
+                      "title": "Unity Game Developer (Self-Employed)",
+                      "description": "Engineered extensible game systems and multi-threaded script assemblies using C# and Unity Engine. Built modular state machines for high-performance interactive gameplay loops and canvas-driven UI components."
+                    },
+                    {
+                      "year": "2022",
+                      "title": "Python Developer (Self-Employed)",
+                      "description": "Created highly optimized system utilities and backend data scraping/processing scripts. Streamlined filesystem operations, standardized error handling, and mitigated application resource leaks."
+                    }
                   ]
                 },
                 "children": []
@@ -160,66 +208,46 @@
               {
                 "type": "Grid",
                 "props": {
-                  "columns": 3
+                  "columns": 2
                 },
                 "children": [
                   {
                     "type": "Card",
                     "props": {
-                      "title": "E-Commerce Platform",
-                      "description": "Full-stack web application with React frontend and Node.js backend, featuring user authentication, product management, and payment integration.",
-                      "image": "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=1600&q=80",
-                      "buttonText": "View Project"
+                      "title": "Enterprise Web Application",
+                      "description": "Full-stack PHP application with MySQL backend, featuring complex authentication, session management, and API integration",
+                      "image": "/uploads/documents/241408cecb8141b78d7d91c712247c8f/image_000.png",
+                      "buttonText": "View Details"
                     },
                     "children": []
                   },
                   {
                     "type": "Card",
                     "props": {
-                      "title": "Task Management System",
-                      "description": "Collaborative project management tool built with Java and Spring Boot, featuring real-time updates, team collaboration, and task tracking capabilities.",
-                      "image": "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=1600&q=80",
-                      "buttonText": "View Project"
+                      "title": "Linux Server Infrastructure",
+                      "description": "Configured and deployed secure production environments with automated deployment pipelines and monitoring systems",
+                      "image": "/uploads/documents/241408cecb8141b78d7d91c712247c8f/image_001.png",
+                      "buttonText": "View Details"
                     },
                     "children": []
                   },
                   {
                     "type": "Card",
                     "props": {
-                      "title": "Machine Learning Classifier",
-                      "description": "Python-based machine learning project implementing classification algorithms for predictive analysis with data visualization and model evaluation.",
-                      "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1600&q=80",
-                      "buttonText": "View Project"
+                      "title": "Unity Game Development",
+                      "description": "Developed interactive gameplay systems with optimized state machines and modular architecture using C# and Unity Engine",
+                      "image": "/uploads/documents/241408cecb8141b78d7d91c712247c8f/image_002.png",
+                      "buttonText": "View Details"
                     },
                     "children": []
                   },
                   {
                     "type": "Card",
                     "props": {
-                      "title": "Mobile Weather App",
-                      "description": "Cross-platform mobile application providing real-time weather forecasts with location-based services and interactive weather maps.",
-                      "image": "https://images.unsplash.com/photo-1592210454359-9043f067919b?auto=format&fit=crop&w=1600&q=80",
-                      "buttonText": "View Project"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Algorithm Visualizer",
-                      "description": "Interactive web tool for visualizing sorting and searching algorithms, helping students understand algorithmic concepts through animation.",
-                      "image": "https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=1600&q=80",
-                      "buttonText": "View Project"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Chat Application",
-                      "description": "Real-time messaging application using WebSocket technology, featuring group chats, file sharing, and end-to-end encryption.",
-                      "image": "https://images.unsplash.com/photo-1611746872915-64382b5c76da?auto=format&fit=crop&w=1600&q=80",
-                      "buttonText": "View Project"
+                      "title": "Python Automation Tools",
+                      "description": "Built system utilities for data processing, web scraping, and automated filesystem operations with comprehensive error handling",
+                      "image": "/uploads/documents/241408cecb8141b78d7d91c712247c8f/image_003.png",
+                      "buttonText": "View Details"
                     },
                     "children": []
                   }
@@ -240,63 +268,27 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Education Journey",
+                  "text": "Get In Touch",
                   "level": 2
                 },
                 "children": []
               },
               {
-                "type": "Timeline",
+                "type": "Paragraph",
                 "props": {
-                  "items": [
-                    {
-                      "year": "2024",
-                      "title": "Advanced Computer Science Coursework",
-                      "description": "Deep dive into advanced algorithms, software architecture, and distributed systems. Completed capstone project on cloud-based microservices."
-                    },
-                    {
-                      "year": "2023",
-                      "title": "Core CS Curriculum",
-                      "description": "Studied data structures, database systems, computer networks, and operating systems. Led team projects and participated in hackathons."
-                    },
-                    {
-                      "year": "2022",
-                      "title": "Foundation Year",
-                      "description": "Built strong foundation in programming, discrete mathematics, and computer organization. Achieved academic excellence and joined coding club."
-                    },
-                    {
-                      "year": "2021",
-                      "title": "University Enrollment",
-                      "description": "Began Bachelor of Science in Computer Science program. Discovered passion for software development and problem-solving."
-                    }
-                  ]
+                  "text": "Available for remote opportunities. Let's discuss how I can contribute to your next project."
                 },
                 "children": []
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
+              },
               {
-                "type": "Heading",
-                "props": {
-                  "text": "Let's Connect",
-                  "level": 2
-                },
+                "type": "ContactForm",
+                "props": {},
                 "children": []
               },
               {
                 "type": "Grid",
                 "props": {
-                  "columns": 2
+                  "columns": 3
                 },
                 "children": [
                   {
@@ -304,41 +296,63 @@
                     "props": {},
                     "children": [
                       {
-                        "type": "Paragraph",
+                        "type": "Heading",
                         "props": {
-                          "text": "I'm always interested in hearing about new opportunities, collaborations, or just connecting with fellow developers and tech enthusiasts."
+                          "text": "Location",
+                          "level": 3
                         },
                         "children": []
                       },
                       {
-                        "type": "Paragraph",
+                        "type": "Text",
                         "props": {
-                          "text": "Whether you have a project idea, want to discuss technology, or are looking for a motivated computer science student for an internship or collaboration, feel free to reach out."
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "Stats",
-                        "props": {
-                          "items": [
-                            {
-                              "label": "Response Time",
-                              "value": "24h"
-                            },
-                            {
-                              "label": "Availability",
-                              "value": "Open"
-                            }
-                          ]
+                          "text": "Magway Region, Myanmar (Remote Available)"
                         },
                         "children": []
                       }
                     ]
                   },
                   {
-                    "type": "ContactForm",
+                    "type": "Stack",
                     "props": {},
-                    "children": []
+                    "children": [
+                      {
+                        "type": "Heading",
+                        "props": {
+                          "text": "Email",
+                          "level": 3
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "Text",
+                        "props": {
+                          "text": "hhaann13579@gmail.com"
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Stack",
+                    "props": {},
+                    "children": [
+                      {
+                        "type": "Heading",
+                        "props": {
+                          "text": "GitHub",
+                          "level": 3
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "Text",
+                        "props": {
+                          "text": "github.com/HanTharMinTun"
+                        },
+                        "children": []
+                      }
+                    ]
                   }
                 ]
               }

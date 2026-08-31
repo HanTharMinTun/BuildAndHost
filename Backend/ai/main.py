@@ -1,7 +1,9 @@
 from fastapi import FastAPI, File, Form, UploadFile
 from typing import List, Optional
 import os
+import sys
 from uuid import uuid4
+from pathlib import Path
 
 import website_planner
 import theme_designer
@@ -13,6 +15,20 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.requests import Request
 from fastapi.staticfiles import StaticFiles
+
+# Add websiteBuilder_Backend to path for document extractors
+backend_path = Path(__file__).parent.parent / "websiteBuilder_Backend"
+if str(backend_path) not in sys.path:
+    sys.path.insert(0, str(backend_path))
+
+# Import document extractors
+try:
+    from app.document_extractors import process_document, build_ai_context, detect_document_type
+    from app.document_extractors.storage import DocumentImageStorage
+    DOCUMENT_EXTRACTION_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: Document extraction not available: {e}")
+    DOCUMENT_EXTRACTION_AVAILABLE = False
 
 app = FastAPI()
 
@@ -145,9 +161,22 @@ async def post_prompt(
 
     upload_urls: List[str] = []
     file_texts = {}
+    image_urls: List[str] = []  # Track images separately for multimodal Claude input
+    
+    # Constants
+    MAX_FILES = 5
 
     # Make sure upload directory exists
     os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+    # Validate file count
+    if files and len(files) > MAX_FILES:
+        return JSONResponse(
+            status_code=400,
+            content={
+                "detail": f"Too many files. Maximum {MAX_FILES} files allowed per message."
+            }
+        )
 
     if files:
         for f in files:
@@ -173,65 +202,105 @@ async def post_prompt(
             # Public URL
             upload_url = f"/uploads/{safe_name}"
             upload_urls.append(upload_url)
+            
+            # Track if this is an image file for Claude vision
+            image_extensions = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
+            if extension in image_extensions:
+                image_urls.append(upload_url)
 
             # ------------------------------------------------
-            # Extract text from uploaded files
+            # Extract text and images from uploaded files
             # ------------------------------------------------
 
             try:
-
-                if extension == ".pdf":
-
+                # Detect document type
+                doc_type = detect_document_type(dest_path) if DOCUMENT_EXTRACTION_AVAILABLE else None
+                
+                # Use enhanced extraction for PDF/DOCX (extracts text + images)
+                if doc_type in ["pdf", "docx"] and DOCUMENT_EXTRACTION_AVAILABLE:
                     try:
-                        from PyPDF2 import PdfReader
-
-                        reader = PdfReader(dest_path)
-
-                        text = []
-
-                        for page in reader.pages:
-                            page_text = page.extract_text() or ""
-                            text.append(page_text)
-
-                        file_texts[upload_url] = "\n".join(text)
-
-                    except Exception as e:
-                        print(f"PDF extraction failed: {e}")
-
-                elif extension == ".docx":
-
-                    try:
-                        from docx import Document
-
-                        doc = Document(dest_path)
-
-                        paragraphs = [
-                            p.text
-                            for p in doc.paragraphs
-                            if p.text
-                        ]
-
-                        file_texts[upload_url] = "\n".join(
-                            paragraphs
+                        print(f"Processing {doc_type.upper()} with enhanced extraction: {original_filename}")
+                        
+                        # Configure storage to use the AI upload directory
+                        storage_handler = DocumentImageStorage(base_upload_dir=UPLOAD_DIR)
+                        
+                        # Generate document ID
+                        doc_id = uuid4().hex
+                        
+                        # Process document (extracts text AND images)
+                        document_data = process_document(
+                            file_path=dest_path,
+                            document_id=doc_id,
+                            storage_handler=storage_handler
                         )
-
+                        
+                        # Add extracted text for AI context
+                        extracted_text = document_data.get("extracted_text", "")
+                        if extracted_text:
+                            file_texts[upload_url] = extracted_text
+                        
+                        # Add extracted images to upload_urls and image_urls for AI vision
+                        extracted_images = document_data.get("image_urls", [])
+                        for img_url in extracted_images:
+                            upload_urls.append(img_url)
+                            image_urls.append(img_url)
+                        
+                        print(f"Enhanced extraction complete: {len(extracted_text)} chars, {len(extracted_images)} images")
+                        
                     except Exception as e:
-                        print(f"DOCX extraction failed: {e}")
-
+                        print(f"Enhanced {doc_type.upper()} extraction failed: {e}")
+                        # Fall back to basic extraction
+                        if extension == ".pdf":
+                            try:
+                                from PyPDF2 import PdfReader
+                                reader = PdfReader(dest_path)
+                                text = [page.extract_text() or "" for page in reader.pages]
+                                file_texts[upload_url] = "\n".join(text)
+                                print(f"Fell back to basic PDF extraction")
+                            except Exception as e2:
+                                print(f"Basic PDF extraction also failed: {e2}")
+                        
+                        elif extension == ".docx":
+                            try:
+                                from docx import Document
+                                doc = Document(dest_path)
+                                paragraphs = [p.text for p in doc.paragraphs if p.text]
+                                file_texts[upload_url] = "\n".join(paragraphs)
+                                print(f"Fell back to basic DOCX extraction")
+                            except Exception as e2:
+                                print(f"Basic DOCX extraction also failed: {e2}")
+                
                 elif extension == ".txt":
-
+                    # Handle text files
                     try:
-                        with open(
-                            dest_path,
-                            "r",
-                            encoding="utf-8",
-                            errors="ignore"
-                        ) as fh:
-
+                        with open(dest_path, "r", encoding="utf-8", errors="ignore") as fh:
                             file_texts[upload_url] = fh.read()
-
+                        print(f"Extracted text file: {original_filename}")
                     except Exception as e:
                         print(f"TXT extraction failed: {e}")
+                
+                else:
+                    # Unsupported file type or extraction not available
+                    # Try basic extraction if it's PDF/DOCX
+                    if extension == ".pdf":
+                        try:
+                            from PyPDF2 import PdfReader
+                            reader = PdfReader(dest_path)
+                            text = [page.extract_text() or "" for page in reader.pages]
+                            file_texts[upload_url] = "\n".join(text)
+                            print(f"Basic PDF extraction: {original_filename}")
+                        except Exception as e:
+                            print(f"PDF extraction failed: {e}")
+                    
+                    elif extension == ".docx":
+                        try:
+                            from docx import Document
+                            doc = Document(dest_path)
+                            paragraphs = [p.text for p in doc.paragraphs if p.text]
+                            file_texts[upload_url] = "\n".join(paragraphs)
+                            print(f"Basic DOCX extraction: {original_filename}")
+                        except Exception as e:
+                            print(f"DOCX extraction failed: {e}")
 
             except Exception as e:
                 print(f"File processing failed: {e}")
@@ -245,7 +314,8 @@ async def post_prompt(
         website = website_planner.create_layout(
             prompt,
             file_urls=upload_urls,
-            file_texts=file_texts
+            file_texts=file_texts,
+            image_urls=image_urls  # Pass images separately for multimodal input
         )
 
         # Generate responsive layout

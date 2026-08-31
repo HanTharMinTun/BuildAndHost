@@ -38,13 +38,37 @@ export interface RegisterResponse {
   created_at: string;
 }
 
+export interface UploadInfo {
+  id: string;
+  filename: string;
+  file_type?: string;
+  file_size: number;
+  created_at: string;
+}
+
+export interface DeploymentInfo {
+  id: string;
+  subdomain: string;
+  domain: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Project {
   id: string;
   user_id: string;
   name: string;
   description?: string;
+  status: string;
   created_at: string;
   updated_at: string;
+  // Enhanced MVP fields
+  prompt?: string;  // Latest/creation prompt text
+  attachments?: UploadInfo[];  // Files attached to this project
+  deployment_url?: string;  // Full deployment URL if deployed
+  deployment_status?: string;  // Deployment status
+  deployment_info?: DeploymentInfo;  // Full deployment details
 }
 
 export interface ProjectCreate {

@@ -25,10 +25,10 @@ export default function PublishedSite() {
     const fetchPublishedWebsite = async () => {
       try {
         setLoading(true);
-        
+
         // Get the backend API URL from environment or default
         const apiUrl = import.meta.env.VITE_API_BASE_URL || "https://webcreator.site";
-        
+
         // Fetch website data by hostname (backend will extract subdomain)
         const response = await fetch(`${apiUrl}/api/public/sites/by-hostname`, {
           method: "GET",
@@ -45,7 +45,7 @@ export default function PublishedSite() {
         }
 
         const data: PublishedWebsite = await response.json();
-        
+
         // Validate that we have website JSON
         if (!data.website_json) {
           throw new Error("Invalid website data received");
@@ -73,7 +73,7 @@ export default function PublishedSite() {
         justifyContent: "center",
         minHeight: "100vh",
         fontFamily: "system-ui, -apple-system, sans-serif",
-        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        background: "radial-gradient(circle at 50% -10%, #31205f 0%, #15142d 28%, #090b18 65%, #05060d 100%)",
       }}>
         <div style={{
           textAlign: "center",
@@ -86,10 +86,20 @@ export default function PublishedSite() {
           }}>
             ⚡
           </div>
-          <p style={{ fontSize: "1.25rem", fontWeight: 500 }}>
+          <p style={{
+            fontSize: "1.25rem",
+            fontWeight: 500,
+            fontFamily: "'Playfair Display', 'Cormorant Garamond', serif",
+          }}>
             Loading your website...
           </p>
         </div>
+        <style>{`
+          @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.1); }
+          }
+        `}</style>
       </div>
     );
   }
@@ -101,16 +111,18 @@ export default function PublishedSite() {
         alignItems: "center",
         justifyContent: "center",
         minHeight: "100vh",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-        background: "#f8fafc",
+        fontFamily: "'Playfair Display', 'Cormorant Garamond', 'Georgia', serif",
+        background: 'radial-gradient(circle at 50% -10%, #31205f 0%, #15142d 28%, #090b18 65%, #05060d 100%)',
       }}>
         <div style={{
           maxWidth: "32rem",
           padding: "2rem",
-          background: "white",
+          background: "rgba(255, 255, 255, 0.05)",
+          backdropFilter: "blur(12px)",
           borderRadius: "0.5rem",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+          boxShadow: "0 4px 25px rgba(6, 182, 212, 0.1)",
           textAlign: "center",
+          border: "1px solid rgba(6, 182, 212, 0.2)",
         }}>
           <div style={{
             fontSize: "3rem",
@@ -121,15 +133,17 @@ export default function PublishedSite() {
           <h1 style={{
             fontSize: "1.5rem",
             fontWeight: 600,
-            color: "#1e293b",
+            color: "#fff",
             marginBottom: "0.5rem",
+            fontFamily: "'Playfair Display', serif",
           }}>
             Website Not Found
           </h1>
           <p style={{
-            color: "#64748b",
+            color: "rgba(255, 255, 255, 0.6)",
             fontSize: "1rem",
             lineHeight: 1.6,
+            fontFamily: "'Cormorant Garamond', serif",
           }}>
             {error}
           </p>

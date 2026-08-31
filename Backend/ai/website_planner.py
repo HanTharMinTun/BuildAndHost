@@ -117,12 +117,53 @@ Rules:
 """
 
 
-def create_layout(user_prompt, file_urls=None, file_texts=None):
-    # Build the messages list so we can optionally append uploaded file URLs.
+def create_layout(user_prompt, file_urls=None, file_texts=None, image_urls=None):
+    """
+    Create website layout using AI with optional file and image inputs.
+    
+    Args:
+        user_prompt: User's website description
+        file_urls: List of all uploaded file URLs
+        file_texts: Dict mapping file URLs to extracted text content
+        image_urls: List of image URLs to send to Claude's vision API
+    """
+    # Build the messages list with multimodal support for images
     messages = [
         {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": user_prompt},
     ]
+    
+    # Build user message content - use multimodal format if images present
+    if image_urls and len(image_urls) > 0:
+        # Multimodal message with text + images
+        user_content = [
+            {"type": "text", "text": user_prompt}
+        ]
+        
+        # Add each image as an image_url block
+        # Convert relative URLs to full URLs for API compatibility
+        for img_url in image_urls[:10]:  # Limit to 10 images to avoid huge prompts
+            # If URL is relative, convert to full URL
+            if img_url.startswith("/"):
+                full_url = f"http://localhost:5173{img_url}"
+            else:
+                full_url = img_url
+            
+            user_content.append({
+                "type": "image_url",
+                "image_url": {"url": full_url}
+            })
+        
+        messages.append({
+            "role": "user",
+            "content": user_content
+        })
+    else:
+        # Simple text-only message
+        messages.append({
+            "role": "user",
+            "content": user_prompt
+        })
+
 
     if file_urls:
         file_list_text = "\n".join(file_urls)
