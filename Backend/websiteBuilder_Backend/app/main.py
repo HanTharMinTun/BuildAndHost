@@ -9,6 +9,7 @@ from app.routers import (
     public,
     uploads,
     contact,
+    ai,
 )
 
 
@@ -42,6 +43,7 @@ app.include_router(deployments.router)
 app.include_router(public.router)
 app.include_router(uploads.router)
 app.include_router(contact.router)
+app.include_router(ai.router)
 
 
 @app.get("/api/health")

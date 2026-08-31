@@ -533,17 +533,22 @@ export default function Editor() {
       try {
         const stored = localStorage.getItem("websiteTheme");
         if (stored) return;
-        const resp = await fetch("/api/ai/design_theme", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ brief: "Create a polished, modern theme with subtle animations and responsive adjustments.", ...(website as any) }),
+        
+        // Get website ID from localStorage (set when website is created/loaded)
+        const websiteId = localStorage.getItem('websiteId');
+        if (!websiteId) return; // No website ID available yet
+        
+        const response = await api.post<{ theme: any; website_id: string }>("/api/ai/design_theme", {
+          website_id: websiteId,
+          brief: "Create a polished, modern theme with subtle animations and responsive adjustments.",
         });
-        if (!resp.ok) return;
-        const data = await resp.json();
+        
+        if (response.error || !response.data) return;
         if (cancelled) return;
-        if (data?.theme) {
-          setTheme(data.theme);
-          try { localStorage.setItem("websiteTheme", JSON.stringify(data.theme)); } catch { }
+        
+        if (response.data.theme) {
+          setTheme(response.data.theme);
+          try { localStorage.setItem("websiteTheme", JSON.stringify(response.data.theme)); } catch { }
         }
       } catch (e) {
         // ignore network errors in dev
@@ -986,18 +991,30 @@ export default function Editor() {
 
             <button onClick={async () => {
               try {
-                const resp = await fetch("/api/ai/design_theme", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ brief: "Create a polished, modern theme with subtle animations and responsive adjustments.", ...(website as any) }),
-                });
-                if (!resp.ok) return;
-                const data = await resp.json();
-                if (data?.theme) {
-                  setTheme(data.theme);
-                  try { localStorage.setItem("websiteTheme", JSON.stringify(data.theme)); } catch { }
+                // Get website ID from localStorage
+                const websiteId = localStorage.getItem('websiteId');
+                if (!websiteId) {
+                  console.error('No website ID found. Please save your website first.');
+                  return;
                 }
-              } catch { }
+                
+                const response = await api.post<{ theme: any; website_id: string }>("/api/ai/design_theme", {
+                  website_id: websiteId,
+                  brief: "Create a polished, modern theme with subtle animations and responsive adjustments.",
+                });
+                
+                if (response.error) {
+                  console.error('Failed to generate theme:', response.error);
+                  return;
+                }
+                
+                if (response.data?.theme) {
+                  setTheme(response.data.theme);
+                  try { localStorage.setItem("websiteTheme", JSON.stringify(response.data.theme)); } catch { }
+                }
+              } catch (error) {
+                console.error('Error generating theme:', error);
+              }
             }}>Generate Theme</button>
 
             <button onClick={handleDeploy} style={{ backgroundColor: '#4F46E5', color: 'white' }}>Deploy Website</button>

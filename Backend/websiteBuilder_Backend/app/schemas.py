@@ -200,3 +200,19 @@ class ContactFormRequest(BaseModel):
 class ContactFormResponse(BaseModel):
     success: bool
     message: str
+
+
+# =========================
+# AI THEME GENERATION
+# =========================
+
+class ThemeGenerationRequest(BaseModel):
+    """Request schema for AI theme generation"""
+    website_id: uuid.UUID
+    brief: str = "Create a polished, modern theme with subtle animations and responsive adjustments."
+
+
+class ThemeGenerationResponse(BaseModel):
+    """Response schema for AI theme generation"""
+    theme: dict[str, Any]
+    website_id: uuid.UUID

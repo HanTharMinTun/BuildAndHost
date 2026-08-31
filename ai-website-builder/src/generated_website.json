@@ -9,9 +9,8 @@
           "items": [
             "Home",
             "About",
-            "Skills",
-            "Projects",
             "Experience",
+            "Skills",
             "Contact"
           ]
         },
@@ -20,11 +19,11 @@
       {
         "type": "Hero",
         "props": {
-          "title": "Phone Myat",
-          "subtitle": "Creative Developer & Designer crafting digital experiences that matter",
-          "buttonText": "View My Work",
-          "buttonAction": "#projects",
-          "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1600&q=80"
+          "title": "Han Thar Min Tun",
+          "subtitle": "Software QA Engineer | Mobile Application Tester | Security Tester",
+          "buttonText": "Get In Touch",
+          "buttonAction": "#contact",
+          "image": "/uploads/3ffaeef998a0451885e37954ca0e8bbe.jpeg"
         },
         "children": []
       },
@@ -37,88 +36,17 @@
             "props": {},
             "children": [
               {
-                "type": "Grid",
-                "props": {
-                  "columns": 2
-                },
-                "children": [
-                  {
-                    "type": "Stack",
-                    "props": {},
-                    "children": [
-                      {
-                        "type": "Heading",
-                        "props": {
-                          "text": "About Me",
-                          "level": 2
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "Paragraph",
-                        "props": {
-                          "text": "I'm a passionate developer and designer with a love for creating beautiful, functional digital experiences. With expertise spanning front-end development, UX design, and creative problem-solving, I bring ideas to life through code and design."
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "Paragraph",
-                        "props": {
-                          "text": "My approach combines technical excellence with creative vision, ensuring every project not only works flawlessly but also delights users. I believe in the power of thoughtful design and clean code to make a real difference."
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "Button",
-                        "props": {
-                          "text": "Download Resume",
-                          "link": "#contact"
-                        },
-                        "children": []
-                      }
-                    ]
-                  },
-                  {
-                    "type": "Image",
-                    "props": {
-                      "src": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80",
-                      "alt": "Developer working on laptop with code on screen"
-                    },
-                    "children": []
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
-              {
                 "type": "Heading",
                 "props": {
-                  "text": "What I Do Best",
+                  "text": "Professional Summary",
                   "level": 2
                 },
                 "children": []
               },
               {
-                "type": "FeatureList",
+                "type": "Paragraph",
                 "props": {
-                  "items": [
-                    "Full-stack web development with modern frameworks and technologies",
-                    "Responsive UI/UX design that works beautifully across all devices",
-                    "Performance optimization and code quality assurance",
-                    "API development and third-party integrations",
-                    "Agile collaboration and project management",
-                    "Creative problem-solving and technical consulting"
-                  ]
+                  "text": "Detail-oriented and technically skilled Software QA Engineer with experience in software testing, penetration testing, system administration, web development, and scripting. Strong background in identifying vulnerabilities, performing security assessments, troubleshooting systems, and ensuring software quality. Familiar with manual testing, test case design, bug reporting, Linux administration, web applications, and mobile application testing methodologies."
                 },
                 "children": []
               }
@@ -137,51 +65,7 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "By The Numbers",
-                  "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "Stats",
-                "props": {
-                  "items": [
-                    {
-                      "label": "Projects Completed",
-                      "value": "50+"
-                    },
-                    {
-                      "label": "Happy Clients",
-                      "value": "30+"
-                    },
-                    {
-                      "label": "Years Experience",
-                      "value": "5"
-                    },
-                    {
-                      "label": "Coffee Consumed",
-                      "value": "1000+"
-                    }
-                  ]
-                },
-                "children": []
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
-              {
-                "type": "Heading",
-                "props": {
-                  "text": "Featured Projects",
+                  "text": "Core Competencies",
                   "level": 2
                 },
                 "children": []
@@ -195,30 +79,30 @@
                   {
                     "type": "Card",
                     "props": {
-                      "title": "E-Commerce Platform",
-                      "description": "A full-featured online shopping platform with secure payments, inventory management, and real-time analytics",
-                      "image": "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=1600&q=80",
-                      "buttonText": "View Details"
+                      "title": "Quality Assurance",
+                      "description": "Manual Testing, Functional Testing, Regression Testing, Smoke Testing, Test Case Design, Defect Tracking, UAT",
+                      "image": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "Learn More"
                     },
                     "children": []
                   },
                   {
                     "type": "Card",
                     "props": {
-                      "title": "Portfolio Dashboard",
-                      "description": "An interactive dashboard for tracking investment portfolios with data visualization and market insights",
-                      "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1600&q=80",
-                      "buttonText": "View Details"
+                      "title": "Security Testing",
+                      "description": "Vulnerability Assessment, Penetration Testing, Security Testing, Web Application Security Assessments",
+                      "image": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "Learn More"
                     },
                     "children": []
                   },
                   {
                     "type": "Card",
                     "props": {
-                      "title": "Social Media App",
-                      "description": "A modern social networking platform with real-time messaging, content sharing, and community features",
-                      "image": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=1600&q=80",
-                      "buttonText": "View Details"
+                      "title": "System Administration",
+                      "description": "Linux Administration, Server Administration, System Administration, Web Application Deployment",
+                      "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "Learn More"
                     },
                     "children": []
                   }
@@ -239,40 +123,7 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Project Gallery",
-                  "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "Gallery",
-                "props": {
-                  "images": [
-                    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1555421689-491a97ff2040?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1600&q=80"
-                  ]
-                },
-                "children": []
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
-              {
-                "type": "Heading",
-                "props": {
-                  "text": "My Journey",
+                  "text": "Professional Experience",
                   "level": 2
                 },
                 "children": []
@@ -282,24 +133,29 @@
                 "props": {
                   "items": [
                     {
-                      "year": "2021",
-                      "title": "Senior Developer at Tech Solutions",
-                      "description": "Leading development teams and architecting scalable web applications for enterprise clients"
+                      "year": "2023 - Present",
+                      "title": "System Administrator (Freelance)",
+                      "description": "Managed Linux-based servers and infrastructure. Performed monitoring, maintenance, troubleshooting, and security hardening. Configured user permissions and supported web application deployments."
                     },
                     {
-                      "year": "2019",
-                      "title": "Full Stack Developer at Digital Agency",
-                      "description": "Built responsive websites and web applications for diverse clients across industries"
+                      "year": "2025 - 2026",
+                      "title": "Penetration Tester – Sheep Adv Web Game (Part-Time)",
+                      "description": "Conducted vulnerability assessments and security testing. Performed web application security assessments. Documented findings and validated remediation fixes."
                     },
                     {
-                      "year": "2017",
-                      "title": "Junior Developer at StartUp Inc",
-                      "description": "Launched career developing features and learning modern development practices"
+                      "year": "2024",
+                      "title": "PHP Developer – Magway Air Force (Part-Time)",
+                      "description": "Developed and maintained PHP web applications. Worked with MySQL databases and application debugging. Tested application functionality and verified fixes before release."
                     },
                     {
-                      "year": "2016",
-                      "title": "Computer Science Degree",
-                      "description": "Graduated with honors, specializing in software engineering and web technologies"
+                      "year": "2021 - 2024",
+                      "title": "Unity Game Developer (Self-Employed)",
+                      "description": "Developed game features using C# and Unity. Performed gameplay testing, bug tracking, and usability validation."
+                    },
+                    {
+                      "year": "2022",
+                      "title": "Python Software Engineer (Self-Employed)",
+                      "description": "Developed automation and scripting solutions using Python. Performed debugging, validation, and software testing activities."
                     }
                   ]
                 },
@@ -320,32 +176,149 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Frequently Asked Questions",
+                  "text": "Technical Skills",
                   "level": 2
                 },
                 "children": []
               },
               {
-                "type": "FAQ",
+                "type": "Grid",
                 "props": {
-                  "items": [
-                    {
-                      "question": "What technologies do you work with?",
-                      "answer": "I specialize in modern web technologies including React, Vue, Node.js, TypeScript, and various backend frameworks. I'm always learning and adapting to new tools that best serve project needs."
-                    },
-                    {
-                      "question": "Do you take on freelance projects?",
-                      "answer": "Yes, I'm available for select freelance projects that align with my expertise and schedule. Feel free to reach out with your project details."
-                    },
-                    {
-                      "question": "What's your typical project timeline?",
-                      "answer": "Project timelines vary based on scope and complexity. A typical website project takes 4-8 weeks from concept to launch, while larger applications may take several months."
-                    },
-                    {
-                      "question": "How do you approach new projects?",
-                      "answer": "I start with understanding your goals and requirements, then move through planning, design, development, testing, and deployment phases with regular communication throughout."
-                    }
-                  ]
+                  "columns": 2
+                },
+                "children": [
+                  {
+                    "type": "Stack",
+                    "props": {},
+                    "children": [
+                      {
+                        "type": "Heading",
+                        "props": {
+                          "text": "Testing & QA",
+                          "level": 3
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "FeatureList",
+                        "props": {
+                          "items": [
+                            "Manual Testing",
+                            "Functional Testing",
+                            "Regression Testing",
+                            "UAT",
+                            "Mobile Testing"
+                          ]
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Stack",
+                    "props": {},
+                    "children": [
+                      {
+                        "type": "Heading",
+                        "props": {
+                          "text": "Security",
+                          "level": 3
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "FeatureList",
+                        "props": {
+                          "items": [
+                            "Vulnerability Scanning",
+                            "Penetration Testing",
+                            "Security Testing"
+                          ]
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Stack",
+                    "props": {},
+                    "children": [
+                      {
+                        "type": "Heading",
+                        "props": {
+                          "text": "Programming",
+                          "level": 3
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "FeatureList",
+                        "props": {
+                          "items": [
+                            "Python",
+                            "PHP",
+                            "C#",
+                            "Bash",
+                            "MySQL"
+                          ]
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Stack",
+                    "props": {},
+                    "children": [
+                      {
+                        "type": "Heading",
+                        "props": {
+                          "text": "Administration",
+                          "level": 3
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "FeatureList",
+                        "props": {
+                          "items": [
+                            "Linux Administration",
+                            "Server Administration",
+                            "System Administration"
+                          ]
+                        },
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Heading",
+                "props": {
+                  "text": "Education",
+                  "level": 2
+                },
+                "children": []
+              },
+              {
+                "type": "Card",
+                "props": {
+                  "title": "University of Computer Studies, Magway",
+                  "description": "Relevant Areas: Computer Science, Software Development, Linux Administration, Databases",
+                  "image": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80"
                 },
                 "children": []
               }
@@ -364,22 +337,70 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Let's Work Together",
+                  "text": "Get In Touch",
                   "level": 2
                 },
                 "children": []
               },
               {
-                "type": "Paragraph",
+                "type": "Grid",
                 "props": {
-                  "text": "Have a project in mind or just want to connect? I'd love to hear from you. Fill out the form below and I'll get back to you as soon as possible."
+                  "columns": 2
                 },
-                "children": []
-              },
-              {
-                "type": "ContactForm",
-                "props": {},
-                "children": []
+                "children": [
+                  {
+                    "type": "Stack",
+                    "props": {},
+                    "children": [
+                      {
+                        "type": "Paragraph",
+                        "props": {
+                          "text": "Location: Magway Region, Myanmar (Remote Available)"
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "Paragraph",
+                        "props": {
+                          "text": "Email: hhaann13579@gmail.com"
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "Paragraph",
+                        "props": {
+                          "text": "Phone: +959760516745"
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "Stats",
+                        "props": {
+                          "items": [
+                            {
+                              "label": "Years Experience",
+                              "value": "5+"
+                            },
+                            {
+                              "label": "Projects Completed",
+                              "value": "50+"
+                            },
+                            {
+                              "label": "Security Assessments",
+                              "value": "20+"
+                            }
+                          ]
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ContactForm",
+                    "props": {},
+                    "children": []
+                  }
+                ]
               }
             ]
           }
