@@ -9,9 +9,8 @@
           "items": [
             "Home",
             "About",
+            "Portfolio",
             "Skills",
-            "Experience",
-            "Projects",
             "Contact"
           ]
         },
@@ -20,11 +19,11 @@
       {
         "type": "Hero",
         "props": {
-          "title": "Han Thar Min Tun",
-          "subtitle": "Full Stack Web Developer | Software Engineer specializing in backend architecture, database optimization, and Linux infrastructure",
+          "title": "Phone Myat",
+          "subtitle": "Creative Developer & Designer Building Digital Experiences",
           "buttonText": "View My Work",
-          "buttonAction": "#projects",
-          "image": "/uploads/fb8ae48153484afcb09c108e69ef3d87.png"
+          "buttonAction": "#portfolio",
+          "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1600&q=80"
         },
         "children": []
       },
@@ -37,9 +36,73 @@
             "props": {},
             "children": [
               {
+                "type": "Grid",
+                "props": {
+                  "columns": 2
+                },
+                "children": [
+                  {
+                    "type": "Stack",
+                    "props": {},
+                    "children": [
+                      {
+                        "type": "Heading",
+                        "props": {
+                          "text": "About Me",
+                          "level": 2
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "Paragraph",
+                        "props": {
+                          "text": "I'm a passionate developer and designer with expertise in creating innovative digital solutions. With years of experience in web development and user interface design, I transform ideas into engaging experiences that users love."
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "Paragraph",
+                        "props": {
+                          "text": "My approach combines technical excellence with creative problem-solving, ensuring every project delivers both functionality and aesthetic appeal."
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "Button",
+                        "props": {
+                          "text": "Download Resume",
+                          "link": "#resume"
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Image",
+                    "props": {
+                      "src": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80",
+                      "alt": "Team collaboration and creative work environment"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
                 "type": "Heading",
                 "props": {
-                  "text": "About Me",
+                  "text": "My Work",
                   "level": 2
                 },
                 "children": []
@@ -47,7 +110,7 @@
               {
                 "type": "Paragraph",
                 "props": {
-                  "text": "Software Engineer with expertise in full-stack web development, backend system architecture, and Linux server administration. Proven competence in creating dynamic, database-driven systems using PHP and Python alongside robust MySQL optimization. Adept at managing infrastructure configurations, continuous integration, and custom automation scripting."
+                  "text": "Explore a selection of projects that showcase my skills and expertise across different domains."
                 },
                 "children": []
               },
@@ -58,22 +121,62 @@
                 },
                 "children": [
                   {
-                    "type": "Stats",
+                    "type": "Card",
                     "props": {
-                      "items": [
-                        {
-                          "label": "Years Experience",
-                          "value": "4+"
-                        },
-                        {
-                          "label": "Projects Completed",
-                          "value": "20+"
-                        },
-                        {
-                          "label": "Technologies",
-                          "value": "15+"
-                        }
-                      ]
+                      "title": "E-Commerce Platform",
+                      "description": "A full-featured online shopping platform with payment integration and inventory management.",
+                      "image": "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=1600&q=80",
+                      "buttonText": "View Project"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Mobile Banking App",
+                      "description": "Secure and intuitive mobile banking interface with modern design and seamless transactions.",
+                      "image": "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1600&q=80",
+                      "buttonText": "View Project"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Analytics Dashboard",
+                      "description": "Real-time data visualization dashboard for business intelligence and reporting.",
+                      "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1600&q=80",
+                      "buttonText": "View Project"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Portfolio Website",
+                      "description": "Creative portfolio site with interactive animations and responsive design.",
+                      "image": "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?auto=format&fit=crop&w=1600&q=80",
+                      "buttonText": "View Project"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Social Media Platform",
+                      "description": "Community-driven social network with real-time messaging and content sharing.",
+                      "image": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=1600&q=80",
+                      "buttonText": "View Project"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Task Management Tool",
+                      "description": "Collaborative project management application with team features and workflow automation.",
+                      "image": "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=1600&q=80",
+                      "buttonText": "View Project"
                     },
                     "children": []
                   }
@@ -94,93 +197,21 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Core Skills",
+                  "text": "Skills & Expertise",
                   "level": 2
                 },
                 "children": []
               },
               {
-                "type": "Grid",
-                "props": {
-                  "columns": 3
-                },
-                "children": [
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Frontend Development",
-                      "description": "HTML5, CSS3, JavaScript (ES6+), UI/UX Component Implementation",
-                      "image": "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=800&q=80",
-                      "buttonText": "Learn More"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Backend & Scripting",
-                      "description": "PHP, Python (Automation & Backend Logic), C# Programming",
-                      "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80",
-                      "buttonText": "Learn More"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Infrastructure & Database",
-                      "description": "MySQL Schema Design & Optimization, Linux Server Management, Git, GitHub, Bash Scripting",
-                      "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80",
-                      "buttonText": "Learn More"
-                    },
-                    "children": []
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
-              {
-                "type": "Heading",
-                "props": {
-                  "text": "Professional Experience",
-                  "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "Timeline",
+                "type": "FeatureList",
                 "props": {
                   "items": [
-                    {
-                      "year": "2023 - Present",
-                      "title": "System Administrator (Freelance)",
-                      "description": "Configure and manage secure Linux-based production environments. Implement Access Control Lists, user workspace configurations, and robust server firewall policies. Facilitate deployment pipelines and execute comprehensive backend diagnostics."
-                    },
-                    {
-                      "year": "2024",
-                      "title": "PHP Developer (Part-Time)",
-                      "description": "Architected and refactored core backend functionalities for responsive PHP web applications. Designed MySQL database normalization strategies and implemented complex authentication, session states, and custom API validation logic."
-                    },
-                    {
-                      "year": "2021 - 2024",
-                      "title": "Unity Game Developer (Self-Employed)",
-                      "description": "Engineered extensible game systems and multi-threaded script assemblies using C# and Unity Engine. Built modular state machines for high-performance interactive gameplay loops and canvas-driven UI components."
-                    },
-                    {
-                      "year": "2022",
-                      "title": "Python Developer (Self-Employed)",
-                      "description": "Created highly optimized system utilities and backend data scraping/processing scripts. Streamlined filesystem operations, standardized error handling, and mitigated application resource leaks."
-                    }
+                    "Full-stack web development with modern frameworks",
+                    "Responsive UI/UX design and prototyping",
+                    "Database architecture and optimization",
+                    "API design and microservices",
+                    "Cloud deployment and DevOps",
+                    "Mobile app development"
                   ]
                 },
                 "children": []
@@ -198,60 +229,28 @@
             "props": {},
             "children": [
               {
-                "type": "Heading",
+                "type": "Stats",
                 "props": {
-                  "text": "Featured Projects",
-                  "level": 2
+                  "items": [
+                    {
+                      "label": "Projects Completed",
+                      "value": "50+"
+                    },
+                    {
+                      "label": "Years Experience",
+                      "value": "5"
+                    },
+                    {
+                      "label": "Happy Clients",
+                      "value": "30+"
+                    },
+                    {
+                      "label": "Technologies",
+                      "value": "20+"
+                    }
+                  ]
                 },
                 "children": []
-              },
-              {
-                "type": "Grid",
-                "props": {
-                  "columns": 2
-                },
-                "children": [
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Enterprise Web Application",
-                      "description": "Full-stack PHP application with MySQL backend, featuring complex authentication, session management, and API integration",
-                      "image": "/uploads/documents/241408cecb8141b78d7d91c712247c8f/image_000.png",
-                      "buttonText": "View Details"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Linux Server Infrastructure",
-                      "description": "Configured and deployed secure production environments with automated deployment pipelines and monitoring systems",
-                      "image": "/uploads/documents/241408cecb8141b78d7d91c712247c8f/image_001.png",
-                      "buttonText": "View Details"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Unity Game Development",
-                      "description": "Developed interactive gameplay systems with optimized state machines and modular architecture using C# and Unity Engine",
-                      "image": "/uploads/documents/241408cecb8141b78d7d91c712247c8f/image_002.png",
-                      "buttonText": "View Details"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Python Automation Tools",
-                      "description": "Built system utilities for data processing, web scraping, and automated filesystem operations with comprehensive error handling",
-                      "image": "/uploads/documents/241408cecb8141b78d7d91c712247c8f/image_003.png",
-                      "buttonText": "View Details"
-                    },
-                    "children": []
-                  }
-                ]
               }
             ]
           }
@@ -276,7 +275,7 @@
               {
                 "type": "Paragraph",
                 "props": {
-                  "text": "Available for remote opportunities. Let's discuss how I can contribute to your next project."
+                  "text": "I'm always interested in hearing about new projects and opportunities. Let's create something amazing together."
                 },
                 "children": []
               },
@@ -284,77 +283,6 @@
                 "type": "ContactForm",
                 "props": {},
                 "children": []
-              },
-              {
-                "type": "Grid",
-                "props": {
-                  "columns": 3
-                },
-                "children": [
-                  {
-                    "type": "Stack",
-                    "props": {},
-                    "children": [
-                      {
-                        "type": "Heading",
-                        "props": {
-                          "text": "Location",
-                          "level": 3
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "Text",
-                        "props": {
-                          "text": "Magway Region, Myanmar (Remote Available)"
-                        },
-                        "children": []
-                      }
-                    ]
-                  },
-                  {
-                    "type": "Stack",
-                    "props": {},
-                    "children": [
-                      {
-                        "type": "Heading",
-                        "props": {
-                          "text": "Email",
-                          "level": 3
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "Text",
-                        "props": {
-                          "text": "hhaann13579@gmail.com"
-                        },
-                        "children": []
-                      }
-                    ]
-                  },
-                  {
-                    "type": "Stack",
-                    "props": {},
-                    "children": [
-                      {
-                        "type": "Heading",
-                        "props": {
-                          "text": "GitHub",
-                          "level": 3
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "Text",
-                        "props": {
-                          "text": "github.com/HanTharMinTun"
-                        },
-                        "children": []
-                      }
-                    ]
-                  }
-                ]
               }
             ]
           }

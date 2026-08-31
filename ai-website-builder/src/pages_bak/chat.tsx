@@ -20,7 +20,6 @@ export default function Home() {
     const navigate = useNavigate();
     const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth();
     const [currentProject, setCurrentProject] = useState<Project | null>(null);
-    const [showSidebar, setShowSidebar] = useState(false);
 
     const [messages, setMessages] = useState<{ role: "user" | "assistant"; text: string }[]>([
         { role: "assistant", text: "Hello! Describe the website you want — I can build a portfolio, business site, blog, or dashboard. Attach up to 5 files (logos, images, PDFs, DOCX)." },
@@ -32,7 +31,7 @@ export default function Home() {
     const [isTyping, setIsTyping] = useState(false);
     const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
     const [fileError, setFileError] = useState<string>("");
-
+    
     // Constants
     const MAX_FILES = 5;
     const [aiThinking, setAiThinking] = useState(false);
@@ -103,45 +102,14 @@ export default function Home() {
         }
     }, [isAuthenticated, currentProject]);
 
-    async function createDefaultProject(): Promise<Project | null> {
-        try {
-            // First, check if user has existing draft projects
-            const projectsResponse = await api.get<Project[]>('/api/projects');
+    async function createDefaultProject() {
+        const response = await api.post<Project>('/api/projects', {
+            name: 'My Website',
+            description: 'Generated with AI Website Builder',
+        });
 
-            if (!projectsResponse.data) {
-                console.error('Failed to fetch projects');
-                return null;
-            }
-
-            const draftProjects = projectsResponse.data.filter(p => p.status === 'draft');
-
-            if (draftProjects.length > 0) {
-                // Load the most recent draft project instead of creating new one
-                const mostRecent = draftProjects.sort((a, b) =>
-                    new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-                )[0];
-                setCurrentProject(mostRecent);
-                console.log('Loaded existing draft project:', mostRecent.id);
-                return mostRecent;
-            }
-
-            // Only create new project if no drafts exist
-            const response = await api.post<Project>('/api/projects', {
-                name: 'My Website',
-                description: 'Generated with AI Website Builder',
-                website_type: type,
-            });
-
-            if (response.data) {
-                setCurrentProject(response.data);
-                console.log('Created new draft project:', response.data.id);
-                return response.data;
-            }
-
-            return null;
-        } catch (error) {
-            console.error('Error loading/creating project:', error);
-            return null;
+        if (response.data) {
+            setCurrentProject(response.data);
         }
     }
 
@@ -205,13 +173,8 @@ export default function Home() {
         const progressInterval = simulateProgress();
 
         try {
-            // Get or create project - use the returned value directly to avoid race condition
-            let project = currentProject;
-            if (!project) {
-                project = await createDefaultProject();
-                if (!project) {
-                    throw new Error('Failed to create or load project');
-                }
+            if (!currentProject) {
+                await createDefaultProject();
             }
 
             const form = new FormData();
@@ -229,27 +192,15 @@ export default function Home() {
 
             setLoadingText("Finalizing your website...");
 
-            // Save website to database using the project we just ensured exists
-            if (project && result.website) {
-                try {
-                    const saveResponse = await api.post<GeneratedWebsite>('/api/websites', {
-                        project_id: project.id,
-                        website_json: result.website,
-                        theme_json: result.theme,
-                        version: 1,
-                    });
+            if (currentProject && result.website) {
+                const saveResponse = await api.post<GeneratedWebsite>('/api/websites', {
+                    project_id: currentProject.id,
+                    website_json: result.website,
+                    version: 1,
+                });
 
-                    if (saveResponse.data) {
-                        console.log('✅ Website saved successfully with ID:', saveResponse.data.id);
-                        localStorage.setItem('websiteId', saveResponse.data.id);
-                    } else if (saveResponse.error) {
-                        console.error('❌ Failed to save website:', saveResponse.error);
-                        throw new Error(`Failed to save website: ${saveResponse.error}`);
-                    }
-                } catch (saveError) {
-                    console.error('❌ Error saving website to database:', saveError);
-                    // Show warning but continue - data is in localStorage
-                    pushMessage("assistant", "⚠️ Website generated but failed to save to database. You can still use the editor, but deployment may not work.");
+                if (saveResponse.data) {
+                    localStorage.setItem('websiteId', saveResponse.data.id);
                 }
             }
 
@@ -288,7 +239,7 @@ export default function Home() {
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFileError("");
-
+        
         if (e.target.files && e.target.files.length > 0) {
             // Validate file count
             if (e.target.files.length > MAX_FILES) {
@@ -296,7 +247,7 @@ export default function Home() {
                 e.target.value = ""; // Reset input
                 return;
             }
-
+            
             setFiles(e.target.files);
             setSelectedFiles(Array.from(e.target.files).map(f => f.name));
         }
@@ -312,210 +263,59 @@ export default function Home() {
         return found ? found.label : "🎨 Portfolio";
     };
 
-    // Helper function to check if a link is active
-    const isActive = (path: string) => {
-        return location.pathname === path;
-    };
-
     return (
         <>
             {/* =========================================================
-                NAVIGATION - SAME AS HOME PAGE
+                NAVIGATION - SAME AS HOME.TSX
             ========================================================= */}
-            <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.08] bg-[#080a15]/75 backdrop-blur-2xl">
+            <nav className="relative z-50 border-b border-white/[0.08] bg-[#080a15]/75 backdrop-blur-2xl">
                 <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
                     <div className="h-[76px] flex items-center justify-between">
 
-                        {/* Logo - Show user profile circle instead of B&H when logged in */}
-                        <div className="flex items-center gap-3 group">
-                            {isAuthenticated && user ? (
-                                // User Profile Circle - replaces B&H logo
-                                <div
-                                    className="relative w-11 h-11 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-400 p-[1px] shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 transition-all duration-300 cursor-pointer hover:scale-105"
-                                    onClick={() => setShowSidebar(!showSidebar)}
-                                >
-                                    <div className="w-full h-full rounded-full bg-[#0a0d18] flex items-center justify-center">
-                                        <span className="text-base font-luxury font-bold bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">
-                                            {user.username?.charAt(0)?.toUpperCase() || 'U'}
-                                        </span>
-                                    </div>
-                                    {/* Status indicator */}
-                                    <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-[#0a0d18]"></div>
+                        <Link to="/" className="flex items-center gap-3 group">
+                            <div className="relative w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-400 p-[1px] shadow-lg shadow-purple-500/20 group-hover:scale-105 transition-transform">
+                                <div className="w-full h-full rounded-[11px] bg-[#0a0d18] flex items-center justify-center">
+                                    <span className="text-xs font-luxury font-bold tracking-widest bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">B&H</span>
                                 </div>
-                            ) : (
-                                // Show B&H logo when not logged in
-                                <Link to="/" className="relative w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-400 p-[1px] shadow-lg shadow-purple-500/20 group-hover:scale-105 transition-transform">
-                                    <div className="w-full h-full rounded-[11px] bg-[#0a0d18] flex items-center justify-center">
-                                        <span className="text-xs font-luxury font-bold tracking-widest bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">B&H</span>
-                                    </div>
-                                </Link>
-                            )}
+                            </div>
                             <div>
                                 <div className="font-luxury text-lg font-bold tracking-wide text-white">
                                     Build<span className="text-purple-400">And</span>Host
                                 </div>
                                 <div className="text-[9px] font-serif-light uppercase tracking-[0.3em] text-white/40">AI Website Builder</div>
                             </div>
+                        </Link>
+
+                        <div className="hidden md:flex items-center gap-2">
+                            <Link to="/" className="px-4 py-2 rounded-lg bg-white/[0.09] text-white text-sm font-body font-medium border border-white/[0.08]">Home</Link>
+                            <Link to="/chat" className="px-4 py-2 rounded-lg text-white text-sm font-body font-medium bg-white/[0.09] border border-white/[0.08]">AI Builder</Link>
+                            <Link to="/websites" className="px-4 py-2 rounded-lg text-white/65 hover:text-white hover:bg-white/[0.06] text-sm font-body font-medium transition-all">My Websites</Link>
                         </div>
 
-                        {/* Desktop Navigation - Only show when authenticated */}
-                        {isAuthenticated && (
-                            <div className="hidden md:flex items-center gap-2">
-                                <Link to="/" className="px-4 py-2 rounded-lg text-white/65 hover:text-white hover:bg-white/[0.06] text-sm font-body font-medium transition-all">Home</Link>
-                                <Link to="/chat" className={`px-4 py-2 rounded-lg text-sm font-body font-medium transition-all ${isActive('/chat')
-                                    ? 'bg-white/[0.09] text-white border border-white/[0.08]'
-                                    : 'text-white/65 hover:text-white hover:bg-white/[0.06]'
-                                    }`}>AI Builder</Link>
-                                <Link to="/websites" className="px-4 py-2 rounded-lg text-white/65 hover:text-white hover:bg-white/[0.06] text-sm font-body font-medium transition-all">My Websites</Link>
-                            </div>
-                        )}
-
-                        {/* Authentication - Only show Login/Get Started when not authenticated */}
                         <div className="flex items-center gap-3">
-                            {!isAuthenticated ? (
+                            {isAuthenticated && user ? (
+                                <>
+                                    <div className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.05] border border-white/[0.08]">
+                                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-cyan-400 flex items-center justify-center">
+                                            <span className="text-[10px] font-luxury font-bold text-white">{user.username?.charAt(0)?.toUpperCase()}</span>
+                                        </div>
+                                        <span className="text-sm font-body text-white/80">{user.username}</span>
+                                    </div>
+                                    <button onClick={() => { logout(); navigate('/'); }} className="px-4 py-2.5 rounded-lg border border-white/[0.12] bg-white/[0.05] hover:bg-white/[0.10] text-sm font-body font-medium text-white/90 transition-all">Logout</button>
+                                </>
+                            ) : (
                                 <>
                                     <Link to="/login" className="hidden sm:block px-4 py-2.5 text-sm font-body font-light text-white/75 hover:text-white transition-colors tracking-wide">Login</Link>
                                     <Link to="/register" className="btn-get-started px-5 py-2.5 rounded-lg text-white text-sm font-body font-semibold tracking-wide">Get Started</Link>
                                 </>
-                            ) : null}
+                            )}
                         </div>
                     </div>
                 </div>
             </nav>
 
-            {/* =========================================================
-                PREMIUM TOGGLE SIDEBAR - SAME AS HOME PAGE
-            ========================================================= */}
-            {isAuthenticated && showSidebar && (
-                <>
-                    {/* Backdrop with blur */}
-                    <div
-                        className="fixed inset-0 z-40 bg-black/60 backdrop-blur-md"
-                        onClick={() => setShowSidebar(false)}
-                    />
-
-                    {/* Premium Sidebar - Fixed height layout with hidden scrollbar */}
-                    <div className="fixed right-0 top-0 z-50 h-full w-80 bg-gradient-to-b from-[#0a0d18] via-[#0d1120] to-[#0a0d18] backdrop-blur-2xl border-l border-white/[0.08] shadow-2xl shadow-black/80 sidebar-slide-in">
-                        <div className="flex flex-col h-full">
-                            {/* Premium Sidebar Header - Fixed */}
-                            <div className="relative p-6 border-b border-white/[0.06] bg-gradient-to-br from-purple-500/5 to-cyan-500/5 flex-shrink-0">
-                                {/* Decorative glow */}
-                                <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-purple-500/10 blur-[80px]" />
-                                <div className="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-cyan-500/10 blur-[80px]" />
-
-                                <div className="relative flex items-center gap-4">
-                                    <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-400 p-[2px] shadow-xl shadow-purple-500/30">
-                                        <div className="w-full h-full rounded-full bg-[#0a0d18] flex items-center justify-center">
-                                            <span className="text-xl font-luxury font-bold bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">
-                                                {user?.username?.charAt(0)?.toUpperCase() || 'U'}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div className="flex-1">
-                                        <div className="font-body text-base font-semibold text-white tracking-wide">{user?.username}</div>
-                                        <div className="flex items-center gap-2 mt-0.5">
-                                            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
-                                            <div className="text-[10px] font-serif-light text-white/40 tracking-wider">Online</div>
-                                        </div>
-                                    </div>
-                                    <button
-                                        onClick={() => setShowSidebar(false)}
-                                        className="text-white/30 hover:text-white/60 transition-colors"
-                                    >
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Sidebar Navigation - Scrollable with hidden scrollbar */}
-                            <div className="flex-1 overflow-y-auto sidebar-scroll p-4 space-y-1.5">
-                                <div className="px-3 py-2 text-[10px] font-serif-light text-white/20 tracking-[0.15em] uppercase">Navigation</div>
-
-                                <Link
-                                    to="/"
-                                    className="flex items-center gap-3 px-4 py-3.5 rounded-xl hover:bg-white/[0.06] transition-all duration-300 text-white/70 hover:text-white group"
-                                    onClick={() => setShowSidebar(false)}
-                                >
-                                    <div className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center">
-                                        <svg className="w-5 h-5 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                                        </svg>
-                                    </div>
-                                    <span className="font-body text-sm font-medium flex-1">Home</span>
-                                    <span className="text-white/20 group-hover:text-white/40 transition-colors">→</span>
-                                </Link>
-
-                                <Link
-                                    to="/chat"
-                                    className={`flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 group ${isActive('/chat')
-                                        ? 'bg-gradient-to-r from-purple-500/20 to-cyan-500/20 border border-purple-400/30 text-white'
-                                        : 'hover:bg-white/[0.06] text-white/70 hover:text-white'
-                                        }`}
-                                    onClick={() => setShowSidebar(false)}
-                                >
-                                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${isActive('/chat')
-                                        ? 'bg-gradient-to-br from-purple-500/30 to-cyan-500/30'
-                                        : 'bg-white/5'
-                                        }`}>
-                                        <svg className={`w-5 h-5 ${isActive('/chat') ? 'text-purple-300' : 'text-white/40'
-                                            }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                        </svg>
-                                    </div>
-                                    <span className={`font-body text-sm font-medium flex-1 ${isActive('/chat') ? 'text-white' : ''
-                                        }`}>AI Builder</span>
-                                    <span className={`transition-colors ${isActive('/chat') ? 'text-white/40' : 'text-white/20 group-hover:text-white/40'
-                                        }`}>→</span>
-                                </Link>
-
-                                <Link
-                                    to="/websites"
-                                    className="flex items-center gap-3 px-4 py-3.5 rounded-xl hover:bg-white/[0.06] transition-all duration-300 text-white/70 hover:text-white group"
-                                    onClick={() => setShowSidebar(false)}
-                                >
-                                    <div className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center">
-                                        <svg className="w-5 h-5 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                                        </svg>
-                                    </div>
-                                    <span className="font-body text-sm font-medium flex-1">My Websites</span>
-                                    <span className="text-white/20 group-hover:text-white/40 transition-colors">→</span>
-                                </Link>
-                            </div>
-
-                            {/* Premium Sidebar Footer - Fixed with logout button */}
-                            <div className="p-4 border-t border-white/[0.06] bg-gradient-to-t from-purple-500/5 to-transparent flex-shrink-0">
-                                <button
-                                    onClick={() => {
-                                        logout();
-                                        navigate('/');
-                                        setShowSidebar(false);
-                                    }}
-                                    className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl bg-gradient-to-r from-red-500/10 to-rose-500/10 hover:from-red-500/20 hover:to-rose-500/20 transition-all duration-300 text-red-400 hover:text-red-300 border border-red-500/10 hover:border-red-500/30"
-                                >
-                                    <div className="w-9 h-9 rounded-lg bg-red-500/10 flex items-center justify-center">
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                        </svg>
-                                    </div>
-                                    <span className="font-body text-sm font-medium flex-1">Logout</span>
-                                    <span className="text-red-400/20">↗</span>
-                                </button>
-
-                                {/* Version info */}
-                                <div className="mt-4 text-center text-[9px] font-serif-light text-white/15 tracking-wider">
-                                    BuildAndHost v2.0 • AI Powered
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </>
-            )}
-
             <div
-                className="chat-root min-h-screen flex items-center justify-center p-4 sm:p-6 relative overflow-hidden pt-[76px]"
+                className="chat-root min-h-screen flex items-center justify-center p-4 sm:p-6 relative overflow-hidden"
                 style={{
                     fontFamily: "'Playfair Display', 'Cormorant Garamond', 'Georgia', serif",
                     background: 'radial-gradient(circle at 50% -10%, #31205f 0%, #15142d 28%, #090b18 65%, #05060d 100%)',
@@ -714,21 +514,6 @@ export default function Home() {
                         animation: dropdown-slide 0.25s ease-out forwards;
                         transform-origin: top center;
                     }
-
-                    /* Hide scrollbar for Chrome, Safari and Opera */
-                    .sidebar-scroll::-webkit-scrollbar {
-                        display: none;
-                    }
-
-                    /* Hide scrollbar for IE, Edge and Firefox */
-                    .sidebar-scroll {
-                        -ms-overflow-style: none;  /* IE and Edge */
-                        scrollbar-width: none;  /* Firefox */
-                    }
-
-                    .sidebar-slide-in {
-                        animation: slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-                    }
                 `}</style>
 
                 {/* =========================================================
@@ -841,7 +626,7 @@ export default function Home() {
                 ========================================================= */}
                 <div className="chat-window w-full max-w-4xl bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden relative border border-white/10 hover:border-cyan-400/20">
                     {/* Header */}
-                    <div className="chat-header bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-700 text-white px-6 py-5 relative overflow-x-hidden">
+                    <div className="chat-header bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-700 text-white px-6 py-5 relative overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12"></div>
                         <div className="flex items-center justify-between relative">
                             <div className="flex items-center gap-4">
@@ -861,7 +646,7 @@ export default function Home() {
                             </div>
                             <div className="flex items-center gap-3">
                                 {/* =========================================================
-                                    IMPROVED PORTFOLIO DROPDOWN
+                                    IMPROVED PORTFOLIO DROPDOWN - ONLY THIS SECTION CHANGED
                                 ========================================================= */}
                                 <div className="relative" ref={dropdownRef}>
                                     <button
@@ -881,15 +666,15 @@ export default function Home() {
 
                                     {/* Premium Dropdown Menu */}
                                     {isDropdownOpen && (
-                                        <div className="absolute right-0 mt-2 w-64 bg-white/10 backdrop-blur-2xl rounded-2xl border border-white/10 shadow-2xl shadow-black/30 overflow-hidden dropdown-animate z-[60]">
+                                        <div className="absolute right-0 mt-2 w-64 bg-white/10 backdrop-blur-2xl rounded-2xl border border-white/10 shadow-2xl shadow-black/30 overflow-hidden dropdown-animate">
                                             <div className="p-1.5 max-h-[280px] overflow-y-auto custom-scrollbar">
                                                 {websiteTypes.map((item) => (
                                                     <button
                                                         key={item.value}
                                                         onClick={() => handleTypeSelect(item.value)}
                                                         className={`w-full text-left px-3 py-2.5 rounded-xl transition-all duration-200 group relative ${type === item.value
-                                                            ? 'bg-gradient-to-r from-cyan-500/30 to-purple-500/30 border border-cyan-400/20'
-                                                            : 'hover:bg-white/10'
+                                                                ? 'bg-gradient-to-r from-cyan-500/30 to-purple-500/30 border border-cyan-400/20'
+                                                                : 'hover:bg-white/10'
                                                             }`}
                                                     >
                                                         <div className="flex items-center gap-2.5">
@@ -932,8 +717,8 @@ export default function Home() {
                                         </div>
                                     )}
                                     <div className={`max-w-[75%] px-5 py-3.5 rounded-2xl shadow-md transition-all hover:shadow-lg ${m.role === "assistant"
-                                        ? "bg-white/10 backdrop-blur border border-white/10 text-white/90 rounded-tl-sm font-serif-light"
-                                        : "bg-gradient-to-br from-cyan-500 to-purple-600 text-white rounded-tr-sm font-serif-light"
+                                            ? "bg-white/10 backdrop-blur border border-white/10 text-white/90 rounded-tl-sm font-serif-light"
+                                            : "bg-gradient-to-br from-cyan-500 to-purple-600 text-white rounded-tr-sm font-serif-light"
                                         }`}>
                                         <p className="leading-relaxed">{m.text}</p>
                                     </div>

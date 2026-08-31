@@ -1,12 +1,9 @@
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
-import { useState } from 'react';
 
 export default function Home() {
     const { user, isAuthenticated, logout } = useAuth();
     const navigate = useNavigate();
-    const location = useLocation();
-    const [showSidebar, setShowSidebar] = useState(false);
 
     const features = [
         {
@@ -43,13 +40,8 @@ export default function Home() {
         // },
     ];
 
-    // Helper function to check if a link is active
-    const isActive = (path: string) => {
-        return location.pathname === path;
-    };
-
     return (
-        <div
+        <div 
             className="min-h-screen overflow-hidden text-white p-0 m-0"
             style={{
                 fontFamily: "'Playfair Display', 'Cormorant Garamond', 'Georgia', serif",
@@ -100,22 +92,6 @@ export default function Home() {
                     100% { background-position: 200% center; }
                 }
 
-                @keyframes slide-in {
-                    from {
-                        transform: translateX(100%);
-                        opacity: 0;
-                    }
-                    to {
-                        transform: translateX(0);
-                        opacity: 1;
-                    }
-                }
-
-                @keyframes glow-pulse {
-                    0%, 100% { opacity: 0.6; }
-                    50% { opacity: 1; }
-                }
-
                 .animate-float-slow {
                     animation: float-slow 15s ease-in-out infinite;
                 }
@@ -142,25 +118,6 @@ export default function Home() {
 
                 .luxury-border {
                     border-image: linear-gradient(135deg, rgba(167, 139, 250, 0.3), rgba(139, 92, 246, 0.1), rgba(167, 139, 250, 0.3)) 1;
-                }
-
-                .sidebar-slide-in {
-                    animation: slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-                }
-
-                .glow-pulse {
-                    animation: glow-pulse 2s ease-in-out infinite;
-                }
-
-                /* Hide scrollbar for Chrome, Safari and Opera */
-                .sidebar-scroll::-webkit-scrollbar {
-                    display: none;
-                }
-
-                /* Hide scrollbar for IE, Edge and Firefox */
-                .sidebar-scroll {
-                    -ms-overflow-style: none;  /* IE and Edge */
-                    scrollbar-width: none;  /* Firefox */
                 }
 
                 /* Button Styles from First File */
@@ -237,78 +194,66 @@ export default function Home() {
             <div className="fixed inset-0 pointer-events-none overflow-hidden">
                 {/* Main purple glow */}
                 <div className="absolute -top-72 left-1/2 -translate-x-1/2 w-[900px] h-[700px] rounded-full bg-purple-600/[0.16] blur-[160px] animate-pulse-soft" />
-
+                
                 {/* Blue glow */}
                 <div className="absolute top-[25%] -left-72 w-[600px] h-[600px] rounded-full bg-blue-600/[0.10] blur-[150px] animate-float-slow" />
-
+                
                 {/* Violet glow */}
                 <div className="absolute bottom-[-300px] right-[-200px] w-[700px] h-[700px] rounded-full bg-violet-600/[0.12] blur-[160px] animate-float-slower" />
-
+                
                 {/* Cyan glow */}
                 <div className="absolute top-[55%] left-[45%] w-[350px] h-[350px] rounded-full bg-cyan-500/[0.05] blur-[120px]" />
-
+                
                 {/* Subtle grid */}
                 <div className="absolute inset-0 opacity-[0.035]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
             </div>
 
             {/* =========================================================
-                NAVIGATION - FIXED POSITION
+                NAVIGATION
             ========================================================= */}
-            <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.08] bg-[#080a15]/75 backdrop-blur-2xl">
+            <nav className="relative z-50 border-b border-white/[0.08] bg-[#080a15]/75 backdrop-blur-2xl">
                 <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
                     <div className="h-[76px] flex items-center justify-between">
 
-                        {/* Logo - Show user profile circle instead of B&H when logged in */}
-                        <div className="flex items-center gap-3 group">
-                            {isAuthenticated && user ? (
-                                // User Profile Circle - replaces B&H logo
-                                <div
-                                    className="relative w-11 h-11 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-400 p-[1px] shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 transition-all duration-300 cursor-pointer hover:scale-105"
-                                    onClick={() => setShowSidebar(!showSidebar)}
-                                >
-                                    <div className="w-full h-full rounded-full bg-[#0a0d18] flex items-center justify-center">
-                                        <span className="text-base font-luxury font-bold bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">
-                                            {user.username?.charAt(0)?.toUpperCase() || 'U'}
-                                        </span>
-                                    </div>
-                                    {/* Status indicator */}
-                                    <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-[#0a0d18]"></div>
+                        {/* Logo */}
+                        <Link to="/" className="flex items-center gap-3 group">
+                            <div className="relative w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-400 p-[1px] shadow-lg shadow-purple-500/20 group-hover:scale-105 transition-transform">
+                                <div className="w-full h-full rounded-[11px] bg-[#0a0d18] flex items-center justify-center">
+                                    <span className="text-xs font-luxury font-bold tracking-widest bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">B&H</span>
                                 </div>
-                            ) : (
-                                // Show B&H logo when not logged in
-                                <Link to="/" className="relative w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-400 p-[1px] shadow-lg shadow-purple-500/20 group-hover:scale-105 transition-transform">
-                                    <div className="w-full h-full rounded-[11px] bg-[#0a0d18] flex items-center justify-center">
-                                        <span className="text-xs font-luxury font-bold tracking-widest bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">B&H</span>
-                                    </div>
-                                </Link>
-                            )}
+                            </div>
                             <div>
                                 <div className="font-luxury text-lg font-bold tracking-wide text-white">
                                     Build<span className="text-purple-400">And</span>Host
                                 </div>
                                 <div className="text-[9px] font-serif-light uppercase tracking-[0.3em] text-white/40">AI Website Builder</div>
                             </div>
+                        </Link>
+
+                        {/* Desktop Navigation */}
+                        <div className="hidden md:flex items-center gap-2">
+                            <Link to="/" className="px-4 py-2 rounded-lg bg-white/[0.09] text-white text-sm font-body font-medium border border-white/[0.08]">Home</Link>
+                            <Link to="/chat" className="px-4 py-2 rounded-lg text-white/65 hover:text-white hover:bg-white/[0.06] text-sm font-body font-medium transition-all">AI Builder</Link>
+                            <Link to="/websites" className="px-4 py-2 rounded-lg text-white/65 hover:text-white hover:bg-white/[0.06] text-sm font-body font-medium transition-all">My Websites</Link>
                         </div>
 
-                        {/* Desktop Navigation - Only show when authenticated */}
-                        {isAuthenticated && (
-                            <div className="hidden md:flex items-center gap-2">
-                                <Link to="/" className="px-4 py-2 rounded-lg bg-white/[0.09] text-white text-sm font-body font-medium border border-white/[0.08]">Home</Link>
-                                <Link to="/chat" className="px-4 py-2 rounded-lg text-white/65 hover:text-white hover:bg-white/[0.06] text-sm font-body font-medium transition-all">AI Builder</Link>
-                                <Link to="/websites" className="px-4 py-2 rounded-lg text-white/65 hover:text-white hover:bg-white/[0.06] text-sm font-body font-medium transition-all">My Websites</Link>
-                            </div>
-                        )}
-
-                        {/* Authentication - Only show Login/Get Started when not authenticated */}
+                        {/* Authentication */}
                         <div className="flex items-center gap-3">
-                            {!isAuthenticated ? (
+                            {isAuthenticated && user ? (
+                                <>
+                                    <div className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.05] border border-white/[0.08]">
+                                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-cyan-400 flex items-center justify-center">
+                                            <span className="text-[10px] font-luxury font-bold text-white">{user.username?.charAt(0)?.toUpperCase()}</span>
+                                        </div>
+                                        <span className="text-sm font-body text-white/80">{user.username}</span>
+                                    </div>
+                                    <button onClick={() => { logout(); navigate('/'); }} className="px-4 py-2.5 rounded-lg border border-white/[0.12] bg-white/[0.05] hover:bg-white/[0.10] text-sm font-body font-medium text-white/90 transition-all">Logout</button>
+                                </>
+                            ) : (
                                 <>
                                     <Link to="/login" className="hidden sm:block px-4 py-2.5 text-sm font-body font-light text-white/75 hover:text-white transition-colors tracking-wide">Login</Link>
                                     <Link to="/register" className="btn-get-started px-5 py-2.5 rounded-lg text-white text-sm font-body font-semibold tracking-wide">Get Started</Link>
                                 </>
-                            ) : (
-                                // When authenticated, show nothing in this section (profile is in logo position)
-                                null
                             )}
                         </div>
                     </div>
@@ -316,158 +261,9 @@ export default function Home() {
             </nav>
 
             {/* =========================================================
-                PREMIUM TOGGLE SIDEBAR - FIXED WITH HIDDEN SCROLLBAR
+                MAIN CONTENT
             ========================================================= */}
-            {isAuthenticated && showSidebar && (
-                <>
-                    {/* Backdrop with blur */}
-                    <div
-                        className="fixed inset-0 z-40 bg-black/60 backdrop-blur-md"
-                        onClick={() => setShowSidebar(false)}
-                    />
-
-                    {/* Premium Sidebar - Fixed height layout with hidden scrollbar */}
-                    <div className="fixed right-0 top-0 z-50 h-full w-80 bg-gradient-to-b from-[#0a0d18] via-[#0d1120] to-[#0a0d18] backdrop-blur-2xl border-l border-white/[0.08] shadow-2xl shadow-black/80 sidebar-slide-in">
-                        <div className="flex flex-col h-full">
-                            {/* Premium Sidebar Header - Fixed */}
-                            <div className="relative p-6 border-b border-white/[0.06] bg-gradient-to-br from-purple-500/5 to-cyan-500/5 flex-shrink-0">
-                                {/* Decorative glow */}
-                                <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-purple-500/10 blur-[80px]" />
-                                <div className="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-cyan-500/10 blur-[80px]" />
-
-                                <div className="relative flex items-center gap-4">
-                                    <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-400 p-[2px] shadow-xl shadow-purple-500/30">
-                                        <div className="w-full h-full rounded-full bg-[#0a0d18] flex items-center justify-center">
-                                            <span className="text-xl font-luxury font-bold bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">
-                                                {user?.username?.charAt(0)?.toUpperCase() || 'U'}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div className="flex-1">
-                                        <div className="font-body text-base font-semibold text-white tracking-wide">{user?.username}</div>
-                                        <div className="flex items-center gap-2 mt-0.5">
-                                            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
-                                            <div className="text-[10px] font-serif-light text-white/40 tracking-wider">Online</div>
-                                        </div>
-                                    </div>
-                                    <button
-                                        onClick={() => setShowSidebar(false)}
-                                        className="text-white/30 hover:text-white/60 transition-colors"
-                                    >
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Sidebar Navigation - Scrollable with hidden scrollbar */}
-                            <div className="flex-1 overflow-y-auto sidebar-scroll p-4 space-y-1.5">
-                                <div className="px-3 py-2 text-[10px] font-serif-light text-white/20 tracking-[0.15em] uppercase">Navigation</div>
-
-                                <Link
-                                    to="/"
-                                    className={`flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 group ${isActive('/')
-                                        ? 'bg-white/[0.08] text-white border border-white/[0.08]'
-                                        : 'hover:bg-white/[0.06] text-white/70 hover:text-white'
-                                        }`}
-                                    onClick={() => setShowSidebar(false)}
-                                >
-                                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${isActive('/')
-                                        ? 'bg-gradient-to-br from-purple-500/20 to-cyan-500/20'
-                                        : 'bg-white/5'
-                                        }`}>
-                                        <svg className={`w-5 h-5 ${isActive('/') ? 'text-purple-300' : 'text-white/40'
-                                            }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                                        </svg>
-                                    </div>
-                                    <span className={`font-body text-sm font-medium flex-1 ${isActive('/') ? 'text-white' : ''
-                                        }`}>Home</span>
-                                    <span className={`transition-colors ${isActive('/') ? 'text-white/40' : 'text-white/20 group-hover:text-white/40'
-                                        }`}>→</span>
-                                </Link>
-
-                                <Link
-                                    to="/chat"
-                                    className={`flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 group ${isActive('/chat')
-                                        ? 'bg-white/[0.08] text-white border border-white/[0.08]'
-                                        : 'hover:bg-white/[0.06] text-white/70 hover:text-white'
-                                        }`}
-                                    onClick={() => setShowSidebar(false)}
-                                >
-                                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${isActive('/chat')
-                                        ? 'bg-gradient-to-br from-purple-500/20 to-cyan-500/20'
-                                        : 'bg-white/5'
-                                        }`}>
-                                        <svg className={`w-5 h-5 ${isActive('/chat') ? 'text-purple-300' : 'text-white/40'
-                                            }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                        </svg>
-                                    </div>
-                                    <span className={`font-body text-sm font-medium flex-1 ${isActive('/chat') ? 'text-white' : ''
-                                        }`}>AI Builder</span>
-                                    <span className={`transition-colors ${isActive('/chat') ? 'text-white/40' : 'text-white/20 group-hover:text-white/40'
-                                        }`}>→</span>
-                                </Link>
-
-                                <Link
-                                    to="/websites"
-                                    className={`flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 group ${isActive('/websites')
-                                        ? 'bg-gradient-to-r from-purple-500/20 to-cyan-500/20 border border-purple-400/30 text-white'
-                                        : 'hover:bg-white/[0.06] text-white/70 hover:text-white'
-                                        }`}
-                                    onClick={() => setShowSidebar(false)}
-                                >
-                                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${isActive('/websites')
-                                        ? 'bg-gradient-to-br from-purple-500/30 to-cyan-500/30'
-                                        : 'bg-white/5'
-                                        }`}>
-                                        <svg className={`w-5 h-5 ${isActive('/websites') ? 'text-purple-300' : 'text-white/40'
-                                            }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                                        </svg>
-                                    </div>
-                                    <span className={`font-body text-sm font-medium flex-1 ${isActive('/websites') ? 'text-white' : ''
-                                        }`}>My Websites</span>
-                                    <span className={`transition-colors ${isActive('/websites') ? 'text-white/40' : 'text-white/20 group-hover:text-white/40'
-                                        }`}>→</span>
-                                </Link>
-                            </div>
-
-                            {/* Premium Sidebar Footer - Fixed with logout button */}
-                            <div className="p-4 border-t border-white/[0.06] bg-gradient-to-t from-purple-500/5 to-transparent flex-shrink-0">
-                                <button
-                                    onClick={() => {
-                                        logout();
-                                        navigate('/');
-                                        setShowSidebar(false);
-                                    }}
-                                    className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl bg-gradient-to-r from-red-500/10 to-rose-500/10 hover:from-red-500/20 hover:to-rose-500/20 transition-all duration-300 text-red-400 hover:text-red-300 border border-red-500/10 hover:border-red-500/30"
-                                >
-                                    <div className="w-9 h-9 rounded-lg bg-red-500/10 flex items-center justify-center">
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                        </svg>
-                                    </div>
-                                    <span className="font-body text-sm font-medium flex-1">Logout</span>
-                                    <span className="text-red-400/20">↗</span>
-                                </button>
-
-                                {/* Version info */}
-                                <div className="mt-4 text-center text-[9px] font-serif-light text-white/15 tracking-wider">
-                                    BuildAndHost v2.0 • AI Powered
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </>
-            )}
-
-            {/* =========================================================
-                MAIN CONTENT - WITH PADDING TOP FOR FIXED NAVBAR
-            ========================================================= */}
-            <main className="relative z-10 pt-[76px]">
+            <main className="relative z-10">
 
                 {/* HERO SECTION */}
                 <section className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pt-24 sm:pt-32 lg:pt-36 pb-24">
