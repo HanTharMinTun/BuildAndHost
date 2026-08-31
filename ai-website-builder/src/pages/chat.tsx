@@ -4,7 +4,7 @@ import { useAuth } from '../lib/auth';
 import { api } from '../lib/api';
 import type { Project, GeneratedWebsite } from '../lib/types';
 
-// Loading phrases constant - moved outside component to avoid re-creation on each render
+// Loading phrases constant
 const LOADING_PHRASES = [
     "AI is thinking...",
     "Analyzing your request...",
@@ -41,20 +41,20 @@ export default function Home() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-    // Game-style loading screen states
+    // Loading screen states
     const [showLoadingScreen, setShowLoadingScreen] = useState(false);
     const [progress, setProgress] = useState(0);
     const [loadingText, setLoadingText] = useState("AI is thinking...");
 
-    // Website types for dropdown - More suitable options
+    // Website types
     const websiteTypes = [
         { value: "portfolio", label: "🎨 Portfolio", description: "Showcase your work & skills" },
         { value: "business", label: "💼 Business", description: "Professional company site" },
         { value: "blog", label: "📝 Blog", description: "Share stories & ideas" },
         { value: "dashboard", label: "📊 Dashboard", description: "Data & analytics" },
-        { value: "ecommerce", label: "🛍️ E-Commerce", description: "Online store" },
-        { value: "landing", label: "🚀 Landing Page", description: "Marketing & leads" },
-        { value: "resume", label: "📄 Resume", description: "Professional profile" },
+        // { value: "ecommerce", label: "🛍️ E-Commerce", description: "Online store" },
+        // { value: "landing", label: "🚀 Landing Page", description: "Marketing & leads" },
+        // { value: "resume", label: "📄 Resume", description: "Professional profile" },
         { value: "agency", label: "🏢 Agency", description: "Creative studio" },
     ];
 
@@ -96,51 +96,23 @@ export default function Home() {
         }
     }, [authLoading, isAuthenticated, navigate]);
 
-    // Create or get project on mount
-    useEffect(() => {
-        if (isAuthenticated && !currentProject) {
-            createDefaultProject();
-        }
-    }, [isAuthenticated, currentProject]);
+    // Note: We removed the auto-create on mount - projects are now created per prompt
 
-    async function createDefaultProject(): Promise<Project | null> {
+    async function createNewProject(): Promise<Project | null> {
         try {
-            // First, check if user has existing draft projects
-            const projectsResponse = await api.get<Project[]>('/api/projects');
-
-            if (!projectsResponse.data) {
-                console.error('Failed to fetch projects');
-                return null;
-            }
-
-            const draftProjects = projectsResponse.data.filter(p => p.status === 'draft');
-
-            if (draftProjects.length > 0) {
-                // Load the most recent draft project instead of creating new one
-                const mostRecent = draftProjects.sort((a, b) =>
-                    new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-                )[0];
-                setCurrentProject(mostRecent);
-                console.log('Loaded existing draft project:', mostRecent.id);
-                return mostRecent;
-            }
-
-            // Only create new project if no drafts exist
             const response = await api.post<Project>('/api/projects', {
                 name: 'My Website',
                 description: 'Generated with AI Website Builder',
-                website_type: type,
             });
 
             if (response.data) {
-                setCurrentProject(response.data);
-                console.log('Created new draft project:', response.data.id);
+                console.log('✅ Created new project:', response.data.id);
                 return response.data;
             }
 
             return null;
         } catch (error) {
-            console.error('Error loading/creating project:', error);
+            console.error('❌ Error creating project:', error);
             return null;
         }
     }
@@ -150,7 +122,6 @@ export default function Home() {
         setTimeout(() => containerRef.current?.scrollTo({ top: containerRef.current.scrollHeight, behavior: "smooth" }), 50);
     }
 
-    // Smooth progress simulation - 0% to 99% with decelerating speed
     function simulateProgress() {
         let currentProgress = 0;
         let speed = 1.5;
@@ -205,13 +176,11 @@ export default function Home() {
         const progressInterval = simulateProgress();
 
         try {
-            // Get or create project - use the returned value directly to avoid race condition
-            let project = currentProject;
+            // Always create a new project for each prompt
+            console.log('🆕 Creating new project for this generation...');
+            const project = await createNewProject();
             if (!project) {
-                project = await createDefaultProject();
-                if (!project) {
-                    throw new Error('Failed to create or load project');
-                }
+                throw new Error('Failed to create project');
             }
 
             const form = new FormData();
@@ -229,7 +198,6 @@ export default function Home() {
 
             setLoadingText("Finalizing your website...");
 
-            // Save website to database using the project we just ensured exists
             if (project && result.website) {
                 try {
                     const saveResponse = await api.post<GeneratedWebsite>('/api/websites', {
@@ -242,13 +210,20 @@ export default function Home() {
                     if (saveResponse.data) {
                         console.log('✅ Website saved successfully with ID:', saveResponse.data.id);
                         localStorage.setItem('websiteId', saveResponse.data.id);
+
+                        // Update project status to completed
+                        try {
+                            await api.patch(`/api/projects/${project.id}`, { status: 'completed' });
+                            console.log('✅ Project status updated to completed');
+                        } catch (statusError) {
+                            console.warn('⚠️ Failed to update project status:', statusError);
+                        }
                     } else if (saveResponse.error) {
                         console.error('❌ Failed to save website:', saveResponse.error);
                         throw new Error(`Failed to save website: ${saveResponse.error}`);
                     }
                 } catch (saveError) {
                     console.error('❌ Error saving website to database:', saveError);
-                    // Show warning but continue - data is in localStorage
                     pushMessage("assistant", "⚠️ Website generated but failed to save to database. You can still use the editor, but deployment may not work.");
                 }
             }
@@ -290,10 +265,9 @@ export default function Home() {
         setFileError("");
 
         if (e.target.files && e.target.files.length > 0) {
-            // Validate file count
             if (e.target.files.length > MAX_FILES) {
                 setFileError(`You can only upload up to ${MAX_FILES} files at once.`);
-                e.target.value = ""; // Reset input
+                e.target.value = "";
                 return;
             }
 
@@ -312,7 +286,6 @@ export default function Home() {
         return found ? found.label : "🎨 Portfolio";
     };
 
-    // Helper function to check if a link is active
     const isActive = (path: string) => {
         return location.pathname === path;
     };
@@ -320,62 +293,61 @@ export default function Home() {
     return (
         <>
             {/* =========================================================
-                NAVIGATION - SAME AS HOME PAGE
+                CYBERPUNK NAVIGATION
             ========================================================= */}
-            <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.08] bg-[#080a15]/75 backdrop-blur-2xl">
+            <nav className="fixed top-0 left-0 right-0 z-50 border-b border-cyan-500/20 bg-black/80 backdrop-blur-xl">
                 <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
                     <div className="h-[76px] flex items-center justify-between">
-
-                        {/* Logo - Show user profile circle instead of B&H when logged in */}
+                        {/* Logo */}
                         <div className="flex items-center gap-3 group">
                             {isAuthenticated && user ? (
-                                // User Profile Circle - replaces B&H logo
                                 <div
-                                    className="relative w-11 h-11 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-400 p-[1px] shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 transition-all duration-300 cursor-pointer hover:scale-105"
+                                    className="relative w-11 h-11 rounded-lg bg-gradient-to-br from-cyan-400 to-purple-600 p-[1px] shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 transition-all duration-300 cursor-pointer hover:scale-105 clip-path-polygon"
                                     onClick={() => setShowSidebar(!showSidebar)}
+                                    style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}
                                 >
-                                    <div className="w-full h-full rounded-full bg-[#0a0d18] flex items-center justify-center">
-                                        <span className="text-base font-luxury font-bold bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">
+                                    <div className="w-full h-full rounded-lg bg-black flex items-center justify-center" style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}>
+                                        <span className="text-base font-mono font-bold bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">
                                             {user.username?.charAt(0)?.toUpperCase() || 'U'}
                                         </span>
                                     </div>
-                                    {/* Status indicator */}
-                                    <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-[#0a0d18]"></div>
+                                    <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-green-400 border-2 border-black"></div>
                                 </div>
                             ) : (
-                                // Show B&H logo when not logged in
-                                <Link to="/" className="relative w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-400 p-[1px] shadow-lg shadow-purple-500/20 group-hover:scale-105 transition-transform">
-                                    <div className="w-full h-full rounded-[11px] bg-[#0a0d18] flex items-center justify-center">
-                                        <span className="text-xs font-luxury font-bold tracking-widest bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">B&H</span>
+                                <Link to="/" className="relative w-11 h-11 rounded-lg bg-gradient-to-br from-cyan-400 to-purple-600 p-[1px] shadow-lg shadow-cyan-500/30 group-hover:scale-105 transition-transform">
+                                    <div className="w-full h-full rounded-lg bg-black flex items-center justify-center">
+                                        <span className="text-xs font-mono font-bold tracking-widest bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">B&H</span>
                                     </div>
                                 </Link>
                             )}
                             <div>
-                                <div className="font-luxury text-lg font-bold tracking-wide text-white">
-                                    Build<span className="text-purple-400">And</span>Host
+                                <div className="font-mono text-lg font-bold tracking-wide text-white">
+                                    <span className="text-cyan-400">Build</span>
+                                    <span className="text-purple-400">And</span>
+                                    <span className="text-cyan-400">Host</span>
                                 </div>
-                                <div className="text-[9px] font-serif-light uppercase tracking-[0.3em] text-white/40">AI Website Builder</div>
+                                <div className="text-[9px] font-mono uppercase tracking-[0.3em] text-cyan-500/60">AI Website Builder</div>
                             </div>
                         </div>
 
-                        {/* Desktop Navigation - Only show when authenticated */}
+                        {/* Desktop Navigation */}
                         {isAuthenticated && (
                             <div className="hidden md:flex items-center gap-2">
-                                <Link to="/" className="px-4 py-2 rounded-lg text-white/65 hover:text-white hover:bg-white/[0.06] text-sm font-body font-medium transition-all">Home</Link>
-                                <Link to="/chat" className={`px-4 py-2 rounded-lg text-sm font-body font-medium transition-all ${isActive('/chat')
-                                    ? 'bg-white/[0.09] text-white border border-white/[0.08]'
-                                    : 'text-white/65 hover:text-white hover:bg-white/[0.06]'
-                                    }`}>AI Builder</Link>
-                                <Link to="/websites" className="px-4 py-2 rounded-lg text-white/65 hover:text-white hover:bg-white/[0.06] text-sm font-body font-medium transition-all">My Websites</Link>
+                                <Link to="/" className="px-4 py-2 rounded-lg text-cyan-400/60 hover:text-cyan-300 hover:bg-cyan-500/10 text-sm font-mono font-medium transition-all border border-transparent hover:border-cyan-500/30">~/home</Link>
+                                <Link to="/chat" className={`px-4 py-2 rounded-lg text-sm font-mono font-medium transition-all ${isActive('/chat')
+                                    ? 'bg-cyan-500/10 text-cyan-300 border border-cyan-500/30'
+                                    : 'text-cyan-400/60 hover:text-cyan-300 hover:bg-cyan-500/10 border border-transparent hover:border-cyan-500/30'
+                                    }`}>~/ai-builder</Link>
+                                <Link to="/websites" className="px-4 py-2 rounded-lg text-cyan-400/60 hover:text-cyan-300 hover:bg-cyan-500/10 text-sm font-mono font-medium transition-all border border-transparent hover:border-cyan-500/30">~/my-websites</Link>
                             </div>
                         )}
 
-                        {/* Authentication - Only show Login/Get Started when not authenticated */}
+                        {/* Authentication */}
                         <div className="flex items-center gap-3">
                             {!isAuthenticated ? (
                                 <>
-                                    <Link to="/login" className="hidden sm:block px-4 py-2.5 text-sm font-body font-light text-white/75 hover:text-white transition-colors tracking-wide">Login</Link>
-                                    <Link to="/register" className="btn-get-started px-5 py-2.5 rounded-lg text-white text-sm font-body font-semibold tracking-wide">Get Started</Link>
+                                    <Link to="/login" className="hidden sm:block px-4 py-2.5 text-sm font-mono text-cyan-400/70 hover:text-cyan-300 transition-colors">./login</Link>
+                                    <Link to="/register" className="px-5 py-2.5 rounded-lg text-white text-sm font-mono font-semibold bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 transition-all shadow-lg shadow-cyan-500/30">./get-started</Link>
                                 </>
                             ) : null}
                         </div>
@@ -384,43 +356,40 @@ export default function Home() {
             </nav>
 
             {/* =========================================================
-                PREMIUM TOGGLE SIDEBAR - SAME AS HOME PAGE
+                CYBERPUNK SIDEBAR
             ========================================================= */}
             {isAuthenticated && showSidebar && (
                 <>
-                    {/* Backdrop with blur */}
                     <div
-                        className="fixed inset-0 z-40 bg-black/60 backdrop-blur-md"
+                        className="fixed inset-0 z-40 bg-black/80 backdrop-blur-md"
                         onClick={() => setShowSidebar(false)}
                     />
 
-                    {/* Premium Sidebar - Fixed height layout with hidden scrollbar */}
-                    <div className="fixed right-0 top-0 z-50 h-full w-80 bg-gradient-to-b from-[#0a0d18] via-[#0d1120] to-[#0a0d18] backdrop-blur-2xl border-l border-white/[0.08] shadow-2xl shadow-black/80 sidebar-slide-in">
+                    <div className="fixed right-0 top-0 z-50 h-full w-80 bg-black border-l border-cyan-500/30 shadow-2xl shadow-cyan-500/20 sidebar-slide-in">
                         <div className="flex flex-col h-full">
-                            {/* Premium Sidebar Header - Fixed */}
-                            <div className="relative p-6 border-b border-white/[0.06] bg-gradient-to-br from-purple-500/5 to-cyan-500/5 flex-shrink-0">
-                                {/* Decorative glow */}
-                                <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-purple-500/10 blur-[80px]" />
-                                <div className="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-cyan-500/10 blur-[80px]" />
+                            {/* Sidebar Header */}
+                            <div className="relative p-6 border-b border-cyan-500/20 bg-gradient-to-br from-cyan-500/5 to-purple-500/5 flex-shrink-0">
+                                <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-cyan-500/10 blur-[80px]" />
+                                <div className="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-purple-500/10 blur-[80px]" />
 
                                 <div className="relative flex items-center gap-4">
-                                    <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-400 p-[2px] shadow-xl shadow-purple-500/30">
-                                        <div className="w-full h-full rounded-full bg-[#0a0d18] flex items-center justify-center">
-                                            <span className="text-xl font-luxury font-bold bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">
+                                    <div className="relative w-14 h-14 rounded-lg bg-gradient-to-br from-cyan-400 to-purple-600 p-[2px] shadow-xl shadow-cyan-500/30">
+                                        <div className="w-full h-full rounded-lg bg-black flex items-center justify-center">
+                                            <span className="text-xl font-mono font-bold bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">
                                                 {user?.username?.charAt(0)?.toUpperCase() || 'U'}
                                             </span>
                                         </div>
                                     </div>
                                     <div className="flex-1">
-                                        <div className="font-body text-base font-semibold text-white tracking-wide">{user?.username}</div>
+                                        <div className="font-mono text-base font-semibold text-white tracking-wide">{user?.username}</div>
                                         <div className="flex items-center gap-2 mt-0.5">
-                                            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
-                                            <div className="text-[10px] font-serif-light text-white/40 tracking-wider">Online</div>
+                                            <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+                                            <div className="text-[10px] font-mono text-cyan-500/60 tracking-wider">ONLINE</div>
                                         </div>
                                     </div>
                                     <button
                                         onClick={() => setShowSidebar(false)}
-                                        className="text-white/30 hover:text-white/60 transition-colors"
+                                        className="text-cyan-500/30 hover:text-cyan-300 transition-colors"
                                     >
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -429,84 +398,80 @@ export default function Home() {
                                 </div>
                             </div>
 
-                            {/* Sidebar Navigation - Scrollable with hidden scrollbar */}
+                            {/* Sidebar Navigation */}
                             <div className="flex-1 overflow-y-auto sidebar-scroll p-4 space-y-1.5">
-                                <div className="px-3 py-2 text-[10px] font-serif-light text-white/20 tracking-[0.15em] uppercase">Navigation</div>
+                                <div className="px-3 py-2 text-[10px] font-mono text-cyan-500/40 tracking-[0.15em] uppercase">Navigation</div>
 
                                 <Link
                                     to="/"
-                                    className="flex items-center gap-3 px-4 py-3.5 rounded-xl hover:bg-white/[0.06] transition-all duration-300 text-white/70 hover:text-white group"
+                                    className="flex items-center gap-3 px-4 py-3.5 rounded-lg hover:bg-cyan-500/10 transition-all duration-300 text-cyan-400/70 hover:text-cyan-300 group border border-transparent hover:border-cyan-500/20"
                                     onClick={() => setShowSidebar(false)}
                                 >
-                                    <div className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center">
-                                        <svg className="w-5 h-5 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div className="w-9 h-9 rounded-lg bg-cyan-500/10 flex items-center justify-center">
+                                        <svg className="w-5 h-5 text-cyan-400/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                         </svg>
                                     </div>
-                                    <span className="font-body text-sm font-medium flex-1">Home</span>
-                                    <span className="text-white/20 group-hover:text-white/40 transition-colors">→</span>
+                                    <span className="font-mono text-sm font-medium flex-1">~/home</span>
+                                    <span className="text-cyan-500/20 group-hover:text-cyan-300/40 transition-colors">→</span>
                                 </Link>
 
                                 <Link
                                     to="/chat"
-                                    className={`flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 group ${isActive('/chat')
-                                        ? 'bg-gradient-to-r from-purple-500/20 to-cyan-500/20 border border-purple-400/30 text-white'
-                                        : 'hover:bg-white/[0.06] text-white/70 hover:text-white'
+                                    className={`flex items-center gap-3 px-4 py-3.5 rounded-lg transition-all duration-300 group border ${isActive('/chat')
+                                        ? 'bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border-cyan-400/40 text-cyan-300'
+                                        : 'hover:bg-cyan-500/10 text-cyan-400/70 hover:text-cyan-300 border-transparent hover:border-cyan-500/20'
                                         }`}
                                     onClick={() => setShowSidebar(false)}
                                 >
                                     <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${isActive('/chat')
-                                        ? 'bg-gradient-to-br from-purple-500/30 to-cyan-500/30'
-                                        : 'bg-white/5'
+                                        ? 'bg-gradient-to-br from-cyan-500/30 to-purple-500/30'
+                                        : 'bg-cyan-500/10'
                                         }`}>
-                                        <svg className={`w-5 h-5 ${isActive('/chat') ? 'text-purple-300' : 'text-white/40'
-                                            }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className={`w-5 h-5 ${isActive('/chat') ? 'text-cyan-300' : 'text-cyan-400/60'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                         </svg>
                                     </div>
-                                    <span className={`font-body text-sm font-medium flex-1 ${isActive('/chat') ? 'text-white' : ''
-                                        }`}>AI Builder</span>
-                                    <span className={`transition-colors ${isActive('/chat') ? 'text-white/40' : 'text-white/20 group-hover:text-white/40'
-                                        }`}>→</span>
+                                    <span className="font-mono text-sm font-medium flex-1">~/ai-builder</span>
+                                    <span className="text-cyan-500/20 group-hover:text-cyan-300/40 transition-colors">→</span>
                                 </Link>
 
                                 <Link
                                     to="/websites"
-                                    className="flex items-center gap-3 px-4 py-3.5 rounded-xl hover:bg-white/[0.06] transition-all duration-300 text-white/70 hover:text-white group"
+                                    className="flex items-center gap-3 px-4 py-3.5 rounded-lg hover:bg-cyan-500/10 transition-all duration-300 text-cyan-400/70 hover:text-cyan-300 group border border-transparent hover:border-cyan-500/20"
                                     onClick={() => setShowSidebar(false)}
                                 >
-                                    <div className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center">
-                                        <svg className="w-5 h-5 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div className="w-9 h-9 rounded-lg bg-cyan-500/10 flex items-center justify-center">
+                                        <svg className="w-5 h-5 text-cyan-400/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                                         </svg>
                                     </div>
-                                    <span className="font-body text-sm font-medium flex-1">My Websites</span>
-                                    <span className="text-white/20 group-hover:text-white/40 transition-colors">→</span>
+                                    <span className="font-mono text-sm font-medium flex-1">~/my-websites</span>
+                                    <span className="text-cyan-500/20 group-hover:text-cyan-300/40 transition-colors">→</span>
                                 </Link>
                             </div>
 
-                            {/* Premium Sidebar Footer - Fixed with logout button */}
-                            <div className="p-4 border-t border-white/[0.06] bg-gradient-to-t from-purple-500/5 to-transparent flex-shrink-0">
+                            {/* Sidebar Footer */}
+                            <div className="p-4 border-t border-cyan-500/20 bg-gradient-to-t from-purple-500/5 to-transparent flex-shrink-0">
                                 <button
                                     onClick={() => {
                                         logout();
                                         navigate('/');
                                         setShowSidebar(false);
                                     }}
-                                    className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl bg-gradient-to-r from-red-500/10 to-rose-500/10 hover:from-red-500/20 hover:to-rose-500/20 transition-all duration-300 text-red-400 hover:text-red-300 border border-red-500/10 hover:border-red-500/30"
+                                    className="w-full flex items-center gap-3 px-4 py-3.5 rounded-lg bg-gradient-to-r from-red-500/10 to-rose-500/10 hover:from-red-500/20 hover:to-rose-500/20 transition-all duration-300 text-red-400 hover:text-red-300 border border-red-500/10 hover:border-red-500/30"
                                 >
                                     <div className="w-9 h-9 rounded-lg bg-red-500/10 flex items-center justify-center">
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                                         </svg>
                                     </div>
-                                    <span className="font-body text-sm font-medium flex-1">Logout</span>
+                                    <span className="font-mono text-sm font-medium flex-1">./logout</span>
                                     <span className="text-red-400/20">↗</span>
                                 </button>
 
-                                {/* Version info */}
-                                <div className="mt-4 text-center text-[9px] font-serif-light text-white/15 tracking-wider">
-                                    BuildAndHost v2.0 • AI Powered
+                                <div className="mt-4 text-center text-[9px] font-mono text-cyan-500/30 tracking-wider">
+                                    BuildAndHost v2.0 • Cyberpunk Edition
                                 </div>
                             </div>
                         </div>
@@ -517,26 +482,26 @@ export default function Home() {
             <div
                 className="chat-root min-h-screen flex items-center justify-center p-4 sm:p-6 relative overflow-hidden pt-[76px]"
                 style={{
-                    fontFamily: "'Playfair Display', 'Cormorant Garamond', 'Georgia', serif",
-                    background: 'radial-gradient(circle at 50% -10%, #31205f 0%, #15142d 28%, #090b18 65%, #05060d 100%)',
+                    fontFamily: "'JetBrains Mono', 'Fira Code', 'Courier New', monospace",
+                    background: 'linear-gradient(135deg, #000000 0%, #0a0a0f 25%, #1a0a2e 50%, #0a0a0f 75%, #000000 100%)',
                 }}
             >
                 {/* =========================================================
-                    ANIMATIONS & STYLES
+                    CYBERPUNK ANIMATIONS & STYLES
                 ========================================================= */}
                 <style>{`
-                    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap');
+                    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500;600&display=swap');
 
                     .font-luxury {
-                        font-family: 'Playfair Display', 'Cormorant Garamond', serif;
+                        font-family: 'JetBrains Mono', 'Fira Code', monospace;
                     }
 
                     .font-serif-light {
-                        font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+                        font-family: 'Fira Code', 'JetBrains Mono', monospace;
                     }
 
                     .font-body {
-                        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+                        font-family: 'JetBrains Mono', 'Fira Code', monospace;
                     }
 
                     @keyframes float-slow {
@@ -574,6 +539,21 @@ export default function Home() {
                         50% { background-position: 100% 50%; }
                     }
 
+                    @keyframes neon-glow {
+                        0%, 100% { box-shadow: 0 0 10px rgba(0, 255, 255, 0.5), 0 0 20px rgba(0, 255, 255, 0.3), 0 0 30px rgba(0, 255, 255, 0.1); }
+                        50% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.8), 0 0 40px rgba(0, 255, 255, 0.5), 0 0 60px rgba(0, 255, 255, 0.3); }
+                    }
+
+                    @keyframes scan-line {
+                        0% { transform: translateY(-100%); }
+                        100% { transform: translateY(100%); }
+                    }
+
+                    @keyframes grid-move {
+                        0% { background-position: 0 0; }
+                        100% { background-position: 50px 50px; }
+                    }
+
                     .animate-slide-in {
                         animation: slide-in 0.3s ease-out;
                     }
@@ -598,17 +578,21 @@ export default function Home() {
                         animation: pulse-soft 6s ease-in-out infinite;
                     }
 
+                    .animate-neon-glow {
+                        animation: neon-glow 2s ease-in-out infinite;
+                    }
+
                     .btn-primary {
-                        background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 25%, #8b5cf6 50%, #7c3aed 75%, #6d28d9 100%);
+                        background: linear-gradient(135deg, #00ffff 0%, #0088ff 25%, #8800ff 50%, #6600cc 75%, #440099 100%);
                         background-size: 200% 200%;
-                        box-shadow: 0 4px 25px rgba(6, 182, 212, 0.25);
+                        box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
                         transition: all 0.4s ease;
                         animation: gradient-shift 3s ease-in-out infinite;
                     }
 
                     .btn-primary:hover {
                         transform: translateY(-2px) scale(1.02);
-                        box-shadow: 0 8px 35px rgba(6, 182, 212, 0.4);
+                        box-shadow: 0 0 40px rgba(0, 255, 255, 0.6);
                     }
 
                     .btn-primary:disabled {
@@ -618,25 +602,44 @@ export default function Home() {
                     }
 
                     .btn-get-started {
-                        background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 25%, #8b5cf6 50%, #7c3aed 75%, #6d28d9 100%);
+                        background: linear-gradient(135deg, #00ffff 0%, #0088ff 25%, #8800ff 50%, #6600cc 75%, #440099 100%);
                         background-size: 200% 200%;
-                        box-shadow: 0 4px 25px rgba(6, 182, 212, 0.3);
+                        box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
                         transition: all 0.4s ease;
                         animation: gradient-shift 3s ease-in-out infinite;
                     }
 
                     .btn-get-started:hover {
                         transform: translateY(-2px) scale(1.03);
-                        box-shadow: 0 8px 40px rgba(6, 182, 212, 0.5);
+                        box-shadow: 0 0 50px rgba(0, 255, 255, 0.7);
                     }
 
                     .chat-window {
                         transition: all 0.3s ease;
+                        position: relative;
+                    }
+
+                    .chat-window::before {
+                        content: '';
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background: repeating-linear-gradient(
+                            0deg,
+                            transparent,
+                            transparent 2px,
+                            rgba(0, 255, 255, 0.03) 2px,
+                            rgba(0, 255, 255, 0.03) 4px
+                        );
+                        pointer-events: none;
+                        z-index: 1;
                     }
 
                     .chat-window:hover {
-                        border-color: rgba(6, 182, 212, 0.3);
-                        box-shadow: 0 8px 40px rgba(6, 182, 212, 0.1);
+                        border-color: rgba(0, 255, 255, 0.5);
+                        box-shadow: 0 0 50px rgba(0, 255, 255, 0.3);
                     }
 
                     .ai-thinking-avatar {
@@ -644,8 +647,8 @@ export default function Home() {
                     }
 
                     @keyframes avatar-pulse {
-                        0%, 100% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.4); }
-                        50% { box-shadow: 0 0 0 20px rgba(6, 182, 212, 0); }
+                        0%, 100% { box-shadow: 0 0 0 0 rgba(0, 255, 255, 0.4); }
+                        50% { box-shadow: 0 0 0 20px rgba(0, 255, 255, 0); }
                     }
 
                     @keyframes fade-in {
@@ -694,6 +697,14 @@ export default function Home() {
                         }
                     }
 
+                    @keyframes glitch {
+                        0%, 100% { transform: translate(0); }
+                        20% { transform: translate(-2px, 2px); }
+                        40% { transform: translate(-2px, -2px); }
+                        60% { transform: translate(2px, 2px); }
+                        80% { transform: translate(2px, -2px); }
+                    }
+
                     .animate-fade-in {
                         animation: fade-in 0.5s ease-out;
                     }
@@ -710,52 +721,64 @@ export default function Home() {
                         animation: shimmer-slide 1.5s ease-in-out infinite;
                     }
 
+                    .animate-glitch {
+                        animation: glitch 0.3s ease-in-out infinite;
+                    }
+
                     .dropdown-animate {
                         animation: dropdown-slide 0.25s ease-out forwards;
                         transform-origin: top center;
                     }
 
-                    /* Hide scrollbar for Chrome, Safari and Opera */
                     .sidebar-scroll::-webkit-scrollbar {
                         display: none;
                     }
 
-                    /* Hide scrollbar for IE, Edge and Firefox */
                     .sidebar-scroll {
-                        -ms-overflow-style: none;  /* IE and Edge */
-                        scrollbar-width: none;  /* Firefox */
+                        -ms-overflow-style: none;
+                        scrollbar-width: none;
                     }
 
                     .sidebar-slide-in {
                         animation: slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
                     }
+
+                    .cyber-grid {
+                        background-image: 
+                            linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+                        background-size: 50px 50px;
+                        animation: grid-move 3s linear infinite;
+                    }
                 `}</style>
 
                 {/* =========================================================
-                    BACKGROUND
+                    CYBERPUNK BACKGROUND
                 ========================================================= */}
                 <div className="fixed inset-0 pointer-events-none overflow-hidden">
-                    <div className="absolute -top-72 left-1/2 -translate-x-1/2 w-[900px] h-[700px] rounded-full bg-purple-600/[0.16] blur-[160px] animate-pulse-soft" />
-                    <div className="absolute top-[25%] -left-72 w-[600px] h-[600px] rounded-full bg-blue-600/[0.10] blur-[150px] animate-float-slow" />
-                    <div className="absolute bottom-[-300px] right-[-200px] w-[700px] h-[700px] rounded-full bg-violet-600/[0.12] blur-[160px] animate-float-slower" />
-                    <div className="absolute top-[55%] left-[45%] w-[350px] h-[350px] rounded-full bg-cyan-500/[0.05] blur-[120px]" />
-                    <div className="absolute inset-0 opacity-[0.035]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
-                    <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-cyan-400/40 rounded-full animate-float-slow"></div>
-                    <div className="absolute top-1/3 right-1/3 w-1.5 h-1.5 bg-purple-400/40 rounded-full animate-float-slower"></div>
-                    <div className="absolute bottom-1/4 left-1/3 w-1 h-1 bg-cyan-400/30 rounded-full animate-float-slow" style={{ animationDelay: '2s' }}></div>
-                    <div className="absolute top-2/3 right-1/4 w-1.5 h-1.5 bg-purple-400/30 rounded-full animate-float-slower" style={{ animationDelay: '3s' }}></div>
+                    <div className="absolute inset-0 cyber-grid opacity-20"></div>
+                    <div className="absolute -top-72 left-1/2 -translate-x-1/2 w-[900px] h-[700px] rounded-full bg-cyan-500/10 blur-[160px] animate-pulse-soft" />
+                    <div className="absolute top-[25%] -left-72 w-[600px] h-[600px] rounded-full bg-purple-600/10 blur-[150px] animate-float-slow" />
+                    <div className="absolute bottom-[-300px] right-[-200px] w-[700px] h-[700px] rounded-full bg-blue-600/10 blur-[160px] animate-float-slower" />
+                    <div className="absolute top-[55%] left-[45%] w-[350px] h-[350px] rounded-full bg-pink-500/5 blur-[120px]" />
+
+                    {/* Floating particles */}
+                    <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-cyan-400/60 rounded-full animate-float-slow"></div>
+                    <div className="absolute top-1/3 right-1/3 w-1.5 h-1.5 bg-purple-400/60 rounded-full animate-float-slower"></div>
+                    <div className="absolute bottom-1/4 left-1/3 w-1 h-1 bg-cyan-400/40 rounded-full animate-float-slow" style={{ animationDelay: '2s' }}></div>
+                    <div className="absolute top-2/3 right-1/4 w-1.5 h-1.5 bg-purple-400/40 rounded-full animate-float-slower" style={{ animationDelay: '3s' }}></div>
                 </div>
 
                 {/* =========================================================
-                    GAME-STYLE LOADING SCREEN
+                    CYBERPUNK LOADING SCREEN
                 ========================================================= */}
                 {showLoadingScreen && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0a0615]/95 backdrop-blur-2xl animate-fade-in">
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-2xl animate-fade-in">
                         <div className="absolute inset-0 overflow-hidden">
-                            {[...Array(20)].map((_, i) => (
+                            {[...Array(30)].map((_, i) => (
                                 <div
                                     key={i}
-                                    className="absolute w-1 h-1 bg-cyan-400/30 rounded-full"
+                                    className="absolute w-1 h-1 bg-cyan-400/40 rounded-full"
                                     style={{
                                         top: `${Math.random() * 100}%`,
                                         left: `${Math.random() * 100}%`,
@@ -767,36 +790,44 @@ export default function Home() {
                             ))}
                         </div>
 
-                        <div className="relative max-w-md w-full mx-4 p-8 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl shadow-cyan-500/10">
-                            <div className="absolute -top-20 -right-20 w-60 h-60 bg-cyan-500/20 rounded-full blur-3xl"></div>
-                            <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-purple-500/20 rounded-full blur-3xl"></div>
+                        <div className="relative max-w-md w-full mx-4 p-8 bg-black border border-cyan-500/30 rounded-lg shadow-[0_0_50px_rgba(0,255,255,0.3)]">
+                            <div className="absolute -top-20 -right-20 w-60 h-60 bg-cyan-500/10 rounded-full blur-3xl"></div>
+                            <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-purple-500/10 rounded-full blur-3xl"></div>
 
-                            <div className="relative flex justify-center mb-6">
-                                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center shadow-2xl shadow-cyan-500/30">
-                                    <span className="text-4xl animate-bounce-subtle">🧠</span>
-                                </div>
-                                <div className="absolute inset-0 rounded-2xl border-2 border-cyan-400/30 animate-pulse-ring"></div>
+                            {/* Terminal header */}
+                            <div className="relative flex items-center gap-2 mb-6 pb-3 border-b border-cyan-500/20">
+                                <div className="w-3 h-3 rounded-full bg-red-500/70"></div>
+                                <div className="w-3 h-3 rounded-full bg-yellow-500/70"></div>
+                                <div className="w-3 h-3 rounded-full bg-green-500/70"></div>
+                                <span className="ml-2 text-xs font-mono text-cyan-500/60">neural-network-build</span>
                             </div>
 
-                            <h3 className="relative text-xl font-luxury font-bold text-white text-center mb-2">
-                                Building Your Website
+                            <div className="relative flex justify-center mb-6">
+                                <div className="w-20 h-20 rounded-lg bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center shadow-2xl shadow-cyan-500/50 animate-neon-glow">
+                                    <span className="text-4xl animate-bounce-subtle">🤖</span>
+                                </div>
+                                <div className="absolute inset-0 rounded-lg border-2 border-cyan-400/30 animate-pulse-ring"></div>
+                            </div>
+
+                            <h3 className="relative text-xl font-mono font-bold text-white text-center mb-2">
+                                <span className="text-cyan-400">&gt;</span> Building_Your_Website
                             </h3>
 
-                            <p className="relative text-center font-serif-light text-cyan-300/80 text-sm mb-6 min-h-[24px] transition-all duration-500">
+                            <p className="relative text-center font-mono text-cyan-300/80 text-sm mb-6 min-h-[24px] transition-all duration-500">
                                 {loadingText}
                             </p>
 
                             <div className="relative space-y-3">
                                 <div className="flex justify-between items-center">
-                                    <span className="text-xs font-serif-light text-white/40 tracking-wider">PROCESSING</span>
-                                    <span className="text-2xl font-luxury font-bold text-transparent bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text">
+                                    <span className="text-xs font-mono text-cyan-500/60 tracking-wider">PROCESSING</span>
+                                    <span className="text-2xl font-mono font-bold text-transparent bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text">
                                         {Math.round(progress)}%
                                     </span>
                                 </div>
 
-                                <div className="relative h-3 bg-white/5 rounded-full overflow-hidden border border-white/10">
+                                <div className="relative h-3 bg-black rounded overflow-hidden border border-cyan-500/30">
                                     <div
-                                        className="h-full bg-gradient-to-r from-cyan-400 via-purple-400 to-cyan-400 rounded-full transition-all duration-300 ease-out relative"
+                                        className="h-full bg-gradient-to-r from-cyan-400 via-purple-400 to-cyan-400 rounded transition-all duration-300 ease-out relative"
                                         style={{
                                             width: `${progress}%`,
                                             backgroundSize: '200% 100%',
@@ -808,7 +839,7 @@ export default function Home() {
                                 </div>
 
                                 <div
-                                    className="h-1 bg-gradient-to-r from-cyan-400/20 via-purple-400/20 to-cyan-400/20 rounded-full blur-sm transition-all duration-300"
+                                    className="h-1 bg-gradient-to-r from-cyan-400/20 via-purple-400/20 to-cyan-400/20 rounded blur-sm transition-all duration-300"
                                     style={{ width: `${progress}%` }}
                                 ></div>
                             </div>
@@ -817,7 +848,7 @@ export default function Home() {
                                 {[...Array(5)].map((_, i) => (
                                     <div
                                         key={i}
-                                        className="w-1.5 h-1.5 bg-cyan-400/40 rounded-full"
+                                        className="w-1.5 h-1.5 bg-cyan-400/60 rounded"
                                         style={{
                                             animation: `loading-dot 1.2s ease-in-out ${i * 0.15}s infinite`,
                                         }}
@@ -825,94 +856,125 @@ export default function Home() {
                                 ))}
                             </div>
 
-                            <p className="relative text-center text-[10px] font-serif-light text-white/20 mt-4 tracking-wider">
-                                {progress < 30 && "Initializing AI engine..."}
-                                {progress >= 30 && progress < 60 && "Generating website structure..."}
-                                {progress >= 60 && progress < 85 && "Designing layout & styling..."}
-                                {progress >= 85 && progress < 100 && "Finalizing your website..."}
-                                {progress === 100 && "✨ Complete!"}
+                            <p className="relative text-center text-[10px] font-mono text-cyan-500/40 mt-4 tracking-wider">
+                                {progress < 30 && "$ initializing_ai_engine.sh"}
+                                {progress >= 30 && progress < 60 && "$ generating_website_structure.py"}
+                                {progress >= 60 && progress < 85 && "$ designing_layout_styling.js"}
+                                {progress >= 85 && progress < 100 && "$ finalizing_website_build.sh"}
+                                {progress === 100 && "✨ Build Complete!"}
                             </p>
                         </div>
                     </div>
                 )}
 
                 {/* =========================================================
-                    CHAT WINDOW
+                    CYBERPUNK CHAT WINDOW
                 ========================================================= */}
-                <div className="chat-window w-full max-w-4xl bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden relative border border-white/10 hover:border-cyan-400/20">
+                <div className="chat-window w-full max-w-4xl bg-black rounded-lg shadow-[0_0_50px_rgba(0,255,255,0.3)] overflow-hidden relative border border-cyan-500/30">
                     {/* Header */}
-                    <div className="chat-header bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-700 text-white px-6 py-5 relative overflow-x-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12"></div>
+                    <div className="chat-header bg-black text-white px-6 py-5 relative border-b-2 border-cyan-500/50">
+                        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-transparent to-purple-500/20"></div>
                         <div className="flex items-center justify-between relative">
                             <div className="flex items-center gap-4">
                                 <div className="relative">
-                                    <div className={`w-12 h-12 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center font-bold text-xl border border-white/30 shadow-lg ${aiThinking ? 'ai-thinking-avatar' : ''}`}>
-                                        {aiThinking ? '🧠' : 'AI'}
+                                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center font-bold text-xl shadow-lg shadow-cyan-500/50 ${aiThinking ? 'ai-thinking-avatar' : ''}`}>
+                                        {aiThinking ? '🤖' : '>_'}
                                     </div>
-                                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full border-2 border-white animate-pulse"></div>
+                                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded border-2 border-black animate-pulse"></div>
                                 </div>
                                 <div>
-                                    <div className="font-luxury text-lg font-bold">BuildAndHost Assistant</div>
-                                    <div className="text-sm opacity-90 flex items-center gap-2 font-serif-light">
-                                        <span className={`inline-block w-2 h-2 rounded-full ${aiThinking ? 'bg-cyan-400 animate-pulse' : 'bg-emerald-400'}`}></span>
-                                        {aiThinking ? 'AI is thinking...' : user ? `Welcome, ${user.username}` : 'Online • Ready to build'}
+                                    <div className="font-mono text-lg font-bold tracking-tight">
+                                        <span className="text-cyan-400">Build</span>
+                                        <span className="text-purple-400">And</span>
+                                        <span className="text-cyan-400">Host</span>
+                                        <span className="text-white/60 ml-2 animate-glitch inline-block">AI</span>
+                                    </div>
+                                    <div className="text-xs text-white/60 flex items-center gap-2 font-mono">
+                                        <span className={`inline-block w-2 h-2 rounded ${aiThinking ? 'bg-cyan-400 animate-pulse' : 'bg-green-400'}`}></span>
+                                        <span className="text-cyan-400/70">{aiThinking ? '> processing...' : user ? `> user: ${user.username}` : '> system: online'}</span>
                                     </div>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3">
                                 {/* =========================================================
-                                    IMPROVED PORTFOLIO DROPDOWN
+                                    CYBERPUNK TERMINAL DROPDOWN
                                 ========================================================= */}
                                 <div className="relative" ref={dropdownRef}>
                                     <button
                                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/20 backdrop-blur border border-white/30 text-white font-body font-medium hover:bg-white/30 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                                        className="flex items-center gap-2 px-4 py-2 rounded bg-black border border-cyan-500/40 text-cyan-300 font-mono text-sm font-medium hover:border-cyan-400 hover:text-cyan-200 transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,255,255,0.3)] group"
                                     >
-                                        <span>{getCurrentTypeLabel()}</span>
+                                        <span className="text-purple-400">&gt;</span>
+                                        <span>{getCurrentTypeLabel().replace(/^[^\s]+\s/, '')}</span>
                                         <svg
-                                            className={`w-4 h-4 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`}
+                                            className={`w-4 h-4 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180 text-cyan-400' : 'text-purple-400'}`}
                                             fill="none"
                                             stroke="currentColor"
                                             viewBox="0 0 24 24"
                                         >
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                         </svg>
                                     </button>
 
-                                    {/* Premium Dropdown Menu */}
+                                    {/* Cyberpunk Terminal Dropdown Menu */}
                                     {isDropdownOpen && (
-                                        <div className="absolute right-0 mt-2 w-64 bg-white/10 backdrop-blur-2xl rounded-2xl border border-white/10 shadow-2xl shadow-black/30 overflow-hidden dropdown-animate z-[60]">
-                                            <div className="p-1.5 max-h-[280px] overflow-y-auto custom-scrollbar">
+                                        <div className="absolute right-0 mt-2 w-72 bg-black rounded border border-cyan-500/40 shadow-[0_0_30px_rgba(0,255,255,0.4)] overflow-hidden dropdown-animate" style={{ zIndex: 9999 }}>
+                                            {/* Terminal header */}
+                                            <div className="px-3 py-2 bg-black border-b border-cyan-500/30 flex items-center gap-2">
+                                                <div className="w-2 h-2 rounded bg-red-500/70"></div>
+                                                <div className="w-2 h-2 rounded bg-yellow-500/70"></div>
+                                                <div className="w-2 h-2 rounded bg-green-500/70"></div>
+                                                <span className="ml-2 text-[10px] font-mono text-cyan-500/60">select_website_type.sh</span>
+                                            </div>
+
+                                            <div className="p-1.5 max-h-[300px] overflow-y-auto custom-scrollbar">
                                                 {websiteTypes.map((item) => (
                                                     <button
                                                         key={item.value}
-                                                        onClick={() => handleTypeSelect(item.value)}
-                                                        className={`w-full text-left px-3 py-2.5 rounded-xl transition-all duration-200 group relative ${type === item.value
-                                                            ? 'bg-gradient-to-r from-cyan-500/30 to-purple-500/30 border border-cyan-400/20'
-                                                            : 'hover:bg-white/10'
+                                                        type="button"
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            console.log('Selecting type:', item.value);
+                                                            handleTypeSelect(item.value);
+                                                        }}
+                                                        className={`w-full text-left px-3 py-2.5 rounded transition-all duration-200 group relative border-l-2 ${type === item.value
+                                                                ? 'border-cyan-400 bg-cyan-500/20'
+                                                                : 'border-transparent hover:border-cyan-400/50 hover:bg-cyan-500/5'
                                                             }`}
+                                                        style={{ pointerEvents: 'auto', cursor: 'pointer', position: 'relative', zIndex: 10000 }}
                                                     >
-                                                        <div className="flex items-center gap-2.5">
-                                                            <span className="text-base flex-shrink-0">{item.label.split(' ')[0]}</span>
+                                                        <div className="flex items-center gap-3">
+                                                            <span className="text-lg flex-shrink-0">{item.label.split(' ')[0]}</span>
                                                             <div className="flex-1 min-w-0">
-                                                                <div className={`text-xs font-body font-medium transition-colors duration-200 truncate ${type === item.value ? 'text-white' : 'text-white/80 group-hover:text-white'
+                                                                <div className={`text-xs font-mono font-medium transition-colors duration-200 truncate ${type === item.value ? 'text-cyan-300' : 'text-cyan-200/80 group-hover:text-cyan-100'
                                                                     }`}>
+                                                                    <span className="text-purple-400/60 mr-1">$</span>
                                                                     {item.label}
                                                                 </div>
-                                                                <div className="text-[9px] font-serif-light text-white/40 group-hover:text-white/60 transition-colors duration-200 truncate">
-                                                                    {item.description}
+                                                                <div className="text-[9px] font-mono text-cyan-500/40 group-hover:text-cyan-400/60 transition-colors duration-200 truncate ml-3">
+                                                                    # {item.description}
                                                                 </div>
                                                             </div>
                                                             {type === item.value && (
-                                                                <div className="flex-shrink-0">
-                                                                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-lg shadow-cyan-400/50 animate-pulse"></div>
+                                                                <div className="flex-shrink-0 flex items-center gap-1">
+                                                                    <span className="text-[8px] font-mono text-cyan-400">[OK]</span>
+                                                                    <div className="w-1.5 h-1.5 rounded bg-cyan-400 shadow-lg shadow-cyan-400/50 animate-pulse"></div>
                                                                 </div>
                                                             )}
                                                         </div>
-                                                        <div className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400 transition-all duration-300 ${type === item.value ? 'w-full' : 'w-0 group-hover:w-full'
-                                                            }`}></div>
+                                                        {type === item.value && (
+                                                            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-cyan-500/20 to-purple-500/20 pointer-events-none"></div>
+                                                        )}
                                                     </button>
                                                 ))}
+                                            </div>
+
+                                            {/* Terminal footer */}
+                                            <div className="px-3 py-2 bg-black border-t border-cyan-500/30">
+                                                <div className="text-[9px] font-mono text-cyan-500/50">
+                                                    <span className="text-green-400">✓</span> {websiteTypes.length} types available
+                                                </div>
                                             </div>
                                         </div>
                                     )}
@@ -920,22 +982,21 @@ export default function Home() {
                             </div>
                         </div>
                     </div>
-
                     {/* Chat Body */}
-                    <div ref={containerRef} className="chat-body p-6 h-[60vh] overflow-auto bg-gradient-to-b from-[#0a0615]/50 to-[#05030a]/50">
-                        <div className="space-y-4">
+                    <div ref={containerRef} className="chat-body p-6 h-[60vh] overflow-auto bg-black relative z-[1]">
+                        <div className="space-y-4 max-w-full">
                             {messages.map((m, i) => (
-                                <div key={i} className={`flex ${m.role === "assistant" ? "justify-start" : "justify-end"} animate-slide-in`}>
+                                <div key={i} className={`flex ${m.role === "assistant" ? "justify-start" : "justify-end"} animate-slide-in w-full`}>
                                     {m.role === "assistant" && (
-                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center text-white text-xs font-bold mr-2 mt-1 shadow-md shadow-cyan-400/20 flex-shrink-0">
-                                            AI
+                                        <div className="w-8 h-8 rounded bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold mr-2 mt-1 shadow-md shadow-cyan-500/30 flex-shrink-0">
+                                            &gt;_
                                         </div>
                                     )}
-                                    <div className={`max-w-[75%] px-5 py-3.5 rounded-2xl shadow-md transition-all hover:shadow-lg ${m.role === "assistant"
-                                        ? "bg-white/10 backdrop-blur border border-white/10 text-white/90 rounded-tl-sm font-serif-light"
-                                        : "bg-gradient-to-br from-cyan-500 to-purple-600 text-white rounded-tr-sm font-serif-light"
-                                        }`}>
-                                        <p className="leading-relaxed">{m.text}</p>
+                                    <div className={`px-4 py-3 rounded shadow-md transition-all hover:shadow-lg ${m.role === "assistant"
+                                            ? "bg-cyan-500/10 border border-cyan-500/30 text-cyan-100/90 rounded-tl-none font-mono"
+                                            : "bg-gradient-to-br from-cyan-500 to-purple-600 text-white rounded-tr-none font-mono"
+                                        }`} style={{ maxWidth: '55%', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
+                                        <p className="leading-relaxed text-sm">{m.text}</p>
                                     </div>
                                 </div>
                             ))}
@@ -944,8 +1005,8 @@ export default function Home() {
 
                     {/* File Error */}
                     {fileError && (
-                        <div className="px-6 py-3 bg-red-500/10 border-t border-red-500/20">
-                            <div className="flex items-center gap-2 text-red-300 text-sm">
+                        <div className="px-6 py-3 bg-red-500/10 border-t border-red-500/30">
+                            <div className="flex items-center gap-2 text-red-400 text-sm font-mono">
                                 <span>⚠️</span>
                                 <span>{fileError}</span>
                             </div>
@@ -954,17 +1015,17 @@ export default function Home() {
 
                     {/* File Preview */}
                     {selectedFiles.length > 0 && (
-                        <div className="px-6 py-2 bg-[#0a0615]/30 border-t border-white/5">
+                        <div className="px-6 py-2 bg-black border-t border-cyan-500/20">
                             <div className="flex flex-wrap gap-2">
                                 {selectedFiles.map((fileName, index) => (
-                                    <span key={index} className="inline-flex items-center gap-1 px-3 py-1 bg-cyan-500/10 text-cyan-300 rounded-full text-xs font-medium border border-cyan-500/20">
+                                    <span key={index} className="inline-flex items-center gap-1 px-3 py-1 bg-cyan-500/10 text-cyan-300 rounded text-xs font-mono border border-cyan-500/30">
                                         📎 {fileName}
                                         <button
                                             onClick={() => {
                                                 const newFiles = Array.from(files || []).filter((_, i) => i !== index);
                                                 setFiles(newFiles.length > 0 ? newFiles as unknown as FileList : null);
                                                 setSelectedFiles(selectedFiles.filter((_, i) => i !== index));
-                                                setFileError(""); // Clear error when removing files
+                                                setFileError("");
                                             }}
                                             className="ml-1 hover:text-red-400 transition-colors"
                                         >
@@ -977,7 +1038,7 @@ export default function Home() {
                     )}
 
                     {/* Input Area */}
-                    <div className="chat-input p-4 border-t border-white/5 bg-[#05030a]/30 backdrop-blur">
+                    <div className="chat-input p-4 border-t border-cyan-500/20 bg-black">
                         <div className="flex items-center gap-3">
                             <input
                                 type="file"
@@ -988,26 +1049,27 @@ export default function Home() {
                             />
                             <button
                                 onClick={() => fileInputRef.current?.click()}
-                                className="p-3 rounded-xl border-2 border-dashed border-white/20 hover:border-cyan-400/50 hover:bg-cyan-500/10 transition-all group"
+                                className="p-3 rounded border-2 border-dashed border-cyan-500/30 hover:border-cyan-400/60 hover:bg-cyan-500/10 transition-all group"
                                 title="Attach files"
                             >
-                                <svg className="w-5 h-5 text-white/40 group-hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-5 h-5 text-cyan-400/60 group-hover:text-cyan-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                                 </svg>
                             </button>
                             <div className="flex-1 relative">
+                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-400/60 font-mono text-sm">$</span>
                                 <input
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
                                     onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
                                     placeholder="Describe your dream website..."
-                                    className="w-full px-5 py-3.5 rounded-xl border-2 border-white/10 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-400/20 transition-all bg-white/5 text-white placeholder-white/40 font-serif-light"
+                                    className="w-full pl-10 pr-5 py-3.5 rounded border-2 border-cyan-500/30 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-400/20 transition-all bg-black text-white placeholder-cyan-500/40 font-mono"
                                 />
                             </div>
                             <button
                                 onClick={handleSend}
                                 disabled={loading || !input.trim()}
-                                className="px-6 py-3 rounded-xl btn-primary text-white font-body font-semibold flex items-center gap-2"
+                                className="px-6 py-3 rounded btn-primary text-white font-mono font-semibold flex items-center gap-2"
                             >
                                 {loading ? (
                                     <>
@@ -1015,11 +1077,11 @@ export default function Home() {
                                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                                         </svg>
-                                        Creating...
+                                        Building...
                                     </>
                                 ) : (
                                     <>
-                                        Send
+                                        Execute
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                                         </svg>
@@ -1031,20 +1093,20 @@ export default function Home() {
                 </div>
             </div>
 
-            {/* Custom scrollbar for dropdown */}
+            {/* Custom scrollbar for cyberpunk dropdown */}
             <style>{`
                 .custom-scrollbar::-webkit-scrollbar {
-                    width: 3px;
+                    width: 4px;
                 }
                 .custom-scrollbar::-webkit-scrollbar-track {
-                    background: transparent;
+                    background: black;
                 }
                 .custom-scrollbar::-webkit-scrollbar-thumb {
-                    background: rgba(6, 182, 212, 0.3);
-                    border-radius: 10px;
+                    background: rgba(0, 255, 255, 0.3);
+                    border-radius: 2px;
                 }
                 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                    background: rgba(6, 182, 212, 0.5);
+                    background: rgba(0, 255, 255, 0.5);
                 }
             `}</style>
         </>

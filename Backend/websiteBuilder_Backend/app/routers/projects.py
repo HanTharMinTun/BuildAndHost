@@ -113,7 +113,7 @@ async def get_projects(
             )
             
             if deployment:
-                deployment_url = f"https://{deployment.domain}" if deployment.status == "RUNNING" else None
+                deployment_url = deployment.domain if deployment.status == "RUNNING" else None
                 deployment_status = deployment.status
         
         # Build enriched response

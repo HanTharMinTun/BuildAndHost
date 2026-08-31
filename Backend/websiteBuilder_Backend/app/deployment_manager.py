@@ -400,9 +400,9 @@ WantedBy=multi-user.target
     listen 80;
     server_name {domain};
 
-    location /uploads/ {
+    location /uploads/ {{
     alias /var/www/onlinegif/uploads/;
-    }
+    }}
 
     # Proxy all root requests to the shared React/Vite UI server
     # The React app will detect the subdomain and load the appropriate website
