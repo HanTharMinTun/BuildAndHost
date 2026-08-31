@@ -11,6 +11,7 @@ const websiteTemplate = {
   children: [
     { type: "Navbar", props: { items: ["Home", "About", "Projects", "Contact"] }, children: [] },
     { type: "Container", props: {}, children: [] },
+    { type: "Paragraph", props: { text: "Welcome to my portfolio" }, children: [] },
     { type: "Footer", props: {}, children: [] },
   ],
 };
@@ -25,15 +26,15 @@ type DragPayload =
   | { kind: "node"; path: NodePath }
   | { kind: "palette"; type: string };
 
+// ===== Palette ထဲက Section ကိုဖယ်ပါ =====
 const palette = [
-  "Section", "Heading", "Paragraph", "Button", "Grid", "Card",
+  "Paragraph", "Button", "Grid", "Card",
   "FeatureList", "Divider", "Image", "ContactForm",
 ];
 
+// ===== defaults ထဲက Section ကိုဖယ်ပါ =====
 const defaults: Record<string, ComponentNode> = {
-  Section: { type: "Section", props: {}, children: [] },
-  Heading: { type: "Heading", props: { level: 2 }, children: [] },
-  Paragraph: { type: "Paragraph", props: {}, children: [] },
+  Paragraph: { type: "Paragraph", props: { text: "Your paragraph text here" }, children: [] },
   Button: { type: "Button", props: { link: "#", text: "Button" }, children: [] },
   Grid: { type: "Grid", props: { columns: 3 }, children: [] },
   Card: { type: "Card", props: { title: "New card", description: "Card description" }, children: [] },
@@ -95,7 +96,6 @@ function parseListInput(value: string): unknown[] {
 function formatPropValue(value: unknown): string {
   if (!Array.isArray(value)) return String(value ?? "");
   return value.every((item) => typeof item === "string")
-    // Show one item per line in the inspector so commas may be typed freely.
     ? value.join("\n")
     : JSON.stringify(value);
 }
@@ -113,7 +113,6 @@ function PropertyInput({
   const formattedValue = formatPropValue(value);
   const [draft, setDraft] = useState(formattedValue);
 
-  // Sync draft state when value changes externally
   useEffect(() => {
     setDraft(formattedValue);
   }, [formattedValue]);
@@ -122,7 +121,6 @@ function PropertyInput({
     if (draft !== formattedValue) onCommit(name, draft);
   };
 
-  // Specialized inputs for common props
   if (name === "color") {
     const v = typeof value === "string" && value && value ? value : "#000000";
     return (
@@ -187,6 +185,30 @@ function PropertyInput({
     );
   }
 
+  if (name === "items" || name === "images" || name === "features" || name === "links") {
+    const displayValue = Array.isArray(value) ? value.join("\n") : String(value || "");
+    const [draft, setDraft] = useState(displayValue);
+
+    useEffect(() => {
+      setDraft(Array.isArray(value) ? value.join("\n") : String(value || ""));
+    }, [value]);
+
+    return (
+      <textarea
+        value={draft}
+        rows={4}
+        spellCheck={false}
+        placeholder="တစ်ကြောင်းချင်းစီ ရိုက်ထည့်ပါ"
+        onChange={(e) => setDraft(e.target.value)}
+        onBlur={() => {
+          const items = draft.split("\n").filter(s => s.trim());
+          onCommit(name, JSON.stringify(items));
+        }}
+        aria-label={name}
+      />
+    );
+  }
+
   if (isList) {
     return (
       <textarea
@@ -231,7 +253,6 @@ function normalizeWebsite(value: unknown): ComponentNode {
     ? { ...raw.props }
     : {};
 
-  // Support the older AI format, where text was put in children instead of props.
   if (["Heading", "Paragraph", "Text", "Button"].includes(raw.type) && !props.text && textChildren) {
     props.text = textChildren;
   }
@@ -277,13 +298,7 @@ function normalizeWebsite(value: unknown): ComponentNode {
   };
 }
 
-/** Apply simple, deterministic layout heuristics so generated sites are less
- * uniformly stacked. This post-process converts runs of `Card` siblings into
- * a `Grid` and ensures `Grid` nodes have a sensible `columns` prop. These
- * heuristics are intentionally small and safe so they don't break editor UX.
- */
 function applyAutoLayout(node: ComponentNode): ComponentNode {
-  // Ensure Grid nodes declare columns based on children count when missing.
   if (node.type === 'Grid') {
     const cols = typeof node.props?.columns === 'number' ? node.props.columns : undefined;
     const childCount = Array.isArray(node.children) ? node.children.filter(isComponentNode).length : 0;
@@ -293,13 +308,11 @@ function applyAutoLayout(node: ComponentNode): ComponentNode {
     }
   }
 
-  // Process children first
   if (Array.isArray(node.children) && node.children.length) {
     const processedChildren: ComponentNode[] = [];
     let run: ComponentNode[] = [];
     const flushRun = () => {
       if (run.length >= 2) {
-        // replace run with a Grid
         const grid: ComponentNode = { type: 'Grid', props: { columns: Math.max(1, Math.min(4, run.length)) }, children: run };
         processedChildren.push(grid);
       } else if (run.length === 1) {
@@ -310,13 +323,10 @@ function applyAutoLayout(node: ComponentNode): ComponentNode {
 
     for (const child of node.children as ComponentNode[]) {
       const processed = applyAutoLayout(child);
-      // collect consecutive Card nodes into a run
       if (processed.type === 'Card') {
         run.push(processed);
         continue;
       }
-
-      // If we hit a non-Card, flush any run first
       flushRun();
       processedChildren.push(processed);
     }
@@ -421,10 +431,42 @@ function EditorNode({
     />
   ));
 
-  // Skip Grid wrapper in editor to prevent nested layout issues
-  // Render Grid children directly without the grid container
   if (node.type === "Grid") {
-    return <>{children}</>;
+    const cols = node.props?.columns || 3;
+    const isSelected = path.join(".") === selectedPath;
+
+    return (
+      <div
+        className={`editor-node component-grid ${isSelected ? "editor-node--selected" : ""}`}
+        draggable={true}
+        onClick={(event) => { event.stopPropagation(); onSelect(path); }}
+        onDragStart={(event) => {
+          event.dataTransfer.effectAllowed = "move";
+          event.dataTransfer.setData("application/x-website-node", JSON.stringify({ kind: "node", path }));
+        }}
+        onDragOver={(event) => event.preventDefault()}
+        onDrop={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          const payload = getPayload(event);
+          if (payload) onDropNode(payload, path);
+        }}
+        style={{
+          display: 'grid',
+          gridTemplateColumns: `repeat(${cols}, 1fr)`,
+          gap: '1rem',
+          padding: '0.5rem',
+          border: isSelected ? '2px solid #4F46E5' : '1px dashed rgba(255,255,255,0.1)',
+          borderRadius: '8px',
+          minHeight: '50px'
+        }}
+      >
+        <span className="editor-node__label" style={{ gridColumn: '1 / -1', fontSize: '10px', color: 'rgba(255,255,255,0.3)' }}>
+          Grid ({cols} columns)
+        </span>
+        {children}
+      </div>
+    );
   }
 
   if (!Component) return null;
@@ -432,7 +474,7 @@ function EditorNode({
   return (
     <div
       className={`editor-node component-${node.type.toLowerCase()} ${isSelected ? "editor-node--selected" : ""}`}
-      draggable={path.length > 0}
+      draggable={true}
       onClick={(event) => { event.stopPropagation(); onSelect(path); }}
       onDragStart={(event) => {
         event.dataTransfer.effectAllowed = "move";
@@ -461,18 +503,11 @@ export default function Editor() {
   const [theme, setTheme] = useState(readStoredTheme);
   const themeCss = useMemo(() => themeToCss(theme), [theme]);
 
-  // Helper function to check if a link is active
   const isActive = (path: string) => {
     return location.pathname === path;
   };
 
-  // If there's no stored theme, request a generated theme from the backend
-  // to provide richer visuals (transitions, hover states, responsive tweaks).
   useEffect(() => {
-    // On mount try to fetch a generated website JSON and replace the template
-    // only when the user hasn't stored a website in localStorage. This avoids
-    // importing the JSON at module load time which can crash HMR if the file
-    // is missing or malformed.
     (async () => {
       try {
         const stored = localStorage.getItem("website");
@@ -491,7 +526,7 @@ export default function Editor() {
     async function fetchTheme() {
       try {
         const stored = localStorage.getItem("websiteTheme");
-        if (stored) return; // user has a theme already
+        if (stored) return;
         const resp = await fetch("/api/ai/design_theme", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -511,8 +546,8 @@ export default function Editor() {
     fetchTheme();
     return () => { cancelled = true; };
   }, []);
+
   useEffect(() => {
-    // Fix obvious low-contrast text by forcing a readable color when contrast is poor.
     function luminance(r: number, g: number, b: number) {
       const a = [r, g, b].map((v) => {
         v = v / 255;
@@ -525,7 +560,6 @@ export default function Editor() {
       if (!cssColor) return null;
       const m = cssColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
       if (m) return [Number(m[1]), Number(m[2]), Number(m[3])];
-      // hex
       const mh = cssColor.match(/^#([0-9a-f]{6})$/i);
       if (mh) {
         const hex = mh[1];
@@ -565,18 +599,17 @@ export default function Editor() {
         const bg = getEffectiveBackground(el as Element);
         const ratio = contrastRatio(fg, bg);
         if (isNaN(ratio) || ratio < 4.5) {
-          // pick black or white depending on background luminance
           const bgRgb = parseRgb(bg) ?? [255, 255, 255];
           const bgLum = luminance(bgRgb[0], bgRgb[1], bgRgb[2]);
           const newColor = bgLum > 0.5 ? '#0f172a' : '#ffffff';
           (el as HTMLElement).style.color = newColor;
         } else {
-          // clear any previously set inline color so theme can control it
           (el as HTMLElement).style.color = '';
         }
       } catch { }
     }
   }, [website, themeCss]);
+
   const [selectedPath, setSelectedPath] = useState<string | null>("0");
   const selected = useMemo(
     () => selectedPath ? getNode(website, selectedPath.split(".").map(Number)) : undefined,
@@ -619,7 +652,6 @@ export default function Editor() {
       ? parseListInput(value)
       : typeof oldValue === "number" ? Number(value) || 0 : value;
 
-    // Ensure we create a completely new props object to avoid any reference issues
     node.props = { ...(node.props || {}), [key]: nextValue };
     save(next);
   }
@@ -650,10 +682,8 @@ export default function Editor() {
   }
 
   function handleDeploy() {
-    // Save the current website state before navigating
     localStorage.setItem("website", JSON.stringify(website));
     localStorage.setItem("websiteTheme", JSON.stringify(theme));
-    // Navigate to deploy page with the current website context
     navigate('/websites');
   }
 
@@ -666,10 +696,8 @@ export default function Editor() {
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <div className="h-[76px] flex items-center justify-between">
 
-            {/* Logo - Show user profile circle instead of B&H when logged in */}
             <div className="flex items-center gap-3 group">
               {isAuthenticated && user ? (
-                // User Profile Circle - replaces B&H logo
                 <div
                   className="relative w-11 h-11 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-400 p-[1px] shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 transition-all duration-300 cursor-pointer hover:scale-105"
                   onClick={() => setShowSidebar(!showSidebar)}
@@ -679,11 +707,9 @@ export default function Editor() {
                       {user.username?.charAt(0)?.toUpperCase() || 'U'}
                     </span>
                   </div>
-                  {/* Status indicator */}
                   <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-[#0a0d18]"></div>
                 </div>
               ) : (
-                // Show B&H logo when not logged in
                 <Link to="/" className="relative w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-400 p-[1px] shadow-lg shadow-purple-500/20 group-hover:scale-105 transition-transform">
                   <div className="w-full h-full rounded-[11px] bg-[#0a0d18] flex items-center justify-center">
                     <span className="text-xs font-luxury font-bold tracking-widest bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">B&H</span>
@@ -698,7 +724,6 @@ export default function Editor() {
               </div>
             </div>
 
-            {/* Desktop Navigation - Only show when authenticated */}
             {isAuthenticated && (
               <div className="hidden md:flex items-center gap-2">
                 <Link to="/" className="px-4 py-2 rounded-lg text-white/65 hover:text-white hover:bg-white/[0.06] text-sm font-body font-medium transition-all">Home</Link>
@@ -710,7 +735,6 @@ export default function Editor() {
               </div>
             )}
 
-            {/* Authentication - Only show Login/Get Started when not authenticated */}
             <div className="flex items-center gap-3">
               {!isAuthenticated ? (
                 <>
@@ -728,18 +752,14 @@ export default function Editor() {
       ========================================================= */}
       {isAuthenticated && showSidebar && (
         <>
-          {/* Backdrop with blur */}
           <div
             className="fixed inset-0 z-40 bg-black/60 backdrop-blur-md"
             onClick={() => setShowSidebar(false)}
           />
 
-          {/* Premium Sidebar - Fixed height layout with hidden scrollbar */}
           <div className="fixed right-0 top-0 z-50 h-full w-80 bg-gradient-to-b from-[#0a0d18] via-[#0d1120] to-[#0a0d18] backdrop-blur-2xl border-l border-white/[0.08] shadow-2xl shadow-black/80 sidebar-slide-in">
             <div className="flex flex-col h-full">
-              {/* Premium Sidebar Header - Fixed */}
               <div className="relative p-6 border-b border-white/[0.06] bg-gradient-to-br from-purple-500/5 to-cyan-500/5 flex-shrink-0">
-                {/* Decorative glow */}
                 <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-purple-500/10 blur-[80px]" />
                 <div className="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-cyan-500/10 blur-[80px]" />
 
@@ -769,7 +789,6 @@ export default function Editor() {
                 </div>
               </div>
 
-              {/* Sidebar Navigation - Scrollable with hidden scrollbar */}
               <div className="flex-1 overflow-y-auto sidebar-scroll p-4 space-y-1.5">
                 <div className="px-3 py-2 text-[10px] font-serif-light text-white/20 tracking-[0.15em] uppercase">Navigation</div>
 
@@ -843,7 +862,6 @@ export default function Editor() {
                 </Link>
               </div>
 
-              {/* Premium Sidebar Footer - Fixed with logout button */}
               <div className="p-4 border-t border-white/[0.06] bg-gradient-to-t from-purple-500/5 to-transparent flex-shrink-0">
                 <button
                   onClick={() => {
@@ -862,7 +880,6 @@ export default function Editor() {
                   <span className="text-red-400/20">↗</span>
                 </button>
 
-                {/* Version info */}
                 <div className="mt-4 text-center text-[9px] font-serif-light text-white/15 tracking-wider">
                   BuildAndHost v2.0 • AI Powered
                 </div>
@@ -934,7 +951,6 @@ export default function Editor() {
             <>
               <div className="cms-selected-type">{selected.type}</div>
               {
-                // Show only the props that exist on this component, excluding UI-only properties
                 (() => {
                   const excludedProps = ["style", "color", "size", "align", "animations"];
                   const existing = Object.keys(selected.props ?? {}).filter((k) => !excludedProps.includes(k));
@@ -961,23 +977,17 @@ export default function Editor() {
         </aside>
       </div>
 
-      {/* Styles for sidebar scroll hiding */}
       <style>{`
-        /* Hide scrollbar for Chrome, Safari and Opera */
         .sidebar-scroll::-webkit-scrollbar {
           display: none;
         }
-
-        /* Hide scrollbar for IE, Edge and Firefox */
         .sidebar-scroll {
-          -ms-overflow-style: none;  /* IE and Edge */
-          scrollbar-width: none;  /* Firefox */
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
-
         .sidebar-slide-in {
           animation: slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-
         @keyframes slide-in {
           from {
             transform: translateX(100%);

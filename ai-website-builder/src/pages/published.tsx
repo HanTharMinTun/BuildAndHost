@@ -1,20 +1,16 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, createContext } from "react";
 import Renderer from "../renderer/Renderer";
 import type { ComponentNode } from "../renderer/types";
 import { themeToCss } from "../theme/generatedTheme";
+import type { PublishedWebsite } from "../lib/types";
 
-interface PublishedWebsite {
-  id: string;
-  website_json: ComponentNode;
-  theme_json: any;
-  subdomain: string;
-  domain: string;
-  version: number;
-}
+// Context to provide project_id to all child components (especially ContactForm)
+export const ProjectContext = createContext<string | null>(null);
 
 export default function PublishedSite() {
   const [website, setWebsite] = useState<ComponentNode | null>(null);
   const [theme, setTheme] = useState<any>(null);
+  const [projectId, setProjectId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -53,6 +49,7 @@ export default function PublishedSite() {
 
         setWebsite(data.website_json);
         setTheme(data.theme_json);
+        setProjectId(data.project_id);
         setError(null);
       } catch (err) {
         console.error("Error loading published website:", err);
@@ -158,10 +155,13 @@ export default function PublishedSite() {
 
   // Render the website using the existing Renderer component
   // Apply theme CSS just like in the editor
+  // Wrap in ProjectContext to provide project_id to ContactForm
   return (
-    <div className="published-site ai-site">
-      {themeCss && <style>{themeCss}</style>}
-      <Renderer node={website} />
-    </div>
+    <ProjectContext.Provider value={projectId}>
+      <div className="published-site ai-site">
+        {themeCss && <style>{themeCss}</style>}
+        <Renderer node={website} />
+      </div>
+    </ProjectContext.Provider>
   );
 }

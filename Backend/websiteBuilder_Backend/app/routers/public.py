@@ -58,6 +58,7 @@ async def get_website_by_subdomain(
     # Return the website JSON, theme, and metadata
     return {
         "id": str(website.id),
+        "project_id": str(website.project_id),
         "website_json": website.website_json,
         "theme_json": website.theme_json,
         "subdomain": deployment.subdomain,

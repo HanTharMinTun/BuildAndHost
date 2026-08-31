@@ -176,3 +176,21 @@ class DeploymentLogResponse(BaseModel):
     level: str
     message: str
     created_at: datetime
+
+
+from pydantic import BaseModel, EmailStr, Field
+
+
+from uuid import UUID
+
+
+class ContactFormRequest(BaseModel):
+    project_id: UUID
+    name: str = Field(..., min_length=1, max_length=100)
+    email: EmailStr
+    message: str = Field(..., min_length=1, max_length=5000)
+
+
+class ContactFormResponse(BaseModel):
+    success: bool
+    message: str

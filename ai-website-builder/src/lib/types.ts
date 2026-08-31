@@ -136,3 +136,13 @@ export interface DeploymentLog {
   message: string;
   created_at: string;
 }
+
+export interface PublishedWebsite {
+  id: string;
+  project_id: string;
+  website_json: any;
+  theme_json?: any;
+  subdomain: string;
+  domain: string;
+  version: number;
+}
