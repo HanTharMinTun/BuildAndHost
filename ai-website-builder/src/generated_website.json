@@ -9,7 +9,9 @@
           "items": [
             "Home",
             "About",
-            "Portfolio",
+            "Skills",
+            "Projects",
+            "Experience",
             "Contact"
           ]
         },
@@ -18,12 +20,11 @@
       {
         "type": "Hero",
         "props": {
-          "title": "Phone Phone",
-          "subtitle": "Innovative mobile solutions and digital experiences that connect people",
-          "buttonText": "View Portfolio",
-          "buttonAction": "#portfolio",
-          "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1600&q=80",
-          "alt": "Modern smartphones displaying applications"
+          "title": "Phone Myat",
+          "subtitle": "Creative Developer & Designer crafting digital experiences that matter",
+          "buttonText": "View My Work",
+          "buttonAction": "#projects",
+          "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1600&q=80"
         },
         "children": []
       },
@@ -36,53 +37,52 @@
             "props": {},
             "children": [
               {
-                "type": "Heading",
-                "props": {
-                  "text": "What We Do",
-                  "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "Paragraph",
-                "props": {
-                  "text": "Crafting exceptional mobile experiences through design, development, and strategic consulting."
-                },
-                "children": []
-              },
-              {
                 "type": "Grid",
                 "props": {
-                  "columns": 3
+                  "columns": 2
                 },
                 "children": [
                   {
-                    "type": "Card",
-                    "props": {
-                      "title": "App Development",
-                      "description": "Native and cross-platform mobile applications built with cutting-edge technology",
-                      "image": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80",
-                      "alt": "Mobile app development on laptop"
-                    },
-                    "children": []
+                    "type": "Stack",
+                    "props": {},
+                    "children": [
+                      {
+                        "type": "Heading",
+                        "props": {
+                          "text": "About Me",
+                          "level": 2
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "Paragraph",
+                        "props": {
+                          "text": "I'm a passionate developer and designer with a love for creating beautiful, functional digital experiences. With expertise spanning front-end development, UX design, and creative problem-solving, I bring ideas to life through code and design."
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "Paragraph",
+                        "props": {
+                          "text": "My approach combines technical excellence with creative vision, ensuring every project not only works flawlessly but also delights users. I believe in the power of thoughtful design and clean code to make a real difference."
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "Button",
+                        "props": {
+                          "text": "Download Resume",
+                          "link": "#contact"
+                        },
+                        "children": []
+                      }
+                    ]
                   },
                   {
-                    "type": "Card",
+                    "type": "Image",
                     "props": {
-                      "title": "UX Design",
-                      "description": "User-centered design that puts your customers first and drives engagement",
-                      "image": "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=800&q=80",
-                      "alt": "UX design wireframes and prototypes"
-                    },
-                    "children": []
-                  },
-                  {
-                    "type": "Card",
-                    "props": {
-                      "title": "Consulting",
-                      "description": "Strategic guidance to help you navigate the mobile landscape and maximize impact",
-                      "image": "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80",
-                      "alt": "Team collaboration and consulting"
+                      "src": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80",
+                      "alt": "Developer working on laptop with code on screen"
                     },
                     "children": []
                   }
@@ -101,24 +101,66 @@
             "props": {},
             "children": [
               {
+                "type": "Heading",
+                "props": {
+                  "text": "What I Do Best",
+                  "level": 2
+                },
+                "children": []
+              },
+              {
+                "type": "FeatureList",
+                "props": {
+                  "items": [
+                    "Full-stack web development with modern frameworks and technologies",
+                    "Responsive UI/UX design that works beautifully across all devices",
+                    "Performance optimization and code quality assurance",
+                    "API development and third-party integrations",
+                    "Agile collaboration and project management",
+                    "Creative problem-solving and technical consulting"
+                  ]
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Heading",
+                "props": {
+                  "text": "By The Numbers",
+                  "level": 2
+                },
+                "children": []
+              },
+              {
                 "type": "Stats",
                 "props": {
                   "items": [
                     {
-                      "label": "Projects Delivered",
-                      "value": "150+"
+                      "label": "Projects Completed",
+                      "value": "50+"
                     },
                     {
                       "label": "Happy Clients",
-                      "value": "80+"
+                      "value": "30+"
                     },
                     {
                       "label": "Years Experience",
-                      "value": "8"
+                      "value": "5"
                     },
                     {
-                      "label": "App Downloads",
-                      "value": "2M+"
+                      "label": "Coffee Consumed",
+                      "value": "1000+"
                     }
                   ]
                 },
@@ -139,7 +181,65 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Featured Work",
+                  "text": "Featured Projects",
+                  "level": 2
+                },
+                "children": []
+              },
+              {
+                "type": "Grid",
+                "props": {
+                  "columns": 3
+                },
+                "children": [
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "E-Commerce Platform",
+                      "description": "A full-featured online shopping platform with secure payments, inventory management, and real-time analytics",
+                      "image": "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=1600&q=80",
+                      "buttonText": "View Details"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Portfolio Dashboard",
+                      "description": "An interactive dashboard for tracking investment portfolios with data visualization and market insights",
+                      "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1600&q=80",
+                      "buttonText": "View Details"
+                    },
+                    "children": []
+                  },
+                  {
+                    "type": "Card",
+                    "props": {
+                      "title": "Social Media App",
+                      "description": "A modern social networking platform with real-time messaging, content sharing, and community features",
+                      "image": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=1600&q=80",
+                      "buttonText": "View Details"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Heading",
+                "props": {
+                  "text": "Project Gallery",
                   "level": 2
                 },
                 "children": []
@@ -148,10 +248,11 @@
                 "type": "Gallery",
                 "props": {
                   "images": [
-                    "https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&w=1600&q=80",
-                    "https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=1600&q=80"
+                    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1555421689-491a97ff2040?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1600&q=80"
                   ]
                 },
                 "children": []
@@ -171,7 +272,7 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Our Journey",
+                  "text": "My Journey",
                   "level": 2
                 },
                 "children": []
@@ -181,24 +282,24 @@
                 "props": {
                   "items": [
                     {
-                      "year": "2017",
-                      "title": "Founded",
-                      "description": "Phone Phone was established with a vision to create exceptional mobile experiences"
+                      "year": "2021",
+                      "title": "Senior Developer at Tech Solutions",
+                      "description": "Leading development teams and architecting scalable web applications for enterprise clients"
                     },
                     {
                       "year": "2019",
-                      "title": "First Major Client",
-                      "description": "Delivered our first enterprise-scale application serving 100K+ users"
+                      "title": "Full Stack Developer at Digital Agency",
+                      "description": "Built responsive websites and web applications for diverse clients across industries"
                     },
                     {
-                      "year": "2022",
-                      "title": "Expansion",
-                      "description": "Grew our team and expanded services to include strategic consulting"
+                      "year": "2017",
+                      "title": "Junior Developer at StartUp Inc",
+                      "description": "Launched career developing features and learning modern development practices"
                     },
                     {
-                      "year": "2026",
-                      "title": "Innovation Leader",
-                      "description": "Recognized as a leading mobile innovation partner with 150+ successful projects"
+                      "year": "2016",
+                      "title": "Computer Science Degree",
+                      "description": "Graduated with honors, specializing in software engineering and web technologies"
                     }
                   ]
                 },
@@ -229,20 +330,20 @@
                 "props": {
                   "items": [
                     {
-                      "question": "What platforms do you develop for?",
-                      "answer": "We develop for iOS, Android, and cross-platform solutions using React Native and Flutter."
+                      "question": "What technologies do you work with?",
+                      "answer": "I specialize in modern web technologies including React, Vue, Node.js, TypeScript, and various backend frameworks. I'm always learning and adapting to new tools that best serve project needs."
                     },
                     {
-                      "question": "How long does a typical project take?",
-                      "answer": "Project timelines vary based on complexity, but most applications take 3-6 months from concept to launch."
+                      "question": "Do you take on freelance projects?",
+                      "answer": "Yes, I'm available for select freelance projects that align with my expertise and schedule. Feel free to reach out with your project details."
                     },
                     {
-                      "question": "Do you provide ongoing support?",
-                      "answer": "Yes, we offer maintenance packages and ongoing support to ensure your app stays current and performs optimally."
+                      "question": "What's your typical project timeline?",
+                      "answer": "Project timelines vary based on scope and complexity. A typical website project takes 4-8 weeks from concept to launch, while larger applications may take several months."
                     },
                     {
-                      "question": "Can you help with app store submission?",
-                      "answer": "Absolutely. We handle the entire submission process for both Apple App Store and Google Play Store."
+                      "question": "How do you approach new projects?",
+                      "answer": "I start with understanding your goals and requirements, then move through planning, design, development, testing, and deployment phases with regular communication throughout."
                     }
                   ]
                 },
@@ -263,7 +364,7 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Let's Build Something Great",
+                  "text": "Let's Work Together",
                   "level": 2
                 },
                 "children": []
@@ -271,7 +372,7 @@
               {
                 "type": "Paragraph",
                 "props": {
-                  "text": "Ready to bring your mobile vision to life? Get in touch and let's discuss your project."
+                  "text": "Have a project in mind or just want to connect? I'd love to hear from you. Fill out the form below and I'll get back to you as soon as possible."
                 },
                 "children": []
               },

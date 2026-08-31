@@ -13,6 +13,7 @@ from ..models import (
 from ..schemas import (
     WebsiteCreate,
     WebsiteResponse,
+    WebsiteContentUpdate,
 )
 from ..security import get_current_user
 
@@ -132,6 +133,51 @@ async def get_website(
 
     return website
 
+
+@router.put(
+    "/{website_id}",
+    response_model=WebsiteResponse,
+)
+async def update_website_content(
+    website_id: uuid.UUID,
+    data: WebsiteContentUpdate,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Update the website JSON content and theme.
+    Only the authenticated owner can update their website.
+    """
+    # Find the website
+    website = await db.scalar(
+        select(GeneratedWebsite).where(
+            GeneratedWebsite.id == website_id,
+        )
+    )
+
+    if not website:
+        raise HTTPException(
+            status_code=404,
+            detail="Website not found",
+        )
+
+    # Verify ownership
+    if website.user_id != current_user.id:
+        raise HTTPException(
+            status_code=403,
+            detail="You don't have permission to update this website",
+        )
+
+    # Update only the content fields
+    website.website_json = data.website_json
+    if data.theme_json is not None:
+        website.theme_json = data.theme_json
+
+    # Commit changes
+    await db.commit()
+    await db.refresh(website)
+
+    return website
 
 
 @router.delete(

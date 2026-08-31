@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect, type DragEvent, type ReactNode } from "react";
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
+import { api } from '../lib/api';
 
 // Avoid statically importing `generated_website.json` which can cause the
 // dev server to throw and break the overlay when the file is invalid. Use a
@@ -502,6 +503,11 @@ export default function Editor() {
   const [website, setWebsite] = useState<ComponentNode>(readStoredWebsite);
   const [theme, setTheme] = useState(readStoredTheme);
   const themeCss = useMemo(() => themeToCss(theme), [theme]);
+  
+  // Save state management
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [saveError, setSaveError] = useState<string>('');
 
   const isActive = (path: string) => {
     return location.pathname === path;
@@ -619,6 +625,52 @@ export default function Editor() {
   const selectedParent = selectedPath
     ? getNode(website, selectedPath.split(".").map(Number).slice(0, -1))
     : undefined;
+
+  // Save changes to database
+  async function saveChanges() {
+    // Prevent duplicate saves
+    if (isSaving) return;
+    
+    // Get the website ID from localStorage (stored when website was created)
+    const websiteId = localStorage.getItem('websiteId');
+    
+    if (!websiteId) {
+      setSaveStatus('error');
+      setSaveError('No website ID found. Please generate a website first.');
+      setTimeout(() => setSaveStatus('idle'), 3000);
+      return;
+    }
+    
+    setIsSaving(true);
+    setSaveStatus('idle');
+    setSaveError('');
+    
+    try {
+      // Send the complete current website JSON to the backend
+      const response = await api.put(`/api/websites/${websiteId}`, {
+        website_json: website,
+        theme_json: theme,
+      });
+      
+      if (response.error) {
+        throw new Error(response.error);
+      }
+      
+      // Also save to localStorage for offline editing
+      localStorage.setItem("website", JSON.stringify(website));
+      localStorage.setItem("websiteTheme", JSON.stringify(theme));
+      
+      setSaveStatus('success');
+      setTimeout(() => setSaveStatus('idle'), 2000);
+    } catch (error) {
+      console.error('Failed to save website:', error);
+      setSaveStatus('error');
+      setSaveError(error instanceof Error ? error.message : 'Failed to save changes');
+      setTimeout(() => setSaveStatus('idle'), 3000);
+    } finally {
+      setIsSaving(false);
+    }
+  }
 
   function save(next: ComponentNode) {
     setWebsite(next);
@@ -919,7 +971,18 @@ export default function Editor() {
         >
           <div className="cms-toolbar">
             <span>Page editor</span>
-            <button onClick={() => localStorage.setItem("website", JSON.stringify(website))}>Save changes</button>
+            <button
+              onClick={saveChanges}
+              disabled={isSaving}
+              style={{
+                backgroundColor: saveStatus === 'success' ? '#10b981' : saveStatus === 'error' ? '#ef4444' : undefined,
+                opacity: isSaving ? 0.7 : 1,
+                cursor: isSaving ? 'wait' : 'pointer'
+              }}
+            >
+              {isSaving ? 'Saving...' : saveStatus === 'success' ? 'Saved ✓' : saveStatus === 'error' ? 'Error ✗' : 'Save Changes'}
+            </button>
+            {saveError && <span style={{ color: '#ef4444', fontSize: '12px', marginLeft: '8px' }}>{saveError}</span>}
 
             <button onClick={async () => {
               try {

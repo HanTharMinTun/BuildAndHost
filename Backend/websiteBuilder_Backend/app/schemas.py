@@ -129,6 +129,12 @@ class WebsiteCreate(BaseModel):
     version: int = 1
 
 
+class WebsiteContentUpdate(BaseModel):
+    """Schema for updating website JSON content only"""
+    website_json: dict[str, Any]
+    theme_json: dict[str, Any] | None = None
+
+
 class WebsiteResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
