@@ -19,6 +19,8 @@ const websiteTemplate = {
 import { COMPONENT_REGISTRY } from "../renderer/registry";
 import type { ComponentNode } from "../renderer/types";
 import { themeToCss } from "../theme/generatedTheme";
+import { getPropertySchema, validateAndConvert } from "./propertySchema";
+import { PropertyEditor, AnimationEditor } from "./PropertyEditors";
 import "./editor.css";
 
 type NodePath = number[];
@@ -27,22 +29,38 @@ type DragPayload =
   | { kind: "node"; path: NodePath }
   | { kind: "palette"; type: string };
 
-// ===== Palette ထဲက Section ကိုဖယ်ပါ =====
+// Expanded component palette - all available components from registry
 const palette = [
-  "Paragraph", "Button", "Grid", "Card",
-  "FeatureList", "Divider", "Image", "ContactForm",
+  "Heading", "Paragraph", "Text",
+  "Button", "Image",
+  "Container", "Section", "Stack", "Grid",
+  "Card", "Hero", "Navbar", "Footer",
+  "FeatureList", "Gallery", "Stats", "FAQ", "Timeline",
+  "ContactForm", "Divider",
 ];
 
-// ===== defaults ထဲက Section ကိုဖယ်ပါ =====
+// Default props for new components
 const defaults: Record<string, ComponentNode> = {
+  Heading: { type: "Heading", props: { text: "New Heading", level: 2 }, children: [] },
   Paragraph: { type: "Paragraph", props: { text: "Your paragraph text here" }, children: [] },
+  Text: { type: "Text", props: { text: "Text content" }, children: [] },
   Button: { type: "Button", props: { link: "#", text: "Button" }, children: [] },
+  Image: { type: "Image", props: { src: "https://placehold.co/800x500", alt: "Placeholder" }, children: [] },
+  Container: { type: "Container", props: {}, children: [] },
+  Section: { type: "Section", props: {}, children: [] },
+  Stack: { type: "Stack", props: { direction: "column", gap: "1rem" }, children: [] },
   Grid: { type: "Grid", props: { columns: 3 }, children: [] },
   Card: { type: "Card", props: { title: "New card", description: "Card description" }, children: [] },
-  FeatureList: { type: "FeatureList", props: { items: ["First feature", "Second feature"] }, children: [] },
+  Hero: { type: "Hero", props: { title: "Hero Title", subtitle: "Hero subtitle", image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1600&q=80" }, children: [] },
+  Navbar: { type: "Navbar", props: { logo: "Logo", items: ["Home", "About", "Contact"] }, children: [] },
+  Footer: { type: "Footer", props: { copyright: "© 2024 Your Company" }, children: [] },
+  FeatureList: { type: "FeatureList", props: { items: ["First feature", "Second feature", "Third feature"] }, children: [] },
+  Gallery: { type: "Gallery", props: { images: ["https://placehold.co/400x300", "https://placehold.co/400x300"], columns: 3 }, children: [] },
+  Stats: { type: "Stats", props: { items: [{ label: "Projects", value: "50+" }, { label: "Clients", value: "100+" }] }, children: [] },
+  FAQ: { type: "FAQ", props: { items: [{ question: "What is this?", answer: "This is an FAQ item" }] }, children: [] },
+  Timeline: { type: "Timeline", props: { items: [{ year: "2024", title: "Event", description: "Event description" }] }, children: [] },
+  ContactForm: { type: "ContactForm", props: { title: "Contact Us" }, children: [] },
   Divider: { type: "Divider", props: {}, children: [] },
-  Image: { type: "Image", props: { src: "https://placehold.co/800x500", alt: "Placeholder" }, children: [] },
-  ContactForm: { type: "ContactForm", props: {}, children: [] },
 };
 
 function clone<T>(value: T): T {
@@ -67,6 +85,17 @@ const legacyImageFallbacks = {
   gallery2: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=900&q=80",
   gallery3: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80",
 };
+
+/** Normalize Image src from object to string if needed */
+function normalizeImageSrc(src: unknown): unknown {
+  // If src is an object like {url: "..."} or {"url": "..."}, extract the URL
+  if (src && typeof src === "object" && !Array.isArray(src)) {
+    const obj = src as Record<string, unknown>;
+    if (typeof obj.url === "string") return obj.url;
+    if (typeof obj.src === "string") return obj.src;
+  }
+  return src;
+}
 
 function replaceLegacyImage(url: unknown): unknown {
   if (typeof url !== "string" || !url.startsWith("https://example.com/")) return url;
@@ -101,139 +130,8 @@ function formatPropValue(value: unknown): string {
     : JSON.stringify(value);
 }
 
-function PropertyInput({
-  name,
-  value,
-  onCommit,
-}: {
-  name: string;
-  value: unknown;
-  onCommit: (name: string, value: string) => void;
-}) {
-  const isList = Array.isArray(value);
-  const formattedValue = formatPropValue(value);
-  const [draft, setDraft] = useState(formattedValue);
-
-  useEffect(() => {
-    setDraft(formattedValue);
-  }, [formattedValue]);
-
-  const commit = () => {
-    if (draft !== formattedValue) onCommit(name, draft);
-  };
-
-  if (name === "color") {
-    const v = typeof value === "string" && value && value ? value : "#000000";
-    return (
-      <input
-        type="color"
-        value={typeof draft === "string" && draft ? draft : v}
-        onChange={(e) => { setDraft(e.target.value); onCommit(name, e.target.value); }}
-        onBlur={commit}
-        aria-label={name}
-      />
-    );
-  }
-
-  if (name === "align") {
-    const v = typeof value === "string" && value ? value : "left";
-    return (
-      <select value={typeof draft === "string" && draft ? draft : v} onChange={(e) => { setDraft(e.target.value); onCommit(name, e.target.value); }} onBlur={commit}>
-        <option value="left">left</option>
-        <option value="center">center</option>
-        <option value="right">right</option>
-        <option value="justify">justify</option>
-      </select>
-    );
-  }
-
-  if (name === "size") {
-    const v = typeof value === "string" && value ? value : "";
-    return (
-      <input
-        placeholder="e.g. 1rem or 16px"
-        value={typeof draft === "string" ? draft : String(draft)}
-        onChange={(event) => setDraft(event.target.value)}
-        onBlur={commit}
-      />
-    );
-  }
-
-  if (name === "animations") {
-    const v = typeof value === "string" ? value : "";
-    return (
-      <textarea
-        value={draft}
-        rows={3}
-        spellCheck={false}
-        onChange={(event) => setDraft(event.target.value)}
-        onBlur={commit}
-        aria-label={name}
-      />
-    );
-  }
-
-  if (name === "text") {
-    return (
-      <textarea
-        value={draft}
-        rows={3}
-        spellCheck={false}
-        onChange={(event) => setDraft(event.target.value)}
-        onBlur={commit}
-        aria-label={name}
-      />
-    );
-  }
-
-  if (name === "items" || name === "images" || name === "features" || name === "links") {
-    const displayValue = Array.isArray(value) ? value.join("\n") : String(value || "");
-    const [draft, setDraft] = useState(displayValue);
-
-    useEffect(() => {
-      setDraft(Array.isArray(value) ? value.join("\n") : String(value || ""));
-    }, [value]);
-
-    return (
-      <textarea
-        value={draft}
-        rows={4}
-        spellCheck={false}
-        placeholder="တစ်ကြောင်းချင်းစီ ရိုက်ထည့်ပါ"
-        onChange={(e) => setDraft(e.target.value)}
-        onBlur={() => {
-          const items = draft.split("\n").filter(s => s.trim());
-          onCommit(name, JSON.stringify(items));
-        }}
-        aria-label={name}
-      />
-    );
-  }
-
-  if (isList) {
-    return (
-      <textarea
-        value={draft}
-        rows={3}
-        spellCheck={false}
-        onChange={(event) => setDraft(event.target.value)}
-        onBlur={commit}
-        aria-label={name}
-      />
-    );
-  }
-
-  return (
-    <input
-      value={draft}
-      onChange={(event) => setDraft(event.target.value)}
-      onBlur={commit}
-      onKeyDown={(event) => {
-        if (event.key === "Enter") event.currentTarget.blur();
-      }}
-    />
-  );
-}
+// PropertyInput component has been replaced with the schema-based PropertyEditor system
+// See PropertyEditors.tsx for the new implementation
 
 /** Remove malformed AI/local-storage nodes before they reach the React tree. */
 function normalizeWebsite(value: unknown): ComponentNode {
@@ -258,7 +156,7 @@ function normalizeWebsite(value: unknown): ComponentNode {
     props.text = textChildren;
   }
 
-  if (raw.type === "Image") props.src = replaceLegacyImage(props.src);
+  if (raw.type === "Image") props.src = replaceLegacyImage(normalizeImageSrc(props.src));
   if (["Gallery", "FeatureList", "Navbar"].includes(raw.type)) {
     const listKey = raw.type === "Gallery" ? "images" : "items";
     if (typeof props[listKey] === "string") props[listKey] = parseStringList(props[listKey]);
@@ -275,6 +173,7 @@ function normalizeWebsite(value: unknown): ComponentNode {
     props.buttonText ??= getText(button);
     props.buttonAction ??= typeof button?.props?.link === "string" ? button.props.link : undefined;
     props.image ??= "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1600&q=80";
+    props.image = normalizeImageSrc(props.image); // Normalize in case it's an object
     return { type: raw.type, props, children: [] };
   }
 
@@ -284,6 +183,7 @@ function normalizeWebsite(value: unknown): ComponentNode {
     props.image ??= typeof children.find((child) => child.type === "Image")?.props?.src === "string"
       ? children.find((child) => child.type === "Image")?.props?.src
       : undefined;
+    props.image = normalizeImageSrc(props.image); // Normalize in case it's an object
     props.buttonText ??= getText(children.find((child) => child.type === "Button"));
     return { type: raw.type, props, children: [] };
   }
@@ -432,10 +332,10 @@ function EditorNode({
     />
   ));
 
-  if (node.type === "Grid") {
+  // Render actual Grid component with editor wrapper
+  if (node.type === "Grid" && Component) {
     const cols = node.props?.columns || 3;
-    const isSelected = path.join(".") === selectedPath;
-
+    
     return (
       <div
         className={`editor-node component-grid ${isSelected ? "editor-node--selected" : ""}`}
@@ -453,19 +353,213 @@ function EditorNode({
           if (payload) onDropNode(payload, path);
         }}
         style={{
-          display: 'grid',
-          gridTemplateColumns: `repeat(${cols}, 1fr)`,
-          gap: '1rem',
-          padding: '0.5rem',
+          position: 'relative',
           border: isSelected ? '2px solid #4F46E5' : '1px dashed rgba(255,255,255,0.1)',
           borderRadius: '8px',
+          padding: '1.5rem 0.5rem 0.5rem 0.5rem',
           minHeight: '50px'
         }}
       >
-        <span className="editor-node__label" style={{ gridColumn: '1 / -1', fontSize: '10px', color: 'rgba(255,255,255,0.3)' }}>
+        <span className="editor-node__label" style={{
+          position: 'absolute',
+          top: '2px',
+          left: '4px',
+          fontSize: '10px',
+          color: 'rgba(255,255,255,0.3)',
+          zIndex: 10
+        }}>
           Grid ({cols} columns)
         </span>
-        {children}
+        {node.children && node.children.length > 0 ? (
+          <Component {...(node.props ?? {})} style={safeStyle}>
+            {children}
+          </Component>
+        ) : (
+          <Component {...(node.props ?? {})} style={safeStyle}>
+            <div style={{
+              gridColumn: '1 / -1',
+              padding: '1rem',
+              textAlign: 'center',
+              color: 'rgba(255,255,255,0.2)',
+              fontSize: '12px',
+              fontStyle: 'italic'
+            }}>
+              Drop components here
+            </div>
+          </Component>
+        )}
+      </div>
+    );
+  }
+
+  // Render actual Container component with editor wrapper
+  if (node.type === "Container" && Component) {
+    return (
+      <div
+        className={`editor-node component-container ${isSelected ? "editor-node--selected" : ""}`}
+        draggable={true}
+        onClick={(event) => { event.stopPropagation(); onSelect(path); }}
+        onDragStart={(event) => {
+          event.dataTransfer.effectAllowed = "move";
+          event.dataTransfer.setData("application/x-website-node", JSON.stringify({ kind: "node", path }));
+        }}
+        onDragOver={(event) => event.preventDefault()}
+        onDrop={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          const payload = getPayload(event);
+          if (payload) onDropNode(payload, path);
+        }}
+        style={{
+          position: 'relative',
+          minHeight: '50px',
+          border: isSelected ? '2px solid #4F46E5' : '1px dashed rgba(255,255,255,0.1)',
+          borderRadius: '8px',
+          padding: '1.5rem 0.5rem 0.5rem 0.5rem',
+        }}
+      >
+        <span className="editor-node__label" style={{
+          position: 'absolute',
+          top: '2px',
+          left: '4px',
+          fontSize: '10px',
+          color: 'rgba(255,255,255,0.3)',
+          zIndex: 10
+        }}>
+          Container
+        </span>
+        {node.children && node.children.length > 0 ? (
+          <Component {...(node.props ?? {})} style={safeStyle}>
+            {children}
+          </Component>
+        ) : (
+          <Component {...(node.props ?? {})} style={safeStyle}>
+            <div style={{
+              padding: '1rem',
+              textAlign: 'center',
+              color: 'rgba(255,255,255,0.2)',
+              fontSize: '12px',
+              fontStyle: 'italic'
+            }}>
+              Drop components here
+            </div>
+          </Component>
+        )}
+      </div>
+    );
+  }
+
+  // Render actual Section component with editor wrapper
+  if (node.type === "Section" && Component) {
+    return (
+      <div
+        className={`editor-node component-section ${isSelected ? "editor-node--selected" : ""}`}
+        draggable={true}
+        onClick={(event) => { event.stopPropagation(); onSelect(path); }}
+        onDragStart={(event) => {
+          event.dataTransfer.effectAllowed = "move";
+          event.dataTransfer.setData("application/x-website-node", JSON.stringify({ kind: "node", path }));
+        }}
+        onDragOver={(event) => event.preventDefault()}
+        onDrop={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          const payload = getPayload(event);
+          if (payload) onDropNode(payload, path);
+        }}
+        style={{
+          position: 'relative',
+          minHeight: '50px',
+          border: isSelected ? '2px solid #4F46E5' : '1px dashed rgba(255,255,255,0.1)',
+          borderRadius: '8px',
+          padding: '1.5rem 0.5rem 0.5rem 0.5rem',
+        }}
+      >
+        <span className="editor-node__label" style={{
+          position: 'absolute',
+          top: '2px',
+          left: '4px',
+          fontSize: '10px',
+          color: 'rgba(255,255,255,0.3)',
+          zIndex: 10
+        }}>
+          Section
+        </span>
+        {node.children && node.children.length > 0 ? (
+          <Component {...(node.props ?? {})} style={safeStyle}>
+            {children}
+          </Component>
+        ) : (
+          <Component {...(node.props ?? {})} style={safeStyle}>
+            <div style={{
+              padding: '1rem',
+              textAlign: 'center',
+              color: 'rgba(255,255,255,0.2)',
+              fontSize: '12px',
+              fontStyle: 'italic'
+            }}>
+              Drop components here
+            </div>
+          </Component>
+        )}
+      </div>
+    );
+  }
+
+  // Render actual Stack component with editor wrapper
+  if (node.type === "Stack" && Component) {
+    const direction = node.props?.direction || 'vertical';
+    return (
+      <div
+        className={`editor-node component-stack ${isSelected ? "editor-node--selected" : ""}`}
+        draggable={true}
+        onClick={(event) => { event.stopPropagation(); onSelect(path); }}
+        onDragStart={(event) => {
+          event.dataTransfer.effectAllowed = "move";
+          event.dataTransfer.setData("application/x-website-node", JSON.stringify({ kind: "node", path }));
+        }}
+        onDragOver={(event) => event.preventDefault()}
+        onDrop={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          const payload = getPayload(event);
+          if (payload) onDropNode(payload, path);
+        }}
+        style={{
+          position: 'relative',
+          minHeight: '50px',
+          border: isSelected ? '2px solid #4F46E5' : '1px dashed rgba(255,255,255,0.1)',
+          borderRadius: '8px',
+          padding: '1.5rem 0.5rem 0.5rem 0.5rem',
+        }}
+      >
+        <span className="editor-node__label" style={{
+          position: 'absolute',
+          top: '2px',
+          left: '4px',
+          fontSize: '10px',
+          color: 'rgba(255,255,255,0.3)',
+          zIndex: 10
+        }}>
+          Stack ({direction})
+        </span>
+        {node.children && node.children.length > 0 ? (
+          <Component {...(node.props ?? {})} style={safeStyle}>
+            {children}
+          </Component>
+        ) : (
+          <Component {...(node.props ?? {})} style={safeStyle}>
+            <div style={{
+              padding: '1rem',
+              textAlign: 'center',
+              color: 'rgba(255,255,255,0.2)',
+              fontSize: '12px',
+              fontStyle: 'italic'
+            }}>
+              Drop components here
+            </div>
+          </Component>
+        )}
       </div>
     );
   }
@@ -558,68 +652,8 @@ export default function Editor() {
     return () => { cancelled = true; };
   }, []);
 
-  useEffect(() => {
-    function luminance(r: number, g: number, b: number) {
-      const a = [r, g, b].map((v) => {
-        v = v / 255;
-        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-      });
-      return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
-    }
-
-    function parseRgb(cssColor: string): [number, number, number] | null {
-      if (!cssColor) return null;
-      const m = cssColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
-      if (m) return [Number(m[1]), Number(m[2]), Number(m[3])];
-      const mh = cssColor.match(/^#([0-9a-f]{6})$/i);
-      if (mh) {
-        const hex = mh[1];
-        return [parseInt(hex.slice(0, 2), 16), parseInt(hex.slice(2, 4), 16), parseInt(hex.slice(4, 6), 16)];
-      }
-      return null;
-    }
-
-    function contrastRatio(fg: string, bg: string) {
-      const f = parseRgb(fg) ?? [0, 0, 0];
-      const b = parseRgb(bg) ?? [255, 255, 255];
-      const L1 = luminance(f[0], f[1], f[2]);
-      const L2 = luminance(b[0], b[1], b[2]);
-      const lighter = Math.max(L1, L2);
-      const darker = Math.min(L1, L2);
-      return (lighter + 0.05) / (darker + 0.05);
-    }
-
-    function getEffectiveBackground(el: Element): string {
-      let node: Element | null = el as Element;
-      while (node && node !== document.documentElement) {
-        const cs = getComputedStyle(node as Element);
-        const bg = cs.backgroundColor;
-        if (bg && bg !== 'transparent' && bg !== 'rgba(0, 0, 0, 0)') return bg;
-        node = node.parentElement;
-      }
-      return getComputedStyle(document.body).backgroundColor || '#ffffff';
-    }
-
-    const root = document.querySelector('.ai-site');
-    if (!root) return;
-    const nodes = Array.from(root.querySelectorAll('h1,h2,h3,h4,h5,h6,p,span,a,li,button')) as Element[];
-    for (const el of nodes) {
-      try {
-        const cs = getComputedStyle(el as Element);
-        const fg = cs.color;
-        const bg = getEffectiveBackground(el as Element);
-        const ratio = contrastRatio(fg, bg);
-        if (isNaN(ratio) || ratio < 4.5) {
-          const bgRgb = parseRgb(bg) ?? [255, 255, 255];
-          const bgLum = luminance(bgRgb[0], bgRgb[1], bgRgb[2]);
-          const newColor = bgLum > 0.5 ? '#0f172a' : '#ffffff';
-          (el as HTMLElement).style.color = newColor;
-        } else {
-          (el as HTMLElement).style.color = '';
-        }
-      } catch { }
-    }
-  }, [website, themeCss]);
+  // Color properties are now properly handled by the component props system
+  // Components apply color props as inline styles which work correctly with the theme
 
   const [selectedPath, setSelectedPath] = useState<string | null>("0");
   const selected = useMemo(
@@ -695,7 +729,7 @@ export default function Editor() {
     save(next);
   }
 
-  function updateProp(key: string, value: string) {
+  function updateProp(key: string, value: any) {
     if (!selected || !selectedPath) return;
     const path = selectedPath.split(".").map(Number);
     if (!path.length) return;
@@ -704,10 +738,10 @@ export default function Editor() {
     const node = getNode(next, path);
     if (!node) return;
 
-    const oldValue = node.props?.[key];
-    const nextValue = Array.isArray(oldValue)
-      ? parseListInput(value)
-      : typeof oldValue === "number" ? Number(value) || 0 : value;
+    // Use schema-based validation and conversion
+    const schema = getPropertySchema(node.type);
+    const propDef = schema.find(p => p.key === key);
+    const nextValue = propDef ? validateAndConvert(value, propDef) : value;
 
     node.props = { ...(node.props || {}), [key]: nextValue };
     save(next);
@@ -736,6 +770,37 @@ export default function Editor() {
     [parent.children[selectedIndex], parent.children[nextIndex]] = [parent.children[nextIndex], parent.children[selectedIndex]];
     save(next);
     setSelectedPath([...path.slice(0, -1), nextIndex].join("."));
+  }
+
+  function addChild(childType: string) {
+    if (!selected || !selectedPath) return;
+    const path = selectedPath.split(".").map(Number);
+    if (!path.length) return;
+
+    const next = clone(website);
+    const node = getNode(next, path);
+    if (!node) return;
+
+    // Initialize children array if it doesn't exist
+    if (!node.children) node.children = [];
+    
+    // Add new child component
+    node.children.push(makeNode(childType));
+    save(next);
+  }
+
+  function removeChild(childIndex: number) {
+    if (!selected || !selectedPath) return;
+    const path = selectedPath.split(".").map(Number);
+    if (!path.length) return;
+
+    const next = clone(website);
+    const node = getNode(next, path);
+    if (!node?.children || childIndex < 0 || childIndex >= node.children.length) return;
+
+    // Remove child at specified index
+    node.children.splice(childIndex, 1);
+    save(next);
   }
 
   function handleDeploy() {
@@ -988,7 +1053,7 @@ export default function Editor() {
               {isSaving ? 'Saving...' : saveStatus === 'success' ? 'Saved ✓' : saveStatus === 'error' ? 'Error ✗' : 'Save Changes'}
             </button>
             {saveError && <span style={{ color: '#ef4444', fontSize: '12px', marginLeft: '8px' }}>{saveError}</span>}
-
+{/* 
             <button onClick={async () => {
               try {
                 // Get website ID from localStorage
@@ -1015,7 +1080,7 @@ export default function Editor() {
               } catch (error) {
                 console.error('Error generating theme:', error);
               }
-            }}>Generate Theme</button>
+            }}>Generate Theme</button> */}
 
             <button onClick={handleDeploy} style={{ backgroundColor: '#4F46E5', color: 'white' }}>Deploy Website</button>
           </div>
@@ -1030,19 +1095,171 @@ export default function Editor() {
           {selected ? (
             <>
               <div className="cms-selected-type">{selected.type}</div>
-              {
-                (() => {
-                  const excludedProps = ["style", "color", "size", "align", "animations"];
-                  const existing = Object.keys(selected.props ?? {}).filter((k) => !excludedProps.includes(k));
-                  return existing.map((key) => (
-                    <label key={key}>
-                      {key}
-                      <PropertyInput key={`${selectedPath ?? "root"}-${key}`} name={key} value={(selected.props ?? {})[key]} onCommit={updateProp} />
-                    </label>
-                  ));
-                })()
-              }
-              {!Object.keys(selected.props ?? {}).length && <p className="cms-empty">This block has no editable properties.</p>}
+              
+              {(() => {
+                const schema = getPropertySchema(selected.type);
+                
+                if (schema.length === 0) {
+                  return <p className="cms-empty" style={{ fontSize: "12px", color: "#6b7280" }}>
+                    This component has no editable properties.
+                  </p>;
+                }
+                
+                return (
+                  <>
+                    <details open style={{ marginBottom: "1rem" }}>
+                      <summary style={{
+                        cursor: "pointer",
+                        fontWeight: "600",
+                        fontSize: "13px",
+                        padding: "0.5rem 0",
+                        color: "#1f2937",
+                        userSelect: "none"
+                      }}>
+                        Component Properties
+                      </summary>
+                      <div style={{ paddingLeft: "0.5rem", marginTop: "0.5rem" }}>
+                        {schema.map((propDef) => {
+                          const value = selected.props?.[propDef.key];
+                          
+                          // Boolean properties are rendered inline
+                          if (propDef.type === "boolean") {
+                            return (
+                              <div key={propDef.key} style={{ marginBottom: "0.75rem" }}>
+                                <PropertyEditor
+                                  propDef={propDef}
+                                  value={value}
+                                  onCommit={(val) => updateProp(propDef.key, val)}
+                                />
+                              </div>
+                            );
+                          }
+                          
+                          // Other properties have labels
+                          return (
+                            <label key={propDef.key} style={{ marginBottom: "0.75rem" }}>
+                              <span style={{ fontSize: "12px", color: "#374151", fontWeight: "500" }}>
+                                {propDef.label}
+                              </span>
+                              <PropertyEditor
+                                propDef={propDef}
+                                value={value}
+                                onCommit={(val) => updateProp(propDef.key, val)}
+                              />
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </details>
+                    
+                    {/* Children Management Section for Container Components */}
+                    {["Grid", "Container", "Section", "Stack"].includes(selected.type) && (
+                      <details open style={{ marginBottom: "1rem" }}>
+                        <summary style={{
+                          cursor: "pointer",
+                          fontWeight: "600",
+                          fontSize: "13px",
+                          padding: "0.5rem 0",
+                          color: "#1f2937",
+                          userSelect: "none"
+                        }}>
+                          Children ({selected.children?.length || 0})
+                        </summary>
+                        <div style={{ paddingLeft: "0.5rem", marginTop: "0.5rem" }}>
+                          {/* List current children */}
+                          {selected.children && selected.children.length > 0 ? (
+                            <div style={{ marginBottom: "0.75rem" }}>
+                              {selected.children.map((child: any, index: number) => (
+                                <div key={index} style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "space-between",
+                                  padding: "0.5rem",
+                                  marginBottom: "0.5rem",
+                                  background: "#f3f4f6",
+                                  borderRadius: "4px",
+                                  fontSize: "12px"
+                                }}>
+                                  <span style={{ color: "#374151", fontWeight: "500" }}>
+                                    {index + 1}. {child.type}
+                                  </span>
+                                  <button
+                                    onClick={() => removeChild(index)}
+                                    style={{
+                                      padding: "0.25rem 0.5rem",
+                                      fontSize: "11px",
+                                      background: "#ef4444",
+                                      color: "white",
+                                      border: "none",
+                                      borderRadius: "4px",
+                                      cursor: "pointer"
+                                    }}
+                                  >
+                                    Remove
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p style={{ fontSize: "12px", color: "#6b7280", marginBottom: "0.75rem", fontStyle: "italic" }}>
+                              No children yet. Add components below.
+                            </p>
+                          )}
+                          
+                          {/* Add child dropdown */}
+                          <div style={{ marginTop: "0.75rem" }}>
+                            <label style={{ fontSize: "12px", color: "#374151", fontWeight: "500", display: "block", marginBottom: "0.25rem" }}>
+                              Add Child Component
+                            </label>
+                            <select
+                              onChange={(e) => {
+                                if (e.target.value) {
+                                  addChild(e.target.value);
+                                  e.target.value = ""; // Reset selection
+                                }
+                              }}
+                              style={{
+                                width: "100%",
+                                padding: "0.5rem",
+                                fontSize: "12px",
+                                border: "1px solid #d1d5db",
+                                borderRadius: "4px",
+                                background: "white",
+                                color: "#374151"
+                              }}
+                            >
+                              <option value="">Select component type...</option>
+                              {palette.map((type) => (
+                                <option key={type} value={type}>{type}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                      </details>
+                    )}
+                    
+                    <details style={{ marginBottom: "1rem" }}>
+                      <summary style={{
+                        cursor: "pointer",
+                        fontWeight: "600",
+                        fontSize: "13px",
+                        padding: "0.5rem 0",
+                        color: "#1f2937",
+                        userSelect: "none"
+                      }}>
+                        Animations
+                      </summary>
+                      <div style={{ paddingLeft: "0.5rem", marginTop: "0.5rem" }}>
+                        <AnimationEditor
+                          value={selected.props?.animations}
+                          onCommit={(val) => updateProp("animations", val)}
+                        />
+                      </div>
+                    </details>
+                  </>
+                );
+              })()}
+              
               {selectedPath && (
                 <>
                   <div className="cms-position-actions">

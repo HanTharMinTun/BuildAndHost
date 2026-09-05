@@ -7,7 +7,7 @@ import os
 from typing import Dict, Any, Optional
 
 # Add Backend directory to path to import ai.api_client
-backend_path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
+backend_path = os.path.join(os.path.dirname(__file__), '..', '..')
 if backend_path not in sys.path:
     sys.path.insert(0, backend_path)
 

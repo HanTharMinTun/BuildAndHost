@@ -171,8 +171,9 @@ def create_layout(user_prompt, file_urls=None, file_texts=None, image_urls=None)
             "role": "user",
             "content": (
                 "Attached files are available and may be used for images or icons. "
-                "Use these exact paths/URLs when setting Image or CDNIcon `src` props. "
-                "If you include them, use the prop shape specified in the system prompt.\nFiles:\n" + file_list_text
+                "When using these in Image components, set the `src` prop to the URL string directly (not as an object). "
+                "For example: {\"type\": \"Image\", \"props\": {\"src\": \"" + (file_urls[0] if file_urls else "https://...") + "\", \"alt\": \"...\"}}. "
+                "Use these exact URL strings:\n" + file_list_text
             ),
         })
 

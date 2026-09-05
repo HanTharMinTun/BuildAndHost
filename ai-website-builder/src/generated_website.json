@@ -8,9 +8,9 @@
         "props": {
           "items": [
             "Home",
+            "Shop",
+            "Collections",
             "About",
-            "Experience",
-            "Skills",
             "Contact"
           ]
         },
@@ -19,11 +19,11 @@
       {
         "type": "Hero",
         "props": {
-          "title": "Han Thar Min Tun",
-          "subtitle": "Software QA Engineer | Mobile Application Tester | Security Tester",
-          "buttonText": "Get In Touch",
-          "buttonAction": "#contact",
-          "image": "/uploads/3ffaeef998a0451885e37954ca0e8bbe.jpeg"
+          "title": "Elevate Your Style",
+          "subtitle": "Discover curated fashion pieces that define your unique aesthetic. New arrivals every week.",
+          "buttonText": "Shop Now",
+          "buttonAction": "#collections",
+          "image": "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1600&q=80"
         },
         "children": []
       },
@@ -38,34 +38,7 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Professional Summary",
-                  "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "Paragraph",
-                "props": {
-                  "text": "Detail-oriented and technically skilled Software QA Engineer with experience in software testing, penetration testing, system administration, web development, and scripting. Strong background in identifying vulnerabilities, performing security assessments, troubleshooting systems, and ensuring software quality. Familiar with manual testing, test case design, bug reporting, Linux administration, web applications, and mobile application testing methodologies."
-                },
-                "children": []
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
-              {
-                "type": "Heading",
-                "props": {
-                  "text": "Core Competencies",
+                  "text": "Featured Collections",
                   "level": 2
                 },
                 "children": []
@@ -79,30 +52,30 @@
                   {
                     "type": "Card",
                     "props": {
-                      "title": "Quality Assurance",
-                      "description": "Manual Testing, Functional Testing, Regression Testing, Smoke Testing, Test Case Design, Defect Tracking, UAT",
-                      "image": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80",
-                      "buttonText": "Learn More"
+                      "title": "Spring Essentials",
+                      "description": "Light and breezy pieces perfect for the season. Featuring sustainable fabrics and timeless designs.",
+                      "image": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "Explore"
                     },
                     "children": []
                   },
                   {
                     "type": "Card",
                     "props": {
-                      "title": "Security Testing",
-                      "description": "Vulnerability Assessment, Penetration Testing, Security Testing, Web Application Security Assessments",
-                      "image": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
-                      "buttonText": "Learn More"
+                      "title": "Urban Streetwear",
+                      "description": "Bold statements and contemporary cuts. Express yourself with our modern street style collection.",
+                      "image": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "Explore"
                     },
                     "children": []
                   },
                   {
                     "type": "Card",
                     "props": {
-                      "title": "System Administration",
-                      "description": "Linux Administration, Server Administration, System Administration, Web Application Deployment",
-                      "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80",
-                      "buttonText": "Learn More"
+                      "title": "Classic Elegance",
+                      "description": "Sophisticated pieces that never go out of style. Refined tailoring meets everyday comfort.",
+                      "image": "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?auto=format&fit=crop&w=800&q=80",
+                      "buttonText": "Explore"
                     },
                     "children": []
                   }
@@ -123,39 +96,146 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Professional Experience",
+                  "text": "Latest Arrivals",
                   "level": 2
                 },
                 "children": []
               },
               {
-                "type": "Timeline",
+                "type": "Gallery",
+                "props": {
+                  "images": [
+                    "https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1558769132-cb1aea8c2a0c?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1600&q=80",
+                    "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1600&q=80"
+                  ]
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Grid",
+                "props": {
+                  "columns": 2
+                },
+                "children": [
+                  {
+                    "type": "Stack",
+                    "props": {},
+                    "children": [
+                      {
+                        "type": "Heading",
+                        "props": {
+                          "text": "Why Choose Us",
+                          "level": 2
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "Paragraph",
+                        "props": {
+                          "text": "We're committed to bringing you quality fashion that makes a difference. From sustainable sourcing to exceptional customer service, every detail matters."
+                        },
+                        "children": []
+                      },
+                      {
+                        "type": "FeatureList",
+                        "props": {
+                          "items": [
+                            "Free shipping on orders over $100",
+                            "30-day hassle-free returns",
+                            "Sustainably sourced materials",
+                            "Exclusive member rewards",
+                            "Expert styling advice",
+                            "New arrivals every week"
+                          ]
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Stats",
+                    "props": {
+                      "items": [
+                        {
+                          "label": "Happy Customers",
+                          "value": "50K+"
+                        },
+                        {
+                          "label": "Products",
+                          "value": "2000+"
+                        },
+                        {
+                          "label": "Countries",
+                          "value": "25"
+                        },
+                        {
+                          "label": "Positive Reviews",
+                          "value": "98%"
+                        }
+                      ]
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Section",
+        "props": {},
+        "children": [
+          {
+            "type": "Container",
+            "props": {},
+            "children": [
+              {
+                "type": "Heading",
+                "props": {
+                  "text": "Frequently Asked Questions",
+                  "level": 2
+                },
+                "children": []
+              },
+              {
+                "type": "FAQ",
                 "props": {
                   "items": [
                     {
-                      "year": "2023 - Present",
-                      "title": "System Administrator (Freelance)",
-                      "description": "Managed Linux-based servers and infrastructure. Performed monitoring, maintenance, troubleshooting, and security hardening. Configured user permissions and supported web application deployments."
+                      "question": "What is your shipping policy?",
+                      "answer": "We offer free standard shipping on all orders over $100. Express shipping is available for an additional fee. Most orders are processed within 1-2 business days and arrive within 5-7 business days."
                     },
                     {
-                      "year": "2025 - 2026",
-                      "title": "Penetration Tester – Sheep Adv Web Game (Part-Time)",
-                      "description": "Conducted vulnerability assessments and security testing. Performed web application security assessments. Documented findings and validated remediation fixes."
+                      "question": "Can I return or exchange items?",
+                      "answer": "Yes! We offer a 30-day return policy on all unworn items with tags attached. Exchanges are processed within 3-5 business days of receiving your return."
                     },
                     {
-                      "year": "2024",
-                      "title": "PHP Developer – Magway Air Force (Part-Time)",
-                      "description": "Developed and maintained PHP web applications. Worked with MySQL databases and application debugging. Tested application functionality and verified fixes before release."
+                      "question": "How do I find my size?",
+                      "answer": "Each product page includes a detailed size guide with measurements. If you're between sizes, we recommend sizing up. Our customer service team is also happy to help with fit questions."
                     },
                     {
-                      "year": "2021 - 2024",
-                      "title": "Unity Game Developer (Self-Employed)",
-                      "description": "Developed game features using C# and Unity. Performed gameplay testing, bug tracking, and usability validation."
+                      "question": "Do you offer gift cards?",
+                      "answer": "Yes! Gift cards are available in denominations from $25 to $500. They can be purchased on our website and are delivered via email."
                     },
                     {
-                      "year": "2022",
-                      "title": "Python Software Engineer (Self-Employed)",
-                      "description": "Developed automation and scripting solutions using Python. Performed debugging, validation, and software testing activities."
+                      "question": "Are your products sustainable?",
+                      "answer": "We prioritize sustainability by working with ethical manufacturers and using eco-friendly materials whenever possible. Many of our products are made from organic cotton, recycled polyester, and other sustainable fabrics."
                     }
                   ]
                 },
@@ -176,231 +256,22 @@
               {
                 "type": "Heading",
                 "props": {
-                  "text": "Technical Skills",
+                  "text": "Get in Touch",
                   "level": 2
                 },
                 "children": []
               },
               {
-                "type": "Grid",
+                "type": "Paragraph",
                 "props": {
-                  "columns": 2
-                },
-                "children": [
-                  {
-                    "type": "Stack",
-                    "props": {},
-                    "children": [
-                      {
-                        "type": "Heading",
-                        "props": {
-                          "text": "Testing & QA",
-                          "level": 3
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "FeatureList",
-                        "props": {
-                          "items": [
-                            "Manual Testing",
-                            "Functional Testing",
-                            "Regression Testing",
-                            "UAT",
-                            "Mobile Testing"
-                          ]
-                        },
-                        "children": []
-                      }
-                    ]
-                  },
-                  {
-                    "type": "Stack",
-                    "props": {},
-                    "children": [
-                      {
-                        "type": "Heading",
-                        "props": {
-                          "text": "Security",
-                          "level": 3
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "FeatureList",
-                        "props": {
-                          "items": [
-                            "Vulnerability Scanning",
-                            "Penetration Testing",
-                            "Security Testing"
-                          ]
-                        },
-                        "children": []
-                      }
-                    ]
-                  },
-                  {
-                    "type": "Stack",
-                    "props": {},
-                    "children": [
-                      {
-                        "type": "Heading",
-                        "props": {
-                          "text": "Programming",
-                          "level": 3
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "FeatureList",
-                        "props": {
-                          "items": [
-                            "Python",
-                            "PHP",
-                            "C#",
-                            "Bash",
-                            "MySQL"
-                          ]
-                        },
-                        "children": []
-                      }
-                    ]
-                  },
-                  {
-                    "type": "Stack",
-                    "props": {},
-                    "children": [
-                      {
-                        "type": "Heading",
-                        "props": {
-                          "text": "Administration",
-                          "level": 3
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "FeatureList",
-                        "props": {
-                          "items": [
-                            "Linux Administration",
-                            "Server Administration",
-                            "System Administration"
-                          ]
-                        },
-                        "children": []
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
-              {
-                "type": "Heading",
-                "props": {
-                  "text": "Education",
-                  "level": 2
+                  "text": "Have questions about our products or need styling advice? We'd love to hear from you."
                 },
                 "children": []
               },
               {
-                "type": "Card",
-                "props": {
-                  "title": "University of Computer Studies, Magway",
-                  "description": "Relevant Areas: Computer Science, Software Development, Linux Administration, Databases",
-                  "image": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80"
-                },
+                "type": "ContactForm",
+                "props": {},
                 "children": []
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Section",
-        "props": {},
-        "children": [
-          {
-            "type": "Container",
-            "props": {},
-            "children": [
-              {
-                "type": "Heading",
-                "props": {
-                  "text": "Get In Touch",
-                  "level": 2
-                },
-                "children": []
-              },
-              {
-                "type": "Grid",
-                "props": {
-                  "columns": 2
-                },
-                "children": [
-                  {
-                    "type": "Stack",
-                    "props": {},
-                    "children": [
-                      {
-                        "type": "Paragraph",
-                        "props": {
-                          "text": "Location: Magway Region, Myanmar (Remote Available)"
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "Paragraph",
-                        "props": {
-                          "text": "Email: hhaann13579@gmail.com"
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "Paragraph",
-                        "props": {
-                          "text": "Phone: +959760516745"
-                        },
-                        "children": []
-                      },
-                      {
-                        "type": "Stats",
-                        "props": {
-                          "items": [
-                            {
-                              "label": "Years Experience",
-                              "value": "5+"
-                            },
-                            {
-                              "label": "Projects Completed",
-                              "value": "50+"
-                            },
-                            {
-                              "label": "Security Assessments",
-                              "value": "20+"
-                            }
-                          ]
-                        },
-                        "children": []
-                      }
-                    ]
-                  },
-                  {
-                    "type": "ContactForm",
-                    "props": {},
-                    "children": []
-                  }
-                ]
               }
             ]
           }

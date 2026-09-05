@@ -7,6 +7,45 @@ from pathlib import Path
 from typing import Dict, Any
 
 
+def normalize_image_src(value):
+    """Extract string URL from object if needed (e.g., {"url": "..."} -> "...")"""
+    if isinstance(value, dict):
+        # Check for {"url": "..."} or {"src": "..."} patterns
+        if "url" in value and isinstance(value["url"], str):
+            return value["url"]
+        if "src" in value and isinstance(value["src"], str):
+            return value["src"]
+    return value
+
+
+def normalize_website_images(node):
+    """Recursively normalize Image src values in website JSON to fix [object Object] issue"""
+    if not isinstance(node, dict):
+        return node
+    
+    # Normalize Image component src
+    if node.get("type") == "Image" and "props" in node:
+        if "src" in node["props"]:
+            node["props"]["src"] = normalize_image_src(node["props"]["src"])
+    
+    # Normalize Hero component image
+    if node.get("type") == "Hero" and "props" in node:
+        if "image" in node["props"]:
+            node["props"]["image"] = normalize_image_src(node["props"]["image"])
+    
+    # Normalize Card component image
+    if node.get("type") == "Card" and "props" in node:
+        if "image" in node["props"]:
+            node["props"]["image"] = normalize_image_src(node["props"]["image"])
+    
+    # Recursively process children
+    if "children" in node and isinstance(node["children"], list):
+        for child in node["children"]:
+            normalize_website_images(child)
+    
+    return node
+
+
 def generate_static_html(website_json: Dict[Any, Any], theme_json: Dict[Any, Any] = None) -> str:
     """
     Generate a standalone HTML file with website JSON and React renderer
@@ -39,6 +78,9 @@ def generate_static_html(website_json: Dict[Any, Any], theme_json: Dict[Any, Any
                 "body": "system-ui, -apple-system, sans-serif"
             }
         }
+    
+    # Normalize image src values to fix [object Object] issue in deployed sites
+    website_data = normalize_website_images(website_data)
     
     # Escape JSON for embedding in HTML
     website_json_str = json.dumps(website_data, indent=2).replace('</', '<\\/')

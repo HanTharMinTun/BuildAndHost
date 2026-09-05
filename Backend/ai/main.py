@@ -156,7 +156,7 @@ async def post_prompt(
         /var/www/onlinegif/uploads/
 
     Nginx serves them as:
-        https://onlinegif.shop/uploads/<filename>
+        https://webcreator.site/uploads/<filename>
     """
 
     upload_urls: List[str] = []
@@ -199,8 +199,8 @@ async def post_prompt(
                 content = await f.read()
                 out.write(content)
 
-            # Public URL
-            upload_url = f"/uploads/{safe_name}"
+            # Public URL - use absolute URL for cross-domain compatibility
+            upload_url = f"https://webcreator.site/uploads/{safe_name}"
             upload_urls.append(upload_url)
             
             # Track if this is an image file for Claude vision

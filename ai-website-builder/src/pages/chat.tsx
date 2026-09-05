@@ -75,7 +75,7 @@ export default function Home() {
 
     // Loading text rotation
     useEffect(() => {
-        let textInterval: NodeJS.Timeout;
+        let textInterval: ReturnType<typeof setInterval> | undefined;
 
         if (showLoadingScreen) {
             let textIndex = 0;
@@ -125,30 +125,58 @@ export default function Home() {
 
     function simulateProgress() {
         let currentProgress = 0;
-        let speed = 1.5;
+        let speed = 0.5;
+        let elapsedIntervals = 0;
 
         const interval = setInterval(() => {
-            if (currentProgress < 50) {
-                speed = 1.5 + Math.random() * 0.5;
-            } else if (currentProgress < 75) {
-                speed = 0.8 + Math.random() * 0.4;
-            } else if (currentProgress < 90) {
+            elapsedIntervals++;
+            
+            // Paced for 2-3 minute total duration (600-900 intervals at 200ms each)
+            // Much slower progression to match typical API response time
+            if (currentProgress < 30) {
+                // First 30%: ~60 seconds (300 intervals)
                 speed = 0.4 + Math.random() * 0.3;
+            } else if (currentProgress < 50) {
+                // 30-50%: ~40 seconds (200 intervals)
+                speed = 0.25 + Math.random() * 0.2;
+            } else if (currentProgress < 70) {
+                // 50-70%: ~40 seconds (200 intervals)
+                speed = 0.18 + Math.random() * 0.15;
+            } else if (currentProgress < 85) {
+                // 70-85%: ~30 seconds (150 intervals)
+                speed = 0.12 + Math.random() * 0.1;
+            } else if (currentProgress < 93) {
+                // 85-93%: ~25 seconds (125 intervals)
+                speed = 0.08 + Math.random() * 0.08;
+            } else if (currentProgress < 97) {
+                // 93-97%: ~20 seconds (100 intervals)
+                speed = 0.04 + Math.random() * 0.04;
+            } else if (currentProgress < 98.5) {
+                // 97-98.5%: ~15 seconds (75 intervals)
+                speed = 0.02 + Math.random() * 0.02;
             } else {
-                speed = 0.15 + Math.random() * 0.15;
+                // 98.5-99%: Extremely slow for final stretch
+                speed = 0.005 + Math.random() * 0.005;
             }
 
             currentProgress = Math.min(currentProgress + speed, 99);
             setProgress(currentProgress);
 
-            if (currentProgress < 20) {
+            // Update loading text based on progress and time elapsed
+            if (currentProgress < 15) {
                 setLoadingText("Analyzing your request...");
-            } else if (currentProgress < 40) {
+            } else if (currentProgress < 30) {
+                setLoadingText("Processing with AI engine...");
+            } else if (currentProgress < 45) {
                 setLoadingText("Generating creative ideas...");
             } else if (currentProgress < 60) {
                 setLoadingText("Building your website structure...");
-            } else if (currentProgress < 80) {
+            } else if (currentProgress < 75) {
                 setLoadingText("Designing your layout...");
+            } else if (currentProgress < 88) {
+                setLoadingText("Crafting visual elements...");
+            } else if (currentProgress < 95) {
+                setLoadingText("Finalizing components...");
             } else {
                 setLoadingText("Almost there...");
             }

@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import AppNavbar from '../components/AppNavbar';
 import { api } from '../lib/api';
 import type { Deployment, DeploymentLog } from '../lib/types';
+import QRCode from 'react-qr-code';
 
 export default function Deploy() {
   const navigate = useNavigate();
@@ -224,14 +225,32 @@ export default function Deploy() {
                   <div className="bg-green-50 border border-green-200 rounded-lg p-6">
                     <h3 className="text-lg font-semibold text-green-900 mb-2">🎉 Deployment Successful!</h3>
                     <p className="text-gray-700 mb-4">Your website is now live at:</p>
-                    <a
-                      href={deployment.domain}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 font-semibold"
-                    >
-                      Visit Website →
-                    </a>
+                    
+                    <div className="flex flex-col md:flex-row gap-6 items-start">
+                      <div className="flex-1">
+                        <a
+                          href={deployment.domain}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-block bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 font-semibold mb-4"
+                        >
+                          Visit Website →
+                        </a>
+                        <p className="text-sm text-gray-600 mt-2">
+                          <strong>URL:</strong> {deployment.domain}
+                        </p>
+                      </div>
+                      
+                      <div className="flex flex-col items-center bg-white p-4 rounded-lg border border-green-300">
+                        <p className="text-sm font-medium text-gray-700 mb-2">📱 Scan to visit on mobile</p>
+                        <QRCode
+                          value={deployment.domain}
+                          size={150}
+                          level="M"
+                          className="border-4 border-white"
+                        />
+                      </div>
+                    </div>
                   </div>
                 )}
 
